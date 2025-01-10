@@ -1,0 +1,8 @@
+SPRING_DATASOURCE_URL=jdbc:postgresql://ep-calm-term-a5d08gko.us-east-2.aws.neon.tech/fintech
+SPRING_DATASOURCE_USERNAME=fintech_owner
+SPRING_DATASOURCE_PASSWORD=I2ZB6vGYWQUh
+
+
+
+
+
