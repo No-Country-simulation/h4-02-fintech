@@ -6,11 +6,9 @@ import lombok.*;
 
 @Entity(name = "UserEntity")
 @Table(name = "User_entity")
-@EqualsAndHashCode(of = "id")
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter
-@Setter
+@EqualsAndHashCode(of = "id")
 public class UserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
@@ -24,6 +22,13 @@ public class UserEntity {
 
     @Column(name = "name")
     private String name;
+
+    @Column(name = "dni",unique = true)
+    private String dni;
+
+    public String getDni() {
+        return dni;
+    }
 
     public UserEntity(UserCreated user){
         this.email = user.email();
