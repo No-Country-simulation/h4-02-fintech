@@ -1,6 +1,9 @@
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { registerWithEmail } from "../services/register";
+import { useAuthStore } from "../store/useAuthStore";
+import { getErrorMessage } from "../../validators/errorHandler";
 
 export const RegisterPage = () => {
   const {
@@ -11,9 +14,26 @@ export const RegisterPage = () => {
   } = useForm();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  const { login } = useAuthStore();
 
-  const onSubmit = (data) => {
-    console.log("Form submitted:", data);
+  const onSubmit = async (data) => {
+    try {
+      const response = await registerWithEmail({
+        email: data.email,
+        password: data.password,
+        name: data.name,
+      });
+
+      const user = response.user;
+      const token = response.token;
+      login(user);
+      localStorage.setItem("token", token);
+    } catch (error) {
+      const errorMessage = getErrorMessage(error);
+      setErrorMessage(errorMessage);
+      console.error("Error al registrar:", error);
+    }
   };
 
   const password = watch("password");
@@ -26,7 +46,29 @@ export const RegisterPage = () => {
             Bienvenido a la plataforma
           </h1>
 
+          {errorMessage && (
+            <p className="text-red-500 text-sm mb-4">{errorMessage}</p>
+          )}
+
           <form onSubmit={handleSubmit(onSubmit)}>
+            <div className="form-control">
+              <label htmlFor="name" className="label">
+                <span className="label-text">Nombre</span>
+              </label>
+              <input
+                id="name"
+                type="text"
+                placeholder="Nombre"
+                {...register("name", { required: "El nombre es obligatorio" })}
+                className="input input-bordered w-full"
+              />
+              {errors.name && (
+                <p className="text-red-500 text-sm mt-2">
+                  {errors.name.message}
+                </p>
+              )}
+            </div>
+
             <div className="form-control">
               <label htmlFor="email" className="label">
                 <span className="label-text">Email</span>
@@ -35,7 +77,10 @@ export const RegisterPage = () => {
                 id="email"
                 type="email"
                 placeholder="user@user.com"
-                {...register("email", { required: "Email es obligatorio" })}
+                {...register("email", {
+                  required: "El email es obligatorio",
+                  email: "El email no es válido",
+                })}
                 className="input input-bordered w-full"
               />
               {errors.email && (
@@ -55,7 +100,7 @@ export const RegisterPage = () => {
                   type={showPassword ? "text" : "password"}
                   placeholder="Ingrese su contraseña"
                   {...register("password", {
-                    required: "Contraseña es obligatoria",
+                    required: "La Contraseña es obligatoria",
                   })}
                   className="input input-bordered w-full"
                 />
