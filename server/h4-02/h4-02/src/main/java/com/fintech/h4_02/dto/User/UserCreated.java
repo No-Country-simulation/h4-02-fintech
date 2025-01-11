@@ -8,6 +8,8 @@ public record UserCreated(
         @NotBlank
         String password,
         @NotBlank
-        String name
+        String name,
+        @NotBlank
+        String dni
 ) {
 }

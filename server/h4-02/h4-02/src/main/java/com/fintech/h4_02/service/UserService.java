@@ -13,7 +13,9 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
     public UsercreatedResponse createUser(UserCreated user) {
-        UserEntity userCreated = userRepository.save(new UserEntity(user) );
+        UserEntity userCreated;
+        userCreated = userRepository.findByEmail(user.email() );
+        if(userCreated == null) userCreated = userRepository.save(new UserEntity(user) );
         return new UsercreatedResponse(userCreated);
     }
 }

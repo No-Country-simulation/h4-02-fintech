@@ -11,10 +11,11 @@ public record UsercreatedResponse(
 
         String password,
 
-        String name
+        String name,
+        String dni
 ) {
 
     public UsercreatedResponse(UserEntity userCreated) {
-        this(userCreated.getId(), userCreated.getEmail(), userCreated.getPassword(), userCreated.getName());
+        this(userCreated.getId(), userCreated.getEmail(), userCreated.getPassword(), userCreated.getName(), userCreated.getDni());
     }
 }

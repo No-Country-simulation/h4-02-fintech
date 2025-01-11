@@ -25,10 +25,14 @@ import java.util.Map;
 @Controller
 @RequestMapping("api/v1/user")
 @CrossOrigin("*")
-@AllArgsConstructor
 public class UserController {
 
-    private UserService userService;
+
+    private final UserService userService;
+
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
 
     @PostMapping
     @Operation(
@@ -47,9 +51,9 @@ public class UserController {
     public ResponseEntity<?> createUser(@RequestBody @Valid UserCreated user){
         try {
             return ResponseEntity.status(HttpStatus.CREATED).body(userService.createUser(user));
-        } catch (Exception ex) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("error", ex.getMessage()));
-        }
+    } catch (Exception ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("error", ex.getMessage()));
+    }
     }
 
 }
