@@ -25,14 +25,13 @@ import java.util.Map;
 @Controller
 @RequestMapping("api/v1/user")
 @CrossOrigin("*")
+@AllArgsConstructor
 public class UserController {
 
 
-    private final UserService userService;
+    private  UserService userService;
 
-    public UserController(UserService userService) {
-        this.userService = userService;
-    }
+
 
     @PostMapping
     @Operation(
