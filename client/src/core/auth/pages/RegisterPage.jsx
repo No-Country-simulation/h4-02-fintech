@@ -4,14 +4,18 @@ import { useForm } from "react-hook-form";
 import { registerWithEmail } from "../services/register";
 import { useAuthStore } from "../store/useAuthStore";
 import { getErrorMessage } from "../../validators/errorHandler";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { registerValidationSchema } from "../../validators/register";
 
 export const RegisterPage = () => {
   const {
     register,
     handleSubmit,
-    watch,
     formState: { errors },
-  } = useForm();
+  } = useForm({
+    resolver: yupResolver(registerValidationSchema),
+  });
+
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
@@ -20,9 +24,10 @@ export const RegisterPage = () => {
   const onSubmit = async (data) => {
     try {
       const response = await registerWithEmail({
+        dni: data.dni,
         email: data.email,
         password: data.password,
-        name: data.name,
+        name: data.name + " " + data.surname,
       });
 
       const user = response.user;
@@ -36,13 +41,11 @@ export const RegisterPage = () => {
     }
   };
 
-  const password = watch("password");
-
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
       <div className="card w-full max-w-sm md:max-w-md shadow-none sm:shadow-xl bg-none sm:bg-white">
         <div className="card-body p-0 sm:p-8">
-          <h1 className="text-xl sm:text-2xl font-bold text-start mb-8">
+          <h1 className="text-xl sm:text-2xl font-bold text-center mb-8">
             Bienvenido a la plataforma
           </h1>
 
@@ -52,6 +55,24 @@ export const RegisterPage = () => {
 
           <form onSubmit={handleSubmit(onSubmit)}>
             <div className="form-control">
+              <label htmlFor="dni" className="label">
+                <span className="label-text">DNI</span>
+              </label>
+              <input
+                id="dni"
+                type="text"
+                placeholder="DNI"
+                {...register("dni")}
+                className="input input-bordered w-full"
+              />
+              {errors.dni && (
+                <p className="text-red-500 text-sm mt-2">
+                  {errors.dni.message}
+                </p>
+              )}
+            </div>
+
+            <div className="form-control">
               <label htmlFor="name" className="label">
                 <span className="label-text">Nombre</span>
               </label>
@@ -59,12 +80,30 @@ export const RegisterPage = () => {
                 id="name"
                 type="text"
                 placeholder="Nombre"
-                {...register("name", { required: "El nombre es obligatorio" })}
+                {...register("name")}
                 className="input input-bordered w-full"
               />
               {errors.name && (
                 <p className="text-red-500 text-sm mt-2">
                   {errors.name.message}
+                </p>
+              )}
+            </div>
+
+            <div className="form-control">
+              <label htmlFor="surname" className="label">
+                <span className="label-text">Apellido</span>
+              </label>
+              <input
+                id="surname"
+                type="text"
+                placeholder="Apellido"
+                {...register("surname")}
+                className="input input-bordered w-full"
+              />
+              {errors.surname && (
+                <p className="text-red-500 text-sm mt-2">
+                  {errors.surname.message}
                 </p>
               )}
             </div>
@@ -77,10 +116,7 @@ export const RegisterPage = () => {
                 id="email"
                 type="email"
                 placeholder="user@user.com"
-                {...register("email", {
-                  required: "El email es obligatorio",
-                  email: "El email no es válido",
-                })}
+                {...register("email")}
                 className="input input-bordered w-full"
               />
               {errors.email && (
@@ -99,9 +135,7 @@ export const RegisterPage = () => {
                   id="password"
                   type={showPassword ? "text" : "password"}
                   placeholder="Ingrese su contraseña"
-                  {...register("password", {
-                    required: "La Contraseña es obligatoria",
-                  })}
+                  {...register("password")}
                   className="input input-bordered w-full"
                 />
                 <button
@@ -132,11 +166,7 @@ export const RegisterPage = () => {
                   id="confirmPassword"
                   type={showConfirmPassword ? "text" : "password"}
                   placeholder="Ingrese su contraseña"
-                  {...register("confirmPassword", {
-                    required: "Confirmar la contraseña es obligatorio",
-                    validate: (value) =>
-                      value === password || "Las contraseñas no coinciden",
-                  })}
+                  {...register("confirmPassword")}
                   className="input input-bordered w-full"
                 />
                 <button
