@@ -1,13 +1,11 @@
 package com.fintech.h4_02.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fintech.h4_02.dto.user.CreateUserRequestDto;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
 import java.util.Set;
 
 @Getter
@@ -41,18 +39,30 @@ public class UserEntity {
     )
     private Set<Role> roles;
 
-
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "onboarding_entity_id", referencedColumnName = "id")
     @JsonManagedReference
     private OnboardingEntity onboarding;
 
+    @Column(name = "reset_password_token")
+    private String resetPasswordToken;
+
+    @Column(name = "reset_password_token_expiry")
+    private LocalDateTime tokenExpirationDate;
+
+    @Getter(AccessLevel.NONE)
+    @Column(name = "is_email_confirmed")
+    private Boolean isEmailConfirmed;
 
     public UserEntity(CreateUserRequestDto user) {
         this.email = user.email();
         this.name = user.name();
         this.password = user.password();
         this.dni = user.dni();
+    }
+
+    public boolean isEmailConfirmed() {
+        return isEmailConfirmed;
     }
 
 }
