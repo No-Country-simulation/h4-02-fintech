@@ -4,13 +4,13 @@ import com.fintech.h4_02.dto.user.CreateUserRequestDto;
 import jakarta.persistence.*;
 import lombok.*;
 
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity(name = "UserEntity")
 @Table(name = "User_entity")
 @EqualsAndHashCode(of = "id")
-@AllArgsConstructor
-@NoArgsConstructor
-@Getter
-@Setter
 public class UserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
@@ -25,25 +25,14 @@ public class UserEntity {
     @Column(name = "name")
     private String name;
 
+    @Column(name = "dni", unique = true)
+    private String dni;
+
     public UserEntity(CreateUserRequestDto user) {
         this.email = user.email();
         this.name = user.name();
         this.password = user.password();
+        this.dni = user.dni();
     }
 
-    public long getId() {
-        return id;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public String getName() {
-        return name;
-    }
 }
