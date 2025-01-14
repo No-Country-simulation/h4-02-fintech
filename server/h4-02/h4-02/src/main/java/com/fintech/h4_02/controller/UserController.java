@@ -1,6 +1,6 @@
 package com.fintech.h4_02.controller;
 
-import com.fintech.h4_02.dto.User.UserCreated;
+import com.fintech.h4_02.dto.user.CreateUserRequestDto;
 import com.fintech.h4_02.entity.UserEntity;
 import com.fintech.h4_02.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -27,29 +27,29 @@ import java.util.Map;
 @CrossOrigin("*")
 @AllArgsConstructor
 public class UserController {
-
     private UserService userService;
 
-    @PostMapping
+    /*
     @Operation(
-            summary = "Create a User",
-            description = "Create a new UserEntity",
-            tags = {"UserEntity"}
+        summary = "Create a User",
+        description = "Create a new UserEntity",
+        tags = {"UserEntity"}
     )
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "User created successfully",
-                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = UserEntity.class),
-                            examples = @ExampleObject(name = "WishlistRequestCreate",
-                                    value =  ""
-
-                            )))
+        @ApiResponse(responseCode = "201", description = "User created successfully",
+            content = @Content(
+                mediaType = MediaType.APPLICATION_JSON_VALUE,
+                schema = @Schema(implementation = UserEntity.class),
+                examples = @ExampleObject(name = "WishlistRequestCreate", value = ""))
+        )
     })
-    public ResponseEntity<?> createUser(@RequestBody @Valid UserCreated user){
+    @PostMapping
+    public ResponseEntity<?> createUser(@RequestBody @Valid CreateUserRequestDto user) {
         try {
             return ResponseEntity.status(HttpStatus.CREATED).body(userService.createUser(user));
         } catch (Exception ex) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("error", ex.getMessage()));
         }
-    }
+    }*/
 
 }

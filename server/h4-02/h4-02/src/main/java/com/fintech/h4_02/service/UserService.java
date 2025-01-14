@@ -1,19 +1,26 @@
 package com.fintech.h4_02.service;
 
-import com.fintech.h4_02.dto.User.UserCreated;
-import com.fintech.h4_02.dto.User.UsercreatedResponse;
+import com.fintech.h4_02.dto.user.CreateUserRequestDto;
+import com.fintech.h4_02.dto.user.UserResponseDto;
+import com.fintech.h4_02.entity.Role;
 import com.fintech.h4_02.entity.UserEntity;
 import com.fintech.h4_02.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class UserService {
+    private final UserRepository userRepository;
 
-    @Autowired
-    private UserRepository userRepository;
-    public UsercreatedResponse createUser(UserCreated user) {
-        UserEntity userCreated = userRepository.save(new UserEntity(user) );
-        return new UsercreatedResponse(userCreated);
+    public UserResponseDto createUser(CreateUserRequestDto user) {
+        var userPrepared = new UserEntity(user);
+        Role role = new Role();
+        role.setName("INVERSIONISTA");
+
+        userPrepared.getRoles().add(role);
+        UserEntity userCreated = userRepository.save(userPrepared);
+        return new UserResponseDto(userCreated);
     }
+
 }

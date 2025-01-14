@@ -1,22 +1,24 @@
 package com.fintech.h4_02.entity;
 
-import com.fintech.h4_02.dto.User.UserCreated;
+import com.fintech.h4_02.dto.user.CreateUserRequestDto;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.Set;
+
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity(name = "UserEntity")
 @Table(name = "User_entity")
 @EqualsAndHashCode(of = "id")
-@AllArgsConstructor
-@NoArgsConstructor
-@Getter
-@Setter
 public class UserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private long id;
 
-    @Column(name = "email",unique = true)
+    @Column(name = "email", unique = true)
     private String email;
 
     @Column(name = "password")
@@ -25,25 +27,21 @@ public class UserEntity {
     @Column(name = "name")
     private String name;
 
-    public UserEntity(UserCreated user){
+    @Column(name = "dni", unique = true)
+    private String dni;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "user_roles",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id")
+    )
+    private Set<Role> roles;
+
+    public UserEntity(CreateUserRequestDto user) {
         this.email = user.email();
         this.name = user.name();
         this.password = user.password();
+        this.dni = user.dni();
     }
 
-    public long getId() {
-        return id;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public String getName() {
-        return name;
-    }
 }
