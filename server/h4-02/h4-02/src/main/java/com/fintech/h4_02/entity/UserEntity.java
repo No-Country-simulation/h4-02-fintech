@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 import java.util.Set;
 
 @Getter
@@ -62,7 +63,7 @@ public class UserEntity {
     }
 
     public boolean isEmailConfirmed() {
-        return isEmailConfirmed;
+        return Objects.requireNonNullElse(isEmailConfirmed, false);
     }
 
 }

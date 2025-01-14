@@ -1,6 +1,8 @@
 package com.fintech.h4_02.service;
 
+import com.fintech.h4_02.entity.UserEntity;
 import com.fintech.h4_02.exception.EmailServiceException;
+import com.fintech.h4_02.exception.EntityNotFoundException;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.Builder;
@@ -20,9 +22,7 @@ import java.io.UnsupportedEncodingException;
 public class EmailService {
     private final JavaMailSender javaMailSender;
     private final TemplateEngine templateEngine;
-
-    @Value("${frontend.url}")
-    private String frontendUrl;
+    private final UserService userService;
 
     @Value("${backend.url}")
     private String backendUrl;
@@ -70,7 +70,7 @@ public class EmailService {
             helper.setFrom(emailSender, emailDetails.senderPersonal());
             helper.setTo(emailDetails.toEmail());
             helper.setSubject(emailDetails.subject());
-            String htmlContent = templateEngine.process("password-recovery", emailDetails.context());
+            String htmlContent = templateEngine.process(emailDetails.template(), emailDetails.context());
             helper.setText(htmlContent, true);
             javaMailSender.send(message);
         } catch (MessagingException | UnsupportedEncodingException e) {
@@ -78,9 +78,13 @@ public class EmailService {
         }
     }
 
-    // TODO: Call repository to get user's name by email
     private String getUserNameByEmail(String email) {
-        return email.split("@")[0];
+        try {
+            UserEntity userEntity = userService.getUserByEmail(email);
+            return userEntity.getName();
+        } catch (EntityNotFoundException e) {
+            return "Usuario";
+        }
     }
 
     @Builder
