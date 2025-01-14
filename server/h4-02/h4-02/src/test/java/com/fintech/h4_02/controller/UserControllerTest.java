@@ -38,7 +38,7 @@ class UserControllerTest {
 
     @Test
     void createUser() throws JsonProcessingException {
-        CreateUserRequestDto user = new CreateUserRequestDto("lionel6@gmail", "12346", "Lionel6", "2586987416");
+        CreateUserRequestDto user = new CreateUserRequestDto("lionel8@gmail", "12348", "Lionel8", "2588");
         String json = "{\"email\":\"" + user.email() + "\","
             + "\"password\":\"" + user.password() + "\","
             + "\"name\":\"" + user.name() + "\","
