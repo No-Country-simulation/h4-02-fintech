@@ -15,6 +15,8 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.*;
 
+import java.util.UUID;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -38,7 +40,8 @@ class UserControllerTest {
 
     @Test
     void createUser() throws JsonProcessingException {
-        CreateUserRequestDto user = new CreateUserRequestDto("lionel8@gmail", "12348", "Lionel8", "2588");
+        String reaspuesta =UUID.randomUUID().toString();
+        CreateUserRequestDto user = new CreateUserRequestDto(reaspuesta+"@gmail",reaspuesta , "Lione"+reaspuesta, reaspuesta);
         String json = "{\"email\":\"" + user.email() + "\","
             + "\"password\":\"" + user.password() + "\","
             + "\"name\":\"" + user.name() + "\","
