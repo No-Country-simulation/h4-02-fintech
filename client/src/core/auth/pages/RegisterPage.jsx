@@ -55,24 +55,6 @@ export const RegisterPage = () => {
 
           <form onSubmit={handleSubmit(onSubmit)}>
             <div className="form-control">
-              <label htmlFor="dni" className="label">
-                <span className="label-text">DNI</span>
-              </label>
-              <input
-                id="dni"
-                type="text"
-                placeholder="DNI"
-                {...register("dni")}
-                className="input input-bordered w-full"
-              />
-              {errors.dni && (
-                <p className="text-red-500 text-sm mt-2">
-                  {errors.dni.message}
-                </p>
-              )}
-            </div>
-
-            <div className="form-control">
               <label htmlFor="name" className="label">
                 <span className="label-text">Nombre</span>
               </label>
@@ -104,6 +86,24 @@ export const RegisterPage = () => {
               {errors.surname && (
                 <p className="text-red-500 text-sm mt-2">
                   {errors.surname.message}
+                </p>
+              )}
+            </div>
+
+            <div className="form-control">
+              <label htmlFor="dni" className="label">
+                <span className="label-text">DNI</span>
+              </label>
+              <input
+                id="dni"
+                type="text"
+                placeholder="DNI"
+                {...register("dni")}
+                className="input input-bordered w-full"
+              />
+              {errors.dni && (
+                <p className="text-red-500 text-sm mt-2">
+                  {errors.dni.message}
                 </p>
               )}
             </div>
