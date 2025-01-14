@@ -24,10 +24,12 @@ import java.util.Map;
 
 @Controller
 @RequestMapping("api/v1/user")
+@CrossOrigin("*")
 @AllArgsConstructor
 public class UserController {
     private UserService userService;
 
+    /*
     @Operation(
         summary = "Create a User",
         description = "Create a new UserEntity",
@@ -48,6 +50,6 @@ public class UserController {
         } catch (Exception ex) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("error", ex.getMessage()));
         }
-    }
+    }*/
 
 }

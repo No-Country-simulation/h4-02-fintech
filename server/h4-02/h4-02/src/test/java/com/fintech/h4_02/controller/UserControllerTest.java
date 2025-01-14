@@ -2,6 +2,7 @@ package com.fintech.h4_02.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fintech.h4_02.dto.auth.AuthResponseDto;
 import com.fintech.h4_02.dto.user.CreateUserRequestDto;
 import com.fintech.h4_02.dto.user.UserResponseDto;
 import com.fintech.h4_02.util.JsonUtil;
@@ -37,7 +38,7 @@ class UserControllerTest {
 
     @Test
     void createUser() throws JsonProcessingException {
-        CreateUserRequestDto user = new CreateUserRequestDto("lionel@gmail", "1234", "Lionel", "258698741");
+        CreateUserRequestDto user = new CreateUserRequestDto("lionel6@gmail", "12346", "Lionel6", "2586987416");
         String json = "{\"email\":\"" + user.email() + "\","
             + "\"password\":\"" + user.password() + "\","
             + "\"name\":\"" + user.name() + "\","
@@ -48,15 +49,15 @@ class UserControllerTest {
         JsonUtil.toJsonPrint("json ", json);
 
         HttpEntity<String> request = new HttpEntity<>(json, headers);
-        ResponseEntity<UserResponseDto> result = testRestTemplate.exchange("/api/v1/user", HttpMethod.POST, request, UserResponseDto.class);
+        ResponseEntity<AuthResponseDto> result = testRestTemplate.exchange("/api/v1/auth/register", HttpMethod.POST, request, AuthResponseDto.class);
         JsonUtil.toJsonPrint("user created ", result);
 
         assertAll(
             () -> assertEquals(HttpStatus.CREATED, result.getStatusCode()),
             () -> assertEquals(201, result.getStatusCode().value()),
-            () -> assertEquals(result.getBody().email(), user.email()),
-            () -> assertEquals(result.getBody().name(), user.name()),
-            () -> assertNotNull(result.getBody().id())
+            () -> assertEquals(result.getBody().user().email(), user.email()),
+            () -> assertEquals(result.getBody().user().name(), user.name()),
+            () -> assertNotNull(result.getBody().user().id())
         );
     }
 }

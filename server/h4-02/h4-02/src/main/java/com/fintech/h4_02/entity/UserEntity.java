@@ -4,6 +4,8 @@ import com.fintech.h4_02.dto.user.CreateUserRequestDto;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.Set;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -27,6 +29,13 @@ public class UserEntity {
 
     @Column(name = "dni", unique = true)
     private String dni;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "user_roles",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id")
+    )
+    private Set<Role> roles;
 
     public UserEntity(CreateUserRequestDto user) {
         this.email = user.email();
