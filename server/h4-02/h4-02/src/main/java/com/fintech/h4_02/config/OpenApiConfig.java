@@ -13,7 +13,7 @@ import io.swagger.v3.oas.annotations.info.License;
                 description = "IUPI Fintech API documentation v1.0",
                 contact = @Contact(
                         name = "Lionel (Java Champion)",
-                        email = "lionel@gmail.com",
+                        email = "staricofflionel@gmail.com",
                         url = "lionel.com"
                 ),
                 license = @License(

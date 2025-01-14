@@ -24,7 +24,6 @@ import java.util.Map;
 
 @Controller
 @RequestMapping("api/v1/user")
-@CrossOrigin("*")
 @AllArgsConstructor
 public class UserController {
     private UserService userService;
