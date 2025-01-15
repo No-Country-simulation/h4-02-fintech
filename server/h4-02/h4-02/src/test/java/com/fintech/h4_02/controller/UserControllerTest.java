@@ -128,7 +128,7 @@ class UserControllerTest {
                 "moderado", 10, 20, 30, 352L);
         String json = "{ "
                 + "\"knowledgeLevel\" : \"" + onboarding.knowledgeLevel() + "\","
-               //+ "\"goals\": \"" + onboarding.goals() + "\","
+                + "\"goals\": \"" + onboarding.goals() + "\","
                 + "\"riskPreference\" :\"" + onboarding.riskPreference() + "\","
                 + "\"monthlyIncome\" :\"" + onboarding.monthlyIncome() + "\","
                 + "\"monthlyExpenses\" :\"" + onboarding.monthlyExpenses() + "\","

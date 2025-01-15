@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -35,7 +36,8 @@ public class OnboardingService {
             onboarding.setKnowledgeLevel(KnowledgeLevel.valueOf(onboardingRequest.knowledgeLevel().toUpperCase()));
 
         if (onboardingRequest.goals() != null) {
-            onboarding.setGoals(onboardingRequest.goals().stream().map(Goals::new).collect(Collectors.toSet()));
+            Set<Goals> goals= onboardingRequest.goals().stream().map(Goals::new).collect(Collectors.toSet() );
+            onboarding.setGoals(goals);
         }
 
         if (onboardingRequest.riskPreference() != null)
