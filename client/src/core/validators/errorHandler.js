@@ -41,11 +41,6 @@ export const getErrorMessage = (error) => {
   }
 
   if (error.response) {
-    if (error.response.status === 404) {
-      // Caso: Recurso no encontrado
-      return "El recurso solicitado no fue encontrado.";
-    }
-
     if (error.response.status >= 500) {
       // Caso: Error del servidor
       return "El servidor está experimentando problemas. Por favor, intenta más tarde.";
