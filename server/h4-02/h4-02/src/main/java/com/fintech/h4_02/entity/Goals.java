@@ -20,4 +20,8 @@ public class Goals {
 
     @Column(name = "name")
     private String name;
+
+    public Goals(String nombre){
+        this.name = nombre;
+    }
 }

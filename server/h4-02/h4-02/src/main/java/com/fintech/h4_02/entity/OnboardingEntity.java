@@ -4,14 +4,12 @@ package com.fintech.h4_02.entity;
 import com.fintech.h4_02.enums.KnowledgeLevel;
 import com.fintech.h4_02.enums.RiskPreference;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-import java.util.List;
+import java.util.Set;
 
 @Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity(name = "OnboardingEntity")
@@ -33,7 +31,7 @@ public class OnboardingEntity {
             joinColumns = @JoinColumn(name = "onboardingEntity_id"),
             inverseJoinColumns = @JoinColumn(name = "goals_id")
     )
-    private List<Goals> goals;
+    private Set<Goals> goals;
 
 
     @Column(name = "riskPreference")
