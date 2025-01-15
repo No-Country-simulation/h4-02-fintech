@@ -51,7 +51,6 @@ export const GoalsPage = ({ nextStep, prevStep }) => {
       return;
     }
     updateFormData({ goals: watchGoals });
-    console.log("Selected goals:", watchGoals);
     nextStep();
   };
 

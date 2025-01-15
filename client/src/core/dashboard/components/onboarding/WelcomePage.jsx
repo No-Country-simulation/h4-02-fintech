@@ -1,8 +1,13 @@
 import PropTypes from "prop-types";
 import onboardingImage from "../../../../assets/images/onboarding.svg";
 import { Link } from "react-router-dom";
+import { useOnboardingStore } from "../../../auth/store/useOnboardingStore";
 
 export const WelcomePage = ({ nextStep }) => {
+  const { setFistSate } = useOnboardingStore();
+  const handleSaveAndContinueLater = () => {
+    setFistSate(false);
+  };
   return (
     <div className="min-h-screen bg-gray-50 p-4 md:p-6 lg:p-8">
       <div className="mx-auto max-w-md w-full space-y-8">
@@ -25,7 +30,11 @@ export const WelcomePage = ({ nextStep }) => {
               Iniciar
             </button>
 
-            <Link className="w-full btn btn-outline" to="/dashboard">
+            <Link
+              className="w-full btn btn-outline"
+              to="/dashboard"
+              onClick={handleSaveAndContinueLater}
+            >
               Realizar más tarde
             </Link>
           </div>
