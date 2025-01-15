@@ -8,6 +8,7 @@ import com.fintech.h4_02.dto.onboarding.OnboardingRequest;
 import com.fintech.h4_02.dto.user.CreateUserRequestDto;
 import com.fintech.h4_02.dto.user.UserResponseDto;
 import com.fintech.h4_02.entity.OnboardingEntity;
+import com.fintech.h4_02.entity.UserEntity;
 import com.fintech.h4_02.util.JsonUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Tag;
@@ -49,11 +50,12 @@ class UserControllerTest {
                 + "\"password\":\"" + user.password() + "\""
                 + "}";
 
+        headers.set(HttpHeaders.AUTHORIZATION, "Bearer " + jwt);
+        System.out.println("headers = " + headers);
         HttpEntity<String> request = new HttpEntity<>(json, headers);
         ResponseEntity<AuthResponseDto> result = testRestTemplate.exchange("/api/v1/auth/login", HttpMethod.POST, request, AuthResponseDto.class);
         jwt = result.getBody().token();
-        headers.set(HttpHeaders.AUTHORIZATION, jwt);
-        System.out.println("headers = " + headers);
+
     }
 
     @Test
@@ -120,27 +122,28 @@ class UserControllerTest {
 };
 * */
         OnboardingRequest onboarding = new OnboardingRequest("principiante", Set.of("vacaciones", "bienes", "retiro", "proyecto"),
-                "moderado", 10, 20, 30);
+                "moderado", 10, 20, 30,352L);
         String json = "{\"knowledgeLevel\":\"" + onboarding.knowledgeLevel() + "\","
                 + "\"goals\":\"" + onboarding.goals() + "\","
                 + "\"riskPreference\":\"" + onboarding.riskPreference() + "\","
-                + "\"monthlyIncome\":\"" + onboarding.monthlyIncome() + "\""
-                + "\"monthlyExpenses\":\"" + onboarding.monthlyExpenses() + "\""
-                + "\"savingsPercentage\":\"" + onboarding.savingsPercentage() + "\""
+                + "\"monthlyIncome\":\"" + onboarding.monthlyIncome() + "\","
+                + "\"monthlyExpenses\":\"" + onboarding.monthlyExpenses() + "\","
+                + "\"monthlyExpenses\":\"" + onboarding.monthlyExpenses() + "\","
+                + "\"userId\":\"" + onboarding.userId() + "\""
                 + "}";
 
 
         JsonUtil.toJsonPrint("json ", json);
 
         HttpEntity<String> request = new HttpEntity<>(json, headers);
-        ResponseEntity<OnboardingEntity> result = testRestTemplate.exchange("/api/v1/onboarding", HttpMethod.POST, request, OnboardingEntity.class);
+        ResponseEntity<UserEntity> result = testRestTemplate.exchange("/api/v1/onboarding", HttpMethod.POST, request, UserEntity.class);
         JsonUtil.toJsonPrint("onboarding", result);
 
         assertAll(
                 () -> assertEquals(HttpStatus.CREATED, result.getStatusCode()),
                 () -> assertEquals(201, result.getStatusCode().value()),
-                () -> assertEquals(result.getBody().getKnowledgeLevel(), onboarding.knowledgeLevel()),
-                () -> assertEquals(result.getBody().getMonthlyIncome(), onboarding.monthlyIncome())
+                () -> assertEquals(result.getBody().getOnboarding().getKnowledgeLevel(), onboarding.knowledgeLevel()),
+                () -> assertEquals(result.getBody().getOnboarding().getMonthlyIncome(), onboarding.monthlyIncome())
 
         );
     }

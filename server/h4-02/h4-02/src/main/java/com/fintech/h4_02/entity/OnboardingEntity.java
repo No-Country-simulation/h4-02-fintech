@@ -46,4 +46,7 @@ public class OnboardingEntity {
 
     @Column(name = "savingsPercentage")
     private Integer savingsPercentage;
+
+    @OneToOne(mappedBy = "onboarding")
+    private UserEntity user;
 }

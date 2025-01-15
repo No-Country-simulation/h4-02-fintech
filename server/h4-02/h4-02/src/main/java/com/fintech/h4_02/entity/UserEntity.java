@@ -37,6 +37,12 @@ public class UserEntity {
     )
     private Set<Role> roles;
 
+
+    @OneToOne(cascade = CascadeType.ALL,orphanRemoval = true)
+    @JoinColumn(name = "onboarding_id", referencedColumnName = "id")
+    private OnboardingEntity onboarding;
+
+
     public UserEntity(CreateUserRequestDto user) {
         this.email = user.email();
         this.name = user.name();

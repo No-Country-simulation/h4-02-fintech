@@ -8,6 +8,7 @@ public record OnboardingRequest(
         String riskPreference,
         Integer monthlyIncome,
         Integer monthlyExpenses,
-        Integer savingsPercentage
+        Integer savingsPercentage,
+        Long userId
 ) {
 }
