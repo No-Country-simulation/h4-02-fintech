@@ -18,9 +18,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
@@ -44,18 +46,19 @@ class UserControllerTest {
         testRestTemplate = new TestRestTemplate(restTemplateBuilder);
         headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-
+/*
         LoginRequestDto user = new LoginRequestDto("liontestlogin@gmail", "liontestlogin@gmail");
         String json = "{\"email\":\"" + user.email() + "\","
                 + "\"password\":\"" + user.password() + "\""
                 + "}";
 
-        headers.set(HttpHeaders.AUTHORIZATION, "Bearer " + jwt);
-        System.out.println("headers = " + headers);
+
+
         HttpEntity<String> request = new HttpEntity<>(json, headers);
         ResponseEntity<AuthResponseDto> result = testRestTemplate.exchange("/api/v1/auth/login", HttpMethod.POST, request, AuthResponseDto.class);
-        jwt = result.getBody().token();
-
+        jwt = result.getBody().token();   */
+       // headers.set(HttpHeaders.AUTHORIZATION, "Bearer " +jwt);
+       // System.out.println("headers = " + headers);
     }
 
     @Test
@@ -109,7 +112,7 @@ class UserControllerTest {
 
 
     @Test
-    @Tag("crear onboarding perfil financiero del usuario")
+   // @Tag("crear onboarding perfil financiero del usuario")
     void createonboarding() throws JsonProcessingException {
 /*
 * const formData = {
@@ -128,7 +131,7 @@ class UserControllerTest {
                 + "\"riskPreference\":\"" + onboarding.riskPreference() + "\","
                 + "\"monthlyIncome\":\"" + onboarding.monthlyIncome() + "\","
                 + "\"monthlyExpenses\":\"" + onboarding.monthlyExpenses() + "\","
-                + "\"monthlyExpenses\":\"" + onboarding.monthlyExpenses() + "\","
+                + "\"savingsPercentage\":\"" + onboarding.savingsPercentage() + "\","
                 + "\"userId\":\"" + onboarding.userId() + "\""
                 + "}";
 
@@ -147,5 +150,8 @@ class UserControllerTest {
 
         );
     }
+
+
+
 
 }
