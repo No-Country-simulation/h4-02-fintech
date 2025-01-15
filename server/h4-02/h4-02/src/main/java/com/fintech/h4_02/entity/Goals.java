@@ -22,6 +22,8 @@ public class Goals {
     private String name;
 
     public Goals(String nombre){
-        this.name = nombre;
+        this.name = String.valueOf(nombre);
     }
+
+
 }

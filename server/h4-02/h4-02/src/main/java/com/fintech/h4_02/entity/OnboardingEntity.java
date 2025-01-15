@@ -6,6 +6,7 @@ import com.fintech.h4_02.enums.RiskPreference;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -31,7 +32,7 @@ public class OnboardingEntity {
             joinColumns = @JoinColumn(name = "onboardingEntity_id"),
             inverseJoinColumns = @JoinColumn(name = "goals_id")
     )
-    private Set<Goals> goals;
+    private List<Goals> goals;
 
 
     @Column(name = "riskPreference")

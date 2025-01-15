@@ -11,6 +11,7 @@ import com.fintech.h4_02.dto.user.UserResponseDto;
 import com.fintech.h4_02.entity.OnboardingEntity;
 import com.fintech.h4_02.entity.UserEntity;
 import com.fintech.h4_02.util.JsonUtil;
+import jdk.jfr.Label;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -22,10 +23,7 @@ import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -62,7 +60,7 @@ class UserControllerTest {
     }
 
     @Test
-    @Tag("crear ususarios con seguridad")
+    @Label("crear ususarios con seguridad")
     void createUser() throws JsonProcessingException {
         String reaspuesta = UUID.randomUUID().toString();
         CreateUserRequestDto user = new CreateUserRequestDto(reaspuesta + "@gmail", reaspuesta, "Lione" + reaspuesta, reaspuesta);
@@ -90,7 +88,7 @@ class UserControllerTest {
 
 
     @Test
-    @Tag("login")
+    @Label("login")
     void login() throws JsonProcessingException {
 
         LoginRequestDto user = new LoginRequestDto("liontestlogin@gmail", "liontestlogin@gmail");
@@ -112,7 +110,7 @@ class UserControllerTest {
 
 
     @Test
-    @Tag("crear onboarding perfil financiero del usuario")
+    @Label("crear onboarding perfil financiero del usuario")
     void createonboarding() throws JsonProcessingException {
 /*
 * const formData = {
@@ -124,8 +122,18 @@ class UserControllerTest {
   savingsPercentage: number,     // Número positivo
 };
 * */
-        OnboardingRequest onboarding = new OnboardingRequest("principiante", Set.of("vacaciones", "bienes", "retiro", "proyecto"),
+        List<String>setRequest = new ArrayList<>();
+        setRequest.add("vacaciones");
+        setRequest.add("retiro");
+        setRequest.add("bienes");
+
+
+        
+        OnboardingRequest onboarding = new OnboardingRequest("principiante", setRequest,
                 "moderado", 10, 20, 30, 352L);
+
+        System.out.println("onboarding dto= " + onboarding);
+
         String json = "{ "
                 + "\"knowledgeLevel\" : \"" + onboarding.knowledgeLevel() + "\","
                 + "\"goals\": \"" + onboarding.goals() + "\","
@@ -135,7 +143,13 @@ class UserControllerTest {
                 + "\"savingsPercentage\" :\"" + onboarding.savingsPercentage() + "\","
                 + "\"userId\":\"" + onboarding.userId() + "\""
                 + "}";
-
+json = """
+        {
+        	"userId": 352,
+        	"savingsPercentage": 30,
+        	"goals": ["bienes","retiro","vacaciones"]
+        }
+        """;
 
         JsonUtil.toJsonPrint("json ", json);
 

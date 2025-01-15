@@ -12,8 +12,7 @@ import com.fintech.h4_02.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -36,7 +35,11 @@ public class OnboardingService {
             onboarding.setKnowledgeLevel(KnowledgeLevel.valueOf(onboardingRequest.knowledgeLevel().toUpperCase()));
 
         if (onboardingRequest.goals() != null) {
-            Set<Goals> goals= onboardingRequest.goals().stream().map(Goals::new).collect(Collectors.toSet() );
+            List<Goals> goals =  new ArrayList<>();
+                  for(String g:  onboardingRequest.goals())  {
+                      goals.add(new Goals(g));
+                  }
+
             onboarding.setGoals(goals);
         }
 
@@ -53,7 +56,7 @@ public class OnboardingService {
 
         user.setOnboarding(onboarding);
 
-       // user = userRepository.findByUser(user);
+        // user = userRepository.findByUser(user);
         return user;
     }
 }
