@@ -13,8 +13,7 @@ export const useOnboardingStore = create(
         savingsPercentage: "",
       },
       step: 1,
-      isFirstSet: true,
-      setFistSate: (value) => set({ isFirstSet: value }),
+      isFirstSet: true,    
       updateFormData: (newData) =>
         set((state) => {
           const isFirstSet = state.isFirstSet;
@@ -38,6 +37,20 @@ export const useOnboardingStore = create(
         set((state) => ({
           step: state.step - 1,
         })),
+      reset: () => {
+        set({
+          formData: {
+            knowledgeLevel: "",
+            goals: [],
+            riskPreference: "",
+            monthlyIncome: "",
+            monthlyExpenses: "",
+            savingsPercentage: "",
+          },
+          step: 1,
+          isFirstSet: true,
+        });
+      },
     }),
     {
       name: "onboarding-storage",

@@ -1,4 +1,5 @@
 import { Graph } from "iconsax-react";
+import { Link } from "react-router-dom";
 
 export const FinancialSection = () => {
   return (
@@ -15,9 +16,9 @@ export const FinancialSection = () => {
           Actualiza tus datos para obtener recomendaciones más personalizadas.
         </p>
 
-        <button className="btn btn-primary w-full">
+        <Link className="btn btn-primary w-full" to="/dashboard/onboarding">
           Actualizar mi Radiografía
-        </button>
+        </Link>
       </div>
     </div>
   );
