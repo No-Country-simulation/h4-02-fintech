@@ -3,6 +3,8 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { getErrorMessage } from "../../validators/errorHandler";
 import { forgotPasswordValidationSchema } from "../../validators/login";
+import { sendForgotPasswordEmail } from "../services/login";
+import { toast } from "sonner";
 
 export const ForgotPasswordPage = () => {
   const {
@@ -14,15 +16,14 @@ export const ForgotPasswordPage = () => {
   });
 
   const [errorMessage, setErrorMessage] = useState("");
-  const [successMessage, setSuccessMessage] = useState("");
 
   const onSubmit = async (data) => {
     try {
-      console.log(data);
-      /* await sendForgotPasswordEmail(data.email);  */
-      setSuccessMessage(
-        "Se ha enviado un enlace para recuperar su contraseña."
-      );
+      await sendForgotPasswordEmail(data.email);
+      toast.message("Enlace enviado", {
+        description: "Se ha enviado un enlace para recuperar su contraseña.",
+      });
+      setErrorMessage("");
     } catch (error) {
       const errorMessage = getErrorMessage(error);
       setErrorMessage(errorMessage);
@@ -36,10 +37,6 @@ export const ForgotPasswordPage = () => {
         <div className="card-body p-0 sm:p-8">
           {errorMessage && (
             <p className="text-red-500 text-sm mb-4">{errorMessage}</p>
-          )}
-
-          {successMessage && (
-            <p className="text-green-500 text-sm font-bold mb-4">{successMessage}</p>
           )}
 
           <form onSubmit={handleSubmit(onSubmit)}>

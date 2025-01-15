@@ -4,6 +4,7 @@ import { RegisterPage } from "../auth/pages/RegisterPage";
 import { DashboardRouter } from "./DashboardRouter";
 import { ForgotPasswordPage } from "../auth/pages/ForgotPasswordPage";
 import { useAuthStore } from "../auth/store/useAuthStore";
+import { ResetPasswordPage } from "../auth/pages/ResetPasswordPage";
 
 export const AppRouter = () => {
   const { status } = useAuthStore();
@@ -18,6 +19,7 @@ export const AppRouter = () => {
             path="/auth/forgot-password"
             element={<ForgotPasswordPage />}
           />
+          <Route path="/reset-password" element={<ResetPasswordPage />} />
           <Route path="/*" element={<Navigate to="/auth/login" />} />
         </>
       ) : (
