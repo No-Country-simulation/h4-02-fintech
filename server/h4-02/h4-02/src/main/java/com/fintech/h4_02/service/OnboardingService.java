@@ -32,14 +32,14 @@ public class OnboardingService {
         OnboardingEntity onboarding = user.getOnboarding() == null ? new OnboardingEntity() : user.getOnboarding();
 
         if (onboardingRequest.knowledgeLevel() != null)
-            onboarding.setKnowledgeLevel(KnowledgeLevel.valueOf(onboardingRequest.knowledgeLevel()));
+            onboarding.setKnowledgeLevel(KnowledgeLevel.valueOf(onboardingRequest.knowledgeLevel().toUpperCase()));
 
-        if (!onboardingRequest.goals().isEmpty()) {
+        if (onboardingRequest.goals() != null) {
             onboarding.setGoals(onboardingRequest.goals().stream().map(Goals::new).collect(Collectors.toSet()));
         }
 
         if (onboardingRequest.riskPreference() != null)
-            onboarding.setRiskPreference(RiskPreference.valueOf(onboardingRequest.riskPreference()));
+            onboarding.setRiskPreference(RiskPreference.valueOf(onboardingRequest.riskPreference().toUpperCase()));
 
         if (onboardingRequest.monthlyExpenses() != null)
             onboarding.setMonthlyExpenses(onboardingRequest.monthlyExpenses());
