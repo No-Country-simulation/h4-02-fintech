@@ -1,9 +1,9 @@
-import { Notification, Eye, EyeSlash, Sms } from "iconsax-react";
+import { Notification, Eye, EyeSlash, Sms, Logout } from "iconsax-react";
 import { useAuthStore } from "../../../../auth/store/useAuthStore";
 import { useState } from "react";
 
 export const Header = () => {
-  const { user } = useAuthStore();
+  const { user, logout } = useAuthStore();
   const [balance] = useState({
     ARS: 12500000,
     USD: 35000,
@@ -36,6 +36,9 @@ export const Header = () => {
           </div>
         </div>
         <div className="flex gap-0 sm:gap-2 mt-4 md:mt-0">
+          <button className="btn btn-ghost btn-circle" onClick={logout}>
+            <Logout size="24" />
+          </button>
           <button className="btn btn-ghost btn-circle">
             <Notification size="24" />
           </button>

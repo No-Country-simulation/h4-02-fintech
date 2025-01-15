@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
+import { useOnboardingStore } from "./useOnboardingStore";
 
 export const useAuthStore = create(
   persist(
@@ -7,7 +8,11 @@ export const useAuthStore = create(
       status: "not-authenticated",
       user: null,
       login: (user) => set({ status: "authenticated", user }),
-      logout: () => set({ status: "not-authenticated", user: null }),
+      logout: () => {
+        localStorage.clear();
+        useOnboardingStore.getState().reset();
+        set({ status: "not-authenticated", user: null });
+      },
     }),
     {
       name: "auth-store",

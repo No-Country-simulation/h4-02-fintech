@@ -10,7 +10,7 @@ import { useOnboardingStore } from "../../auth/store/useOnboardingStore";
 export const InvestorDashboardPage = () => {
   const { isFirstSet } = useOnboardingStore();
 
-   if (isFirstSet) {
+  if (isFirstSet) {
     return <Navigate to="/dashboard/onboarding" />;
   }
 

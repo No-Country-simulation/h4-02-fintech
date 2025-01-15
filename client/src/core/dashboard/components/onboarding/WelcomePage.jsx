@@ -4,10 +4,11 @@ import { Link } from "react-router-dom";
 import { useOnboardingStore } from "../../../auth/store/useOnboardingStore";
 
 export const WelcomePage = ({ nextStep }) => {
-  const { setFistSate } = useOnboardingStore();
+  const { updateFormData } = useOnboardingStore();
   const handleSaveAndContinueLater = () => {
-    setFistSate(false);
+    updateFormData({ knowledgeLevel: "" });
   };
+  
   return (
     <div className="min-h-screen bg-gray-50 p-4 md:p-6 lg:p-8">
       <div className="mx-auto max-w-md w-full space-y-8">
