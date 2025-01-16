@@ -13,7 +13,7 @@ export const useOnboardingStore = create(
         savingsPercentage: "",
       },
       step: 1,
-      isFirstSet: true,    
+      isFirstSet: true,
       updateFormData: (newData) =>
         set((state) => {
           const isFirstSet = state.isFirstSet;

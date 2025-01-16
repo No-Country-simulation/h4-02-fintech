@@ -3,11 +3,17 @@ import { useForm } from "react-hook-form";
 import { formatCurrency } from "../../../utils/formatCurrency";
 import PropTypes from "prop-types";
 import { useOnboardingStore } from "../../../auth/store/useOnboardingStore";
-import { Link } from "react-router-dom";
+import { updateOnboarding } from "../../services/onboarding";
+import { useAuthStore } from "../../../auth/store/useAuthStore";
+import { toast } from "sonner";
+import { useNavigate } from "react-router-dom";
+import { getErrorMessage } from "../../../validators/errorHandler";
 
 export const CurrentNumbersPage = ({ nextStep, prevStep }) => {
+  const navigate = useNavigate();
   const { formData, updateFormData } = useOnboardingStore();
   const { monthlyIncome, monthlyExpenses, savingsPercentage } = formData;
+  const { user } = useAuthStore();
 
   const {
     handleSubmit,
@@ -34,16 +40,38 @@ export const CurrentNumbersPage = ({ nextStep, prevStep }) => {
   const watchSavingsPercentage = watch("savingsPercentage");
   const watchCustomSavingsPercentage = watch("customSavingsPercentage");
 
-  const handleNext = () => {
-    updateFormData({
-      monthlyIncome: watchMonthlyIncome,
-      monthlyExpenses: watchMonthlyExpenses,
-      savingsPercentage:
-        watchSavingsPercentage === "otro"
-          ? watchCustomSavingsPercentage
-          : watchSavingsPercentage,
-    });
-    nextStep();
+  const handleNext = async () => {
+    try {
+      const response = await updateOnboarding({
+        knowledgeLevel: formData.knowledgeLevel,
+        goals: formData.goals,
+        riskPreference: formData.riskPreference,
+        monthlyIncome: watchMonthlyIncome,
+        monthlyExpenses: watchMonthlyExpenses,
+        savingsPercentage:
+          watchSavingsPercentage === "otro"
+            ? watchCustomSavingsPercentage
+            : watchSavingsPercentage,
+        userId: user.id,
+      });
+
+      if (response) {
+        updateFormData({
+          monthlyIncome: watchMonthlyIncome,
+          monthlyExpenses: watchMonthlyExpenses,
+          savingsPercentage:
+            watchSavingsPercentage === "otro"
+              ? watchCustomSavingsPercentage
+              : watchSavingsPercentage,
+        });        
+        nextStep();
+      }
+    } catch (error) {
+      const errorMessage = getErrorMessage(error);
+      toast.error("No se pudo actualizar el onboarding", {
+        description: errorMessage,
+      });
+    }
   };
 
   const handleInputChange = (e, field) => {
@@ -66,15 +94,41 @@ export const CurrentNumbersPage = ({ nextStep, prevStep }) => {
     );
   };
 
-  const handleSaveAndContinueLater = () => {
-    updateFormData({
-      monthlyIncome: watchMonthlyIncome,
-      monthlyExpenses: watchMonthlyExpenses,
-      savingsPercentage:
-        watchSavingsPercentage === "otro"
-          ? watchCustomSavingsPercentage
-          : watchSavingsPercentage,
-    });
+  const handleSaveAndContinueLater = async () => {
+    try {
+      const response = await updateOnboarding({
+        knowledgeLevel: formData.knowledgeLevel,
+        goals: formData.goals,
+        riskPreference: formData.riskPreference,
+        monthlyIncome: watchMonthlyIncome,
+        monthlyExpenses: watchMonthlyExpenses,
+        savingsPercentage:
+          watchSavingsPercentage === "otro"
+            ? watchCustomSavingsPercentage
+            : watchSavingsPercentage,
+        userId: user.id,
+      });
+
+      if (response) {
+        updateFormData({
+          monthlyIncome: watchMonthlyIncome,
+          monthlyExpenses: watchMonthlyExpenses,
+          savingsPercentage:
+            watchSavingsPercentage === "otro"
+              ? watchCustomSavingsPercentage
+              : watchSavingsPercentage,
+        });
+        toast("Onboarding actualizado", {
+          description: "Se ha actualizado el onboarding",
+        });
+        navigate("/dashboard");
+      }
+    } catch (error) {
+      const errorMessage = getErrorMessage(error);
+      toast.error("No se pudo actualizar el onboarding", {
+        description: errorMessage,
+      });
+    }
   };
 
   return (
@@ -233,14 +287,14 @@ export const CurrentNumbersPage = ({ nextStep, prevStep }) => {
                 Siguiente
               </button>
 
-              <Link
+              <button
+                type="button"
                 className="w-full btn btn-outline"
-                to={"/dashboard"}
                 onClick={handleSaveAndContinueLater}
                 disabled={!isFormValid()}
               >
                 Guardar y continuar en otro momento
-              </Link>
+              </button>
             </div>
           </div>
         </div>
