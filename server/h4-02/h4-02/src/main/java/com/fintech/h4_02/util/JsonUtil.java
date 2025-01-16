@@ -7,26 +7,28 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 
 public class JsonUtil {
 
-
-    public static void toJsonPrint(String title, Object object) throws JsonProcessingException {
-        final ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
-        String formattedJson = objectMapper.writeValueAsString(object);
-        System.out.println(title + " : " + formattedJson);
-
-
+    public static void toJsonPrint(String title, Object object) {
+        try {
+            final ObjectMapper objectMapper = new ObjectMapper();
+            objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
+            String formattedJson = objectMapper.writeValueAsString(object);
+            System.out.println(title + " : " + formattedJson);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
     }
 
-   /* public static  ResponseEntity<?> PatchMetodTest(String urlDto) {
-        RestTemplate restTemplate = new CustomRestTemplate();
-        String url = urlDto;
+    public static String toJsonString(Object object) {
+        final ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
+        try {
+            return objectMapper.writeValueAsString(object);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        HttpEntity<String> entity = new HttpEntity<>( headers);
-        ResponseEntity<?> response = restTemplate.exchange(url, HttpMethod.PATCH, entity, Object.class);
-       return response;
-    }*/
 }
 
 

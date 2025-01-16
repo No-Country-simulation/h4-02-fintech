@@ -13,6 +13,7 @@ import com.fintech.h4_02.exception.EntityNotFoundException;
 import com.fintech.h4_02.exception.InvalidTokenException;
 import com.fintech.h4_02.repository.RoleRepository;
 import com.fintech.h4_02.repository.UserRepository;
+import com.fintech.h4_02.service.mail.EmailService;
 import com.fintech.h4_02.util.RandomString;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -82,16 +83,16 @@ public class AuthService {
             throw new IllegalArgumentException("Reset password token is not present");
         }
         return userRepository
-            .findByResetPasswordToken(resetPasswordToken)
-            .orElseThrow(() -> new EntityNotFoundException(String.format("User not found with token: %s", resetPasswordToken)));
+                .findByResetPasswordToken(resetPasswordToken)
+                .orElseThrow(() -> new EntityNotFoundException(String.format("User not found with token: %s", resetPasswordToken)));
     }
 
     @Transactional
     public String updatePasswordRecoveryToken(String email) {
         String token = RandomString.generateRandomString(45);
         UserEntity user = userRepository
-            .findByEmail(email)
-            .orElseThrow(() -> new EntityNotFoundException("User not found with email: " + email));
+                .findByEmail(email)
+                .orElseThrow(() -> new EntityNotFoundException("User not found with email: " + email));
 
         user.setResetPasswordToken(token);
         user.setTokenExpirationDate(LocalDateTime.now().plusMinutes(10));
@@ -105,8 +106,8 @@ public class AuthService {
             throw new IllegalArgumentException("Reset password token is not present");
         }
         UserEntity user = userRepository
-            .findByResetPasswordToken(resetPasswordToken)
-            .orElseThrow(() -> new EntityNotFoundException("User not found with token: " + resetPasswordToken));
+                .findByResetPasswordToken(resetPasswordToken)
+                .orElseThrow(() -> new EntityNotFoundException("User not found with token: " + resetPasswordToken));
 
         boolean isTokenExpired = user.getTokenExpirationDate() != null && user.getTokenExpirationDate().isBefore(LocalDateTime.now());
         if (isTokenExpired) {
@@ -135,8 +136,8 @@ public class AuthService {
         // Check if the user exists
         String username = jwtService.getUsernameFromToken(token);
         UserEntity user = userRepository
-            .findByEmail(username)
-            .orElseThrow(() -> new EntityNotFoundException("User not found with email: " + username));
+                .findByEmail(username)
+                .orElseThrow(() -> new EntityNotFoundException("User not found with email: " + username));
 
         // Throw if the user is already activated
         if (Boolean.TRUE.equals(user.isEmailConfirmed())) {

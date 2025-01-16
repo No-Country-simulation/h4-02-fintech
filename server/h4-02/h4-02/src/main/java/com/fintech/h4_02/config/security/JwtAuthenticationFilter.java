@@ -17,6 +17,9 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.Arrays;
+
+import static com.fintech.h4_02.config.security.SecurityConfig.PUBLIC_PATHS;
 
 @Configuration
 @RequiredArgsConstructor
@@ -30,6 +33,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             @NonNull HttpServletResponse response,
             @NonNull FilterChain filterChain
     ) throws ServletException, IOException {
+        String requestPath = request.getRequestURI();
+        if (isPublicPath(requestPath)) {
+            filterChain.doFilter(request, response);
+            return;
+        }
         final String token = getTokenFromRequest(request);
         final String username;
         if (token == null) {
@@ -54,6 +62,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             return token.substring(7);
         }
         return null;
+    }
+
+    private boolean isPublicPath(String path) {
+        return Arrays.stream(PUBLIC_PATHS).anyMatch(path::startsWith);
     }
 
 }
