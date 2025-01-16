@@ -1,104 +1,71 @@
 package com.fintech.h4_02.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fintech.h4_02.dto.auth.AuthResponseDto;
 import com.fintech.h4_02.dto.auth.LoginRequestDto;
-import com.fintech.h4_02.dto.onboarding.OnboardingRequest;
 import com.fintech.h4_02.dto.user.CreateUserRequestDto;
 import com.fintech.h4_02.dto.user.UserResponseDto;
-import com.fintech.h4_02.entity.OnboardingEntity;
-import com.fintech.h4_02.entity.UserEntity;
+import com.fintech.h4_02.service.mail.EmailService;
 import com.fintech.h4_02.util.JsonUtil;
-import jdk.jfr.Label;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.boot.web.client.RestTemplateBuilder;
-import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
-import java.util.*;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.verify;
 
+@ActiveProfiles("test")
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class UserControllerTest {
-    ObjectMapper objectMapper;
+    @Autowired private RestTemplateBuilder restTemplateBuilder;
     private TestRestTemplate testRestTemplate;
     private HttpHeaders headers;
-    @Autowired
-    private RestTemplateBuilder restTemplateBuilder;
-    @LocalServerPort
-    private int port;
-
-    private String jwt;
+    @MockitoBean private EmailService emailService;
+    @LocalServerPort private int port;
+    private AutoCloseable autoCloseable;
 
     @BeforeEach
     void setUp() {
+        autoCloseable = MockitoAnnotations.openMocks(this);
         restTemplateBuilder = restTemplateBuilder.rootUri("http://localhost:" + port);
         testRestTemplate = new TestRestTemplate(restTemplateBuilder);
         headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
+    }
 
-        LoginRequestDto user = new LoginRequestDto("liontestlogin@gmail", "liontestlogin@gmail");
-        String json = "{\"email\":\"" + user.email() + "\","
-                + "\"password\":\"" + user.password() + "\""
-                + "}";
-
-
-        HttpEntity<String> request = new HttpEntity<>(json, headers);
-        ResponseEntity<AuthResponseDto> result = testRestTemplate.exchange("/api/v1/auth/login", HttpMethod.POST, request, AuthResponseDto.class);
-        jwt = result.getBody().token();
-        headers.set(HttpHeaders.AUTHORIZATION, "Bearer " + jwt);
-        System.out.println("headers = " + headers);
+    @AfterEach
+    void tearDown() throws Exception {
+        autoCloseable.close();
     }
 
     @Test
-    @Label("crear ususarios con seguridad")
-    void createUser() throws JsonProcessingException {
-        String reaspuesta = UUID.randomUUID().toString();
-        CreateUserRequestDto user = new CreateUserRequestDto(reaspuesta + "@gmail", reaspuesta, "Lione" + reaspuesta, reaspuesta);
-        String json = "{\"email\":\"" + user.email() + "\","
-                + "\"password\":\"" + user.password() + "\","
-                + "\"name\":\"" + user.name() + "\","
-                + "\"dni\":\"" + user.dni() + "\""
-                + "}";
+    @DisplayName("Login")
+    void login() {
+        CreateUserRequestDto lionel = new CreateUserRequestDto("liontestlogin@gmail.com", "Password123@", "Lionel", "12345678");
+        doRegister(lionel);
 
-
-        JsonUtil.toJsonPrint("json ", json);
-
-        HttpEntity<String> request = new HttpEntity<>(json, headers);
-        ResponseEntity<AuthResponseDto> result = testRestTemplate.exchange("/api/v1/auth/register", HttpMethod.POST, request, AuthResponseDto.class);
-        JsonUtil.toJsonPrint("user created ", result);
-
-        assertAll(
-                () -> assertEquals(HttpStatus.CREATED, result.getStatusCode()),
-                () -> assertEquals(201, result.getStatusCode().value()),
-                () -> assertEquals(result.getBody().user().email(), user.email()),
-                () -> assertEquals(result.getBody().user().name(), user.name()),
-                () -> assertNotNull(result.getBody().user().id())
-        );
-    }
-
-
-    @Test
-    @Label("login")
-    void login() throws JsonProcessingException {
-
-        LoginRequestDto user = new LoginRequestDto("liontestlogin@gmail", "liontestlogin@gmail");
-        String json = "{\"email\":\"" + user.email() + "\","
-                + "\"password\":\"" + user.password() + "\""
-                + "}";
+        LoginRequestDto user = new LoginRequestDto(lionel.email(), lionel.password());
+        String json = JsonUtil.toJsonString(user);
 
         HttpEntity<String> request = new HttpEntity<>(json, headers);
         ResponseEntity<AuthResponseDto> result = testRestTemplate.exchange("/api/v1/auth/login", HttpMethod.POST, request, AuthResponseDto.class);
-        JsonUtil.toJsonPrint("user created ", result);
+        JsonUtil.toJsonPrint("User logged ", result);
 
         assertAll(
                 () -> assertEquals(HttpStatus.OK, result.getStatusCode()),
@@ -108,25 +75,44 @@ class UserControllerTest {
         );
     }
 
+    @Test
+    @DisplayName("Crear usuarios con seguridad")
+    void createUser() {
+        String response = UUID.randomUUID().toString();
+        CreateUserRequestDto user = new CreateUserRequestDto(response + "@gmail.com", response, "Lionel" + response, response);
+        String json = JsonUtil.toJsonString(user);
+        JsonUtil.toJsonPrint("json ", json);
+
+        HttpEntity<String> request = new HttpEntity<>(json, headers);
+        ResponseEntity<AuthResponseDto> result = testRestTemplate.exchange("/api/v1/auth/register", HttpMethod.POST, request, AuthResponseDto.class);
+        JsonUtil.toJsonPrint("User created ", result);
+
+        assertAll(
+                () -> assertEquals(HttpStatus.CREATED, result.getStatusCode()),
+                () -> assertEquals(201, result.getStatusCode().value()),
+                () -> assertEquals(result.getBody().user().email(), user.email()),
+                () -> assertEquals(result.getBody().user().name(), user.name()),
+                () -> assertNotNull(result.getBody().user().id())
+        );
+        verify(emailService, Mockito.times(1)).sendAccountConfirmationEmail(eq(user.email()), anyString());
+    }
 
     @Test
-    @Label("crear onboarding perfil financiero del usuario")
-    void createonboarding() throws JsonProcessingException {
-/*
-* const formData = {
-  knowledgeLevel: string,        // "principiante" | "intermedio" | "avanzado"
-  goals: string[],               // ["vacaciones", "bienes", "retiro", "proyecto"]
-  riskPreference: string,        // "bajo" | "moderado" | "alto"
-  monthlyIncome: number,         // Número positivo
-  monthlyExpenses: number,       // Número positivo
-  savingsPercentage: number,     // Número positivo
-};
-* */
-
-
+    @DisplayName("Crear onboarding perfil financiero del usuario")
+    void createOnboarding() {
+        CreateUserRequestDto lionel = new CreateUserRequestDto("liontestlogin@gmail.com", "Password123@", "Lionel", "12345678");
+        Long userId = doRegister(lionel);
+        // const formData = {
+        //    knowledgeLevel: string,        // "principiante" | "intermedio" | "avanzado"
+        //    goals: string[],               // ["vacaciones", "bienes", "retiro", "proyecto"]
+        //    riskPreference: string,        // "bajo" | "moderado" | "alto"
+        //    monthlyIncome: number,         // Número positivo
+        //    monthlyExpenses: number,       // Número positivo
+        //    savingsPercentage: number,     // Número positivo
+        // };
         String json = """
                 {
-                	"userId": 352,
+                	"userId": %s,
                 	"knowledgeLevel": "principiante",
                 	"riskPreference": "moderado",
                 	"monthlyIncome": 30.06,
@@ -134,45 +120,52 @@ class UserControllerTest {
                 	"savingsPercentage": 30.5,
                 	"goals": ["bienes","retiro","proyecto"]
                 }
-                """;
+                """.formatted(userId);
 
         JsonUtil.toJsonPrint("json ", json);
 
         HttpEntity<String> request = new HttpEntity<>(json, headers);
         ResponseEntity<UserResponseDto> result = testRestTemplate.exchange("/api/v1/onboarding", HttpMethod.POST, request, UserResponseDto.class);
+
         JsonUtil.toJsonPrint("onboarding", result);
 
         assertAll(
                 () -> assertEquals(HttpStatus.CREATED, result.getStatusCode()),
-                () -> assertEquals(201, result.getStatusCode().value()),
-                () -> assertEquals(result.getBody().onboarding().getKnowledgeLevel().toString(), "PRINCIPIANTE"),
-                () -> assertEquals(result.getBody().onboarding().getRiskPreference().toString(), "MODERADO"),
-                () -> assertEquals(result.getBody().id(), 352),
-                () -> assertEquals(result.getBody().onboarding().getMonthlyIncome().toString(), "30.06"),
-                () -> assertEquals(result.getBody().onboarding().getMonthlyExpenses().toString(), "352"),
-                () -> assertEquals(result.getBody().onboarding().getSavingsPercentage().toString(), "30.5")
-
-
-
+                () -> assertEquals(userId, result.getBody().id()),
+                () -> assertEquals("PRINCIPIANTE", result.getBody().onboarding().getKnowledgeLevel().toString()),
+                () -> assertEquals("MODERADO", result.getBody().onboarding().getRiskPreference().toString()),
+                () -> assertEquals("30.06", result.getBody().onboarding().getMonthlyIncome().toString()),
+                () -> assertEquals("352", result.getBody().onboarding().getMonthlyExpenses().toString()),
+                () -> assertEquals("30.5", result.getBody().onboarding().getSavingsPercentage().toString())
         );
     }
 
     @Test
-    @Label("login")
-    void getUserById() throws JsonProcessingException {
+    @DisplayName("Get user by id")
+    void getUserById() {
+        CreateUserRequestDto lionel = new CreateUserRequestDto("liontestlogin@gmail.com", "Password123@", "Lionel", "12345678");
+        Long userId = doRegister(lionel);
 
-
-        HttpEntity<String> request = new HttpEntity<>( headers);
-        ResponseEntity<UserResponseDto> result = testRestTemplate.exchange("/api/v1/user/352", HttpMethod.GET, request, UserResponseDto.class);
+        HttpEntity<String> request = new HttpEntity<>(headers);
+        ResponseEntity<UserResponseDto> result = testRestTemplate.exchange("/api/v1/user/" + userId, HttpMethod.GET, request, UserResponseDto.class);
         JsonUtil.toJsonPrint("user created ", result);
 
         assertAll(
                 () -> assertEquals(HttpStatus.OK, result.getStatusCode()),
-                () -> assertEquals(200, result.getStatusCode().value()),
-                () -> assertEquals(result.getBody().id(),352)
-
+                () -> assertEquals(userId, result.getBody().id())
         );
     }
 
+    private Long doRegister(CreateUserRequestDto user) {
+        String json = JsonUtil.toJsonString(user);
+        HttpEntity<String> request = new HttpEntity<>(json, headers);
+
+        ResponseEntity<AuthResponseDto> result = testRestTemplate.exchange("/api/v1/auth/register", HttpMethod.POST, request, AuthResponseDto.class);
+
+        String jwt = result.getBody().token();
+        headers.set(HttpHeaders.AUTHORIZATION, "Bearer " + jwt);
+        JsonUtil.toJsonPrint("User created ", result);
+        return result.getBody().user().id();
+    }
 
 }

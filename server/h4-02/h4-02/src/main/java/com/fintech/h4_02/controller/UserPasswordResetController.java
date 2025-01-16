@@ -4,7 +4,7 @@ import com.fintech.h4_02.dto.auth.PasswordRecoveryRequestDto;
 import com.fintech.h4_02.dto.auth.PasswordRecoveryResponseDto;
 import com.fintech.h4_02.dto.auth.PasswordResetRequestDto;
 import com.fintech.h4_02.service.AuthService;
-import com.fintech.h4_02.service.EmailService;
+import com.fintech.h4_02.service.mail.EmailService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -41,19 +41,19 @@ public class UserPasswordResetController {
     private String frontendUrl;
 
     @Operation(
-        summary = "Request a password reset email",
-        description = "Generates a password reset token and sends an email to the user with a link to reset their password.",
-        requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
-            required = true,
-            description = "Email of the user requesting password reset",
-            content = @Content(schema = @Schema(implementation = PasswordRecoveryRequestDto.class))
-        ),
-        responses = {
-            @ApiResponse(
-                responseCode = "200",
-                description = "Password reset email sent",
-                content = @Content(schema = @Schema(implementation = PasswordRecoveryResponseDto.class))),
-        }
+            summary = "Request a password reset email",
+            description = "Generates a password reset token and sends an email to the user with a link to reset their password.",
+            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    required = true,
+                    description = "Email of the user requesting password reset",
+                    content = @Content(schema = @Schema(implementation = PasswordRecoveryRequestDto.class))
+            ),
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Password reset email sent",
+                            content = @Content(schema = @Schema(implementation = PasswordRecoveryResponseDto.class))),
+            }
     )
     @PostMapping("/forgot-password")
     public ResponseEntity<PasswordRecoveryResponseDto> requestPasswordReset(@Valid @RequestBody PasswordRecoveryRequestDto request) {
@@ -64,9 +64,9 @@ public class UserPasswordResetController {
     }
 
     @Operation(
-        summary = "Validate reset token",
-        description = "Checks if a password reset token is still valid or has expired.",
-        responses = {@ApiResponse(responseCode = "200", description = "Token is valid")}
+            summary = "Validate reset token",
+            description = "Checks if a password reset token is still valid or has expired.",
+            responses = {@ApiResponse(responseCode = "200", description = "Token is valid")}
     )
     @PostMapping("/check-reset-password-token-expiration")
     public ResponseEntity<Void> validateResetToken(@RequestParam(value = "token") String token) {
@@ -75,19 +75,19 @@ public class UserPasswordResetController {
     }
 
     @Operation(
-        summary = "Reset password",
-        description = "Updates the user's password using a valid reset token.",
-        requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
-            required = true,
-            description = "Token and new password for the user",
-            content = @Content(schema = @Schema(implementation = PasswordResetRequestDto.class))
-        ),
-        responses = {
-            @ApiResponse(
-                responseCode = "200",
-                description = "Password successfully reset",
-                content = @Content(schema = @Schema(implementation = PasswordRecoveryResponseDto.class))),
-        }
+            summary = "Reset password",
+            description = "Updates the user's password using a valid reset token.",
+            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    required = true,
+                    description = "Token and new password for the user",
+                    content = @Content(schema = @Schema(implementation = PasswordResetRequestDto.class))
+            ),
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Password successfully reset",
+                            content = @Content(schema = @Schema(implementation = PasswordRecoveryResponseDto.class))),
+            }
     )
     @PostMapping("/reset-password")
     public ResponseEntity<PasswordRecoveryResponseDto> resetPassword(@Valid @RequestBody PasswordResetRequestDto request) {
