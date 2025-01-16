@@ -4,6 +4,7 @@ import com.fintech.h4_02.dto.user.CreateUserRequestDto;
 import com.fintech.h4_02.dto.user.UserResponseDto;
 import com.fintech.h4_02.entity.Role;
 import com.fintech.h4_02.entity.UserEntity;
+import com.fintech.h4_02.exception.EntityNotFoundException;
 import com.fintech.h4_02.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -21,6 +22,12 @@ public class UserService {
         userPrepared.getRoles().add(role);
         UserEntity userCreated = userRepository.save(userPrepared);
         return new UserResponseDto(userCreated);
+    }
+
+    public UserEntity getUserByEmail(String email) {
+        return userRepository
+            .findByEmail(email)
+            .orElseThrow(() -> new EntityNotFoundException("User not found with email: " + email));
     }
 
 }

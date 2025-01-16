@@ -24,21 +24,37 @@ public class JwtService {
     @Value("${jwt.expiration-hours}")
     private int jwtExpirationHours;
 
-    public String createAuthToken(UserDetails userDetails) {
+    public String createToken(UserDetails userDetails) {
         Map<String, Object> claims = new HashMap<>();
         var roles = userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList();
         claims.put("roles", roles);
-        return createAuthToken(userDetails.getUsername(), claims);
+        return createToken(userDetails.getUsername(), claims);
     }
 
-    public String createAuthToken(String username, Map<String, Object> claims) {
+    public String createActivationToken(String username) {
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("purpose", "account_activation");
+        return createToken(username, claims);
+    }
+
+    public String createToken(String username, Map<String, Object> claims) {
         return Jwts.builder()
-                .claims(claims)
-                .subject(username)
-                .issuedAt(new Date(System.currentTimeMillis()))
-                .expiration(getTokenExpirationInHours())
-                .signWith(getKey())
-                .compact();
+            .claims(claims)
+            .subject(username)
+            .issuedAt(new Date(System.currentTimeMillis()))
+            .expiration(getTokenExpirationInHours())
+            .signWith(getKey())
+            .compact();
+    }
+
+    public boolean isActivationTokenValid(String token) {
+        try {
+            String purpose = getClaim(token, claims -> (String) claims.get("purpose"));
+            return "account_activation".equals(purpose) && !isTokenExpired(token);
+        } catch (Exception e) {
+            log.error("Error trying to validate activation token: {}", e.getMessage());
+            return false;
+        }
     }
 
     public String getUsernameFromToken(String token) {
@@ -66,10 +82,10 @@ public class JwtService {
     private Claims getAllClaims(String token) {
         try {
             return Jwts.parser()
-                    .verifyWith(getKey())
-                    .build()
-                    .parseSignedClaims(token)
-                    .getPayload();
+                .verifyWith(getKey())
+                .build()
+                .parseSignedClaims(token)
+                .getPayload();
         } catch (Exception e) {
             log.error("Error while processing JWT: {}", e.getMessage());
             throw new RuntimeException("Error while processing JWT. Details:", e);
