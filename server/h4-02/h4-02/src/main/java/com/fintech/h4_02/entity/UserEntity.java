@@ -1,5 +1,9 @@
 package com.fintech.h4_02.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fintech.h4_02.dto.user.CreateUserRequestDto;
 import jakarta.persistence.*;
 import lombok.*;
@@ -30,12 +34,19 @@ public class UserEntity {
     @Column(name = "dni", unique = true)
     private String dni;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "user_roles",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
     private Set<Role> roles;
+
+
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "onboarding_entity_id", referencedColumnName = "id")
+    @JsonManagedReference
+    private OnboardingEntity onboarding;
+
 
     public UserEntity(CreateUserRequestDto user) {
         this.email = user.email();
