@@ -21,9 +21,9 @@ export const registerValidationSchema = yup.object().shape({
       "La contraseña debe tener al menos una letra"
     )
     .matches(
-      /[\W_&&[^ñÑáéíóúÁÉÍÓÚa-zA-Z0-9]]/,
+      /[^\wÑñáéíóúÁÉÍÓÚ\s]/,
       "La contraseña debe tener al menos un símbolo especial"
-    ), // Aquí excluimos la ñ y letras acentuadas
+    ),
   confirmPassword: yup
     .string()
     .required("Confirmar la contraseña es obligatorio")
@@ -45,6 +45,6 @@ export const passwordValidations = [
   {
     key: "specialChar",
     message: "Debe incluir al menos un símbolo especial",
-    regex: /[\W_&&[^ñÑáéíóúÁÉÍÓÚa-zA-Z0-9]]/,
+    regex: /[^\wÑñáéíóúÁÉÍÓÚ\s]/,
   },
 ];
