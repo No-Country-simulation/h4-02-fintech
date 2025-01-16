@@ -35,7 +35,8 @@ public class OnboardingController {
                     content = @Content(
                             mediaType = MediaType.APPLICATION_JSON_VALUE,
                             schema = @Schema(implementation = OnboardingRequest.class),
-                            examples = @ExampleObject(name = "WishlistRequestCreate", value = ""))
+                            examples = @ExampleObject(name = "WishlistRequestCreate",
+                                    value = " \"{\\\"id\\\":352,\\\"email\\\":\\\"liontestlogin@gmail\\\",\\\"password\\\":\\\"$2a$10$ne1FiCa5ul0NPgZJo4qYs.cE3Cyg3NAVUcR.girEsWZLBBYJvYmhS\\\",\\\"name\\\":\\\"Lione120570fb-527f-403a-bb7a-cf6384efc885\\\",\\\"dni\\\":\\\"120570fb-527f-403a-bb7a-cf6384efc885\\\",\\\"roles\\\":[{\\\"id\\\":1,\\\"name\\\":\\\"INVERSIONISTA\\\"}],\\\"onboarding\\\":{\\\"id\\\":202,\\\"goals\\\":[{\\\"id\\\":1,\\\"name\\\":\\\"bienes\\\"},{\\\"id\\\":2,\\\"name\\\":\\\"retiro\\\"},{\\\"id\\\":52,\\\"name\\\":\\\"proyecto\\\"}],\\\"riskPreference\\\":\\\"MODERADO\\\",\\\"monthlyIncome\\\":30.06,\\\"monthlyExpenses\\\":352,\\\"savingsPercentage\\\":30.5,\\\"knowledgeLevel\\\":\\\"PRINCIPIANTE\\\"}}\";\n"))
             )
     })
     @PostMapping
