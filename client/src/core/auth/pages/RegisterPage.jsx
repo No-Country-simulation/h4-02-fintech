@@ -5,7 +5,10 @@ import { registerWithEmail } from "../services/register";
 import { useAuthStore } from "../store/useAuthStore";
 import { getErrorMessage } from "../../validators/errorHandler";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { registerValidationSchema } from "../../validators/register";
+import {
+  passwordValidations,
+  registerValidationSchema,
+} from "../../validators/register";
 
 export const RegisterPage = () => {
   const {
@@ -19,7 +22,16 @@ export const RegisterPage = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const [passwordFeedback, setPasswordFeedback] = useState({});
   const { login } = useAuthStore();
+
+  const handlePasswordChange = (password) => {
+    const feedback = passwordValidations.reduce((acc, validation) => {
+      acc[validation.key] = validation.regex.test(password);
+      return acc;
+    }, {});
+    setPasswordFeedback(feedback);
+  };
 
   const onSubmit = async (data) => {
     try {
@@ -135,7 +147,9 @@ export const RegisterPage = () => {
                   id="password"
                   type={showPassword ? "text" : "password"}
                   placeholder="Ingrese su contraseña"
-                  {...register("password")}
+                  {...register("password", {
+                    onChange: (e) => handlePasswordChange(e.target.value),
+                  })}
                   className="input input-bordered w-full"
                 />
                 <button
@@ -155,6 +169,18 @@ export const RegisterPage = () => {
                   {errors.password.message}
                 </p>
               )}
+              <ul className="text-sm mt-2">
+                {passwordValidations.map(({ key, message }) => (
+                  <li
+                    key={key}
+                    className={`${
+                      passwordFeedback[key] ? "text-green-500" : "text-gray-500"
+                    }`}
+                  >
+                    {message}
+                  </li>
+                ))}
+              </ul>
             </div>
 
             <div className="form-control">
@@ -172,7 +198,7 @@ export const RegisterPage = () => {
                 <button
                   type="button"
                   onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 bg-white p-2"
                 >
                   {showConfirmPassword ? (
                     <Eye className="h-5 w-5" />
