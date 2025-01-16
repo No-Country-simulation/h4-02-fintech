@@ -7,9 +7,10 @@ const iupiApi = axios.create({
 });
 
 iupiApi.interceptors.request.use((config) => {
+  const token = localStorage.getItem("token");
   config.headers = {
     ...config.headers,
-    "x-token": localStorage.getItem("token"),
+    AUTHORIZATION: token ? `Bearer ${token}` : "",
   };
   return config;
 });

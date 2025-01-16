@@ -2,10 +2,16 @@ import { useForm } from "react-hook-form";
 import { ArrowLeft2 } from "iconsax-react";
 import PropTypes from "prop-types";
 import { useOnboardingStore } from "../../../auth/store/useOnboardingStore";
-import { Link } from "react-router-dom";
+import { toast } from "sonner";
+import { getErrorMessage } from "../../../validators/errorHandler";
+import { updateOnboarding } from "../../services/onboarding";
+import { useAuthStore } from "../../../auth/store/useAuthStore";
+import { useNavigate } from "react-router-dom";
 
 export const AboutYouPage = ({ nextStep, prevStep }) => {
+  const navigate = useNavigate();
   const { formData, updateFormData } = useOnboardingStore();
+  const { user } = useAuthStore();
 
   const {
     handleSubmit,
@@ -28,8 +34,26 @@ export const AboutYouPage = ({ nextStep, prevStep }) => {
     nextStep();
   };
 
-  const handleSaveAndContinueLater = () => {
-    updateFormData({ knowledgeLevel: experienceValue });
+  const handleSaveAndContinueLater = async () => {
+    try {
+      const response = await updateOnboarding({
+        knowledgeLevel: experienceValue,
+        userId: user.id,
+      });
+
+      if (response) {
+        updateFormData({ knowledgeLevel: experienceValue });
+        toast("Onboarding actualizado", {
+          description: "Se ha actualizado el onboarding",
+        });
+        navigate("/dashboard");
+      }
+    } catch (error) {
+      const errorMessage = getErrorMessage(error);
+      toast.error("No se pudo actualizar el onboarding", {
+        description: errorMessage,
+      });
+    }
   };
 
   return (
@@ -148,13 +172,13 @@ export const AboutYouPage = ({ nextStep, prevStep }) => {
                   Siguiente
                 </button>
 
-                <Link
+                <button
+                  type="button"
                   className="w-full btn btn-outline"
-                  to="/dashboard"
                   onClick={handleSaveAndContinueLater}
                 >
                   Guardar y continuar en otro momento
-                </Link>
+                </button>
               </div>
             </form>
           </div>

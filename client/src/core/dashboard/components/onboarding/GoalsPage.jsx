@@ -2,11 +2,17 @@ import { useForm } from "react-hook-form";
 import { ArrowLeft2 } from "iconsax-react";
 import PropTypes from "prop-types";
 import { useOnboardingStore } from "../../../auth/store/useOnboardingStore";
-import { Link } from "react-router-dom";
+import { useAuthStore } from "../../../auth/store/useAuthStore";
+import { updateOnboarding } from "../../services/onboarding";
+import { toast } from "sonner";
+import { getErrorMessage } from "../../../validators/errorHandler";
+import { useNavigate } from "react-router-dom";
 
 export const GoalsPage = ({ nextStep, prevStep }) => {
+  const navigate = useNavigate();
   const { formData, updateFormData } = useOnboardingStore();
   const { goals: selectedGoals } = formData;
+  const { user } = useAuthStore();
 
   const {
     handleSubmit,
@@ -52,6 +58,36 @@ export const GoalsPage = ({ nextStep, prevStep }) => {
     }
     updateFormData({ goals: watchGoals });
     nextStep();
+  };
+
+  const handleSaveAndContinueLater = async () => {
+    try {
+      if (watchGoals.length === 0) {
+        setError("goals", {
+          type: "manual",
+          message: "Selecciona al menos una meta.",
+        });
+        return;
+      }
+      const response = await updateOnboarding({
+        knowledgeLevel: formData.knowledgeLevel,
+        goals: watchGoals,
+        userId: user.id,
+      });
+
+      if (response) {
+        updateFormData({ goals: watchGoals });
+        toast("Onboarding actualizado", {
+          description: "Se ha actualizado el onboarding",
+        });
+        navigate("/dashboard");
+      }
+    } catch (error) {
+      const errorMessage = getErrorMessage(error);
+      toast.error("No se pudo actualizar el onboarding", {
+        description: errorMessage,
+      });
+    }
   };
 
   return (
@@ -122,13 +158,14 @@ export const GoalsPage = ({ nextStep, prevStep }) => {
                 Siguiente
               </button>
 
-              <Link
+              <button
+                type="button"
                 className="w-full btn btn-outline"
-                to="/dashboard"
                 disabled={!!errors.goals || watchGoals.length === 0}
+                onClick={handleSaveAndContinueLater}
               >
                 Guardar y continuar en otro momento
-              </Link>
+              </button>
             </div>
           </form>
         </div>

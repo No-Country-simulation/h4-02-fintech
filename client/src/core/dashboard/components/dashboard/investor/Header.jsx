@@ -1,9 +1,20 @@
-import { Notification, Eye, EyeSlash, Sms, Logout } from "iconsax-react";
+import {
+  Notification,
+  Eye,
+  EyeSlash,
+  HambergerMenu,
+  Profile,
+  Edit,
+  MoneyRecive,
+  Profile2User,
+  MessageQuestion,
+} from "iconsax-react";
 import { useAuthStore } from "../../../../auth/store/useAuthStore";
 import { useState } from "react";
+import { Drawer } from "../ui/Drawer";
 
 export const Header = () => {
-  const { user, logout } = useAuthStore();
+  const { user } = useAuthStore();
   const [balance] = useState({
     ARS: 12500000,
     USD: 35000,
@@ -18,6 +29,31 @@ export const Header = () => {
   const handleCurrencyChange = (event) => {
     setCurrency(event.target.value);
   };
+
+  const drawerItems = [
+    { icon: <Profile size="24" />, text: "Mi Perfil", link: "/" },
+    {
+      icon: <MoneyRecive size="24" />,
+      text: "Gestión de inversiones",
+      link: "/",
+    },
+    {
+      icon: <Edit size="24" />,
+      text: "Terminar mi onboarding",
+      link: "/dashboard/onboarding",
+    },
+    {
+      icon: <Profile2User size="24" />,
+      text: "Foro y comunidad",
+      link: "/",
+    },
+    {
+      icon: <MessageQuestion size="24" />,
+      text: "Ayuda y soporte técnico",
+      link: "/",
+    },
+  ];
+  
 
   return (
     <div className="bg-primary text-white p-4 md:p-6 lg:p-8 rounded-b-2xl shadow-md">
@@ -36,15 +72,15 @@ export const Header = () => {
           </div>
         </div>
         <div className="flex gap-0 sm:gap-2 mt-4 md:mt-0">
-          <button className="btn btn-ghost btn-circle" onClick={logout}>
-            <Logout size="24" />
-          </button>
           <button className="btn btn-ghost btn-circle">
             <Notification size="24" />
           </button>
-          <button className="btn btn-ghost btn-circle">
-            <Sms size="24" />
-          </button>
+          <label
+            htmlFor="my-drawer"
+            className="btn btn-ghost btn-circle drawer-button"
+          >
+            <HambergerMenu size="24" />
+          </label>
         </div>
       </div>
 
@@ -87,6 +123,8 @@ export const Header = () => {
           </button>
         </div>
       </div>
+
+      <Drawer menu={drawerItems} />
     </div>
   );
 };

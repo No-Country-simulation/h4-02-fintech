@@ -16,7 +16,7 @@ export const FinancialSection = () => {
           Actualiza tus datos para obtener recomendaciones más personalizadas.
         </p>
 
-        <Link className="btn btn-primary w-full" to="/dashboard/onboarding">
+        <Link className="btn btn-primary w-full">
           Actualizar mi Radiografía
         </Link>
       </div>

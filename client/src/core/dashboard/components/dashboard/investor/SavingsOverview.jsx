@@ -1,13 +1,29 @@
 import { DollarCircle, ShoppingBag } from "iconsax-react";
+import { useEffect, useState } from "react";
 
 export const SavingsOverview = () => {
+  const [progressValue, setProgressValue] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setProgressValue((prev) => {
+        if (prev >= 50) {
+          clearInterval(interval);
+          return 50;
+        }
+        return prev + 1;
+      });
+    }, 30);
+
+    return () => clearInterval(interval);
+  }, []);
   return (
     <div className="flex w-full items-center justify-center p-2">
       <div className="flex flex-col items-center gap-2 lg:w-auto p-2">
         <div
           className="w-20 h-20 bg-gray-200 rounded-full flex items-center justify-center radial-progress"
           style={{
-            "--value": "50",
+            "--value": progressValue,
             "--size": "5rem",
             "--thickness": "0.4rem",
           }}

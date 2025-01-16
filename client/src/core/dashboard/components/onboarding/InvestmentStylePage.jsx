@@ -2,11 +2,17 @@ import { ArrowLeft2 } from "iconsax-react";
 import PropTypes from "prop-types";
 import { useOnboardingStore } from "../../../auth/store/useOnboardingStore";
 import { useForm } from "react-hook-form";
-import { Link } from "react-router-dom";
+import { useAuthStore } from "../../../auth/store/useAuthStore";
+import { updateOnboarding } from "../../services/onboarding";
+import { toast } from "sonner";
+import { getErrorMessage } from "../../../validators/errorHandler";
+import { useNavigate } from "react-router-dom";
 
 export const InvestmentStylePage = ({ nextStep, prevStep }) => {
+  const navigate = useNavigate();
   const { formData, updateFormData } = useOnboardingStore();
   const { riskPreference } = formData;
+  const { user } = useAuthStore();
 
   const {
     handleSubmit,
@@ -15,7 +21,7 @@ export const InvestmentStylePage = ({ nextStep, prevStep }) => {
     formState: { errors },
   } = useForm({
     defaultValues: {
-      investmentStyle: riskPreference === "" ? "conservador" : riskPreference,
+      investmentStyle: riskPreference === "" ? "bajo" : riskPreference,
     },
   });
 
@@ -26,8 +32,28 @@ export const InvestmentStylePage = ({ nextStep, prevStep }) => {
     nextStep();
   };
 
-  const handleSaveAndContinueLater = () => {
-    updateFormData({ riskPreference: investmentStyle });
+  const handleSaveAndContinueLater = async () => {
+    try {
+      const response = await updateOnboarding({
+        knowledgeLevel: formData.knowledgeLevel,
+        goals: formData.goals,
+        riskPreference: investmentStyle,
+        userId: user.id,
+      });
+
+      if (response) {
+        updateFormData({ riskPreference: investmentStyle });
+        toast("Onboarding actualizado", {
+          description: "Se ha actualizado el onboarding",
+        });
+        navigate("/dashboard");
+      }
+    } catch (error) {
+      const errorMessage = getErrorMessage(error);
+      toast.error("No se pudo actualizar el onboarding", {
+        description: errorMessage,
+      });
+    }
   };
 
   return (
@@ -52,13 +78,13 @@ export const InvestmentStylePage = ({ nextStep, prevStep }) => {
               <div className="flex items-center space-x-2">
                 <input
                   type="radio"
-                  id="conservador"
-                  value="conservador"
+                  id="bajo"
+                  value="bajo"
                   {...register("investmentStyle", {
                     required: "Selecciona una opción",
                   })}
                   className="radio radio-primary"
-                  checked={investmentStyle === "conservador"}
+                  checked={investmentStyle === "bajo"}
                 />
                 <label
                   htmlFor="conservador"
@@ -97,13 +123,13 @@ export const InvestmentStylePage = ({ nextStep, prevStep }) => {
               <div className="flex items-center space-x-2">
                 <input
                   type="radio"
-                  id="arriesgado"
-                  value="arriesgado"
+                  id="alto"
+                  value="alto"
                   {...register("investmentStyle", {
                     required: "Selecciona una opción",
                   })}
                   className="radio radio-primary"
-                  checked={investmentStyle === "arriesgado"}
+                  checked={investmentStyle === "alto"}
                 />
                 <label
                   htmlFor="arriesgado"
@@ -147,13 +173,13 @@ export const InvestmentStylePage = ({ nextStep, prevStep }) => {
                 Siguiente
               </button>
 
-              <Link
+              <button
+                type="button"
                 className="w-full btn btn-outline"
-                to="/dashboard"
                 onClick={handleSaveAndContinueLater}
               >
                 Guardar y continuar en otro momento
-              </Link>
+              </button>
             </div>
           </form>
         </div>
