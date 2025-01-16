@@ -1,6 +1,8 @@
 package com.fintech.h4_02.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fintech.h4_02.enums.KnowledgeLevel;
 import com.fintech.h4_02.enums.RiskPreference;
 import jakarta.persistence.*;
@@ -15,7 +17,7 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity(name = "OnboardingEntity")
-@Table(name = "onboardingEntity")
+@Table(name = "onboarding_entity")
 @EqualsAndHashCode(of = "id")
 public class OnboardingEntity {
 
@@ -49,6 +51,8 @@ public class OnboardingEntity {
     @Column(name = "savingsPercentage")
     private BigDecimal savingsPercentage;
 
+
     @OneToOne(mappedBy = "onboarding")
+    @JsonBackReference
     private UserEntity user;
 }

@@ -131,8 +131,8 @@ String json = """
         	"riskPreference": "moderado",
         	"monthlyIncome": 30.06,
         	"monthlyExpenses": 352,
-        	"savingsPercentage": "30.5,
-        	"goals": ["bienes","retiro","vacaciones"]
+        	"savingsPercentage": 30.5,
+        	"goals": ["bienes","retiro","proyecto"]
         }
         """;
 
