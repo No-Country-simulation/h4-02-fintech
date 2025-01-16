@@ -129,9 +129,9 @@ String json = """
         	"userId": 352,
         	"knowledgeLevel": "principiante",
         	"riskPreference": "moderado",
-        	"monthlyIncome": "30.06",
-        	"monthlyExpenses": "352",
-        	"savingsPercentage": "30.5",
+        	"monthlyIncome": 30.06,
+        	"monthlyExpenses": 352,
+        	"savingsPercentage": "30.5,
         	"goals": ["bienes","retiro","vacaciones"]
         }
         """;
