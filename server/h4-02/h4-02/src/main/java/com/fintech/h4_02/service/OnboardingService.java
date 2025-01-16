@@ -12,6 +12,7 @@ import com.fintech.h4_02.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -47,12 +48,12 @@ public class OnboardingService {
             onboarding.setRiskPreference(RiskPreference.valueOf(onboardingRequest.riskPreference().toUpperCase()));
 
         if (onboardingRequest.monthlyExpenses() != null)
-            onboarding.setMonthlyExpenses(onboardingRequest.monthlyExpenses());
+            onboarding.setMonthlyExpenses(new BigDecimal(onboardingRequest.monthlyExpenses()));
 
-        if (onboardingRequest.monthlyIncome() != null) onboarding.setMonthlyExpenses(onboardingRequest.monthlyIncome());
+        if (onboardingRequest.monthlyIncome() != null) onboarding.setMonthlyIncome(new BigDecimal(onboardingRequest.monthlyIncome()));
 
         if (onboardingRequest.savingsPercentage() != null)
-            onboarding.setMonthlyExpenses(onboardingRequest.savingsPercentage());
+            onboarding.setSavingsPercentage(new BigDecimal(onboardingRequest.savingsPercentage()));
 
         user.setOnboarding(onboarding);
 

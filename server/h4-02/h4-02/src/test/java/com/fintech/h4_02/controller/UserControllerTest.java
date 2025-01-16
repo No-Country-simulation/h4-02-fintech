@@ -122,31 +122,16 @@ class UserControllerTest {
   savingsPercentage: number,     // Número positivo
 };
 * */
-        List<String>setRequest = new ArrayList<>();
-        setRequest.add("vacaciones");
-        setRequest.add("retiro");
-        setRequest.add("bienes");
 
 
-        
-        OnboardingRequest onboarding = new OnboardingRequest("principiante", setRequest,
-                "moderado", 10, 20, 30, 352L);
-
-        System.out.println("onboarding dto= " + onboarding);
-
-        String json = "{ "
-                + "\"knowledgeLevel\" : \"" + onboarding.knowledgeLevel() + "\","
-                + "\"goals\": \"" + onboarding.goals() + "\","
-                + "\"riskPreference\" :\"" + onboarding.riskPreference() + "\","
-                + "\"monthlyIncome\" :\"" + onboarding.monthlyIncome() + "\","
-                + "\"monthlyExpenses\" :\"" + onboarding.monthlyExpenses() + "\","
-                + "\"savingsPercentage\" :\"" + onboarding.savingsPercentage() + "\","
-                + "\"userId\":\"" + onboarding.userId() + "\""
-                + "}";
-json = """
+String json = """
         {
         	"userId": 352,
-        	"savingsPercentage": 30,
+        	"knowledgeLevel": "principiante",
+        	"riskPreference": "moderado",
+        	"monthlyIncome": "30.06",
+        	"monthlyExpenses": "352",
+        	"savingsPercentage": "30.5",
         	"goals": ["bienes","retiro","vacaciones"]
         }
         """;

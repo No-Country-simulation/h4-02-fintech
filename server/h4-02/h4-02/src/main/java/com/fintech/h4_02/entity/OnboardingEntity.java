@@ -6,6 +6,7 @@ import com.fintech.h4_02.enums.RiskPreference;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Set;
 
@@ -40,13 +41,13 @@ public class OnboardingEntity {
     private RiskPreference riskPreference;
 
     @Column(name = "monthlyIncome")
-    private Integer monthlyIncome;
+    private BigDecimal monthlyIncome;
 
     @Column(name = "monthlyExpenses")
-    private Integer monthlyExpenses;
+    private BigDecimal monthlyExpenses;
 
     @Column(name = "savingsPercentage")
-    private Integer savingsPercentage;
+    private BigDecimal savingsPercentage;
 
     @OneToOne(mappedBy = "onboarding")
     private UserEntity user;
