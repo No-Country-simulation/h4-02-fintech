@@ -59,6 +59,7 @@ public class AuthService {
         newUser.setEmail(dto.email());
         newUser.setPassword(passwordEncoder.encode(dto.password()));
         newUser.setName(dto.name());
+        newUser.setDni(dto.dni());
 
         Optional<Role> rol = roleRepository.findById(1L);
         Set<Role> roles = Set.of(rol.get());
