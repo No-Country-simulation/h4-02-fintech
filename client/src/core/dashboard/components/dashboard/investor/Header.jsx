@@ -1,5 +1,4 @@
 import {
-  Notification,
   Eye,
   EyeSlash,
   HambergerMenu,
@@ -12,6 +11,7 @@ import {
 import { useAuthStore } from "../../../../auth/store/useAuthStore";
 import { useState } from "react";
 import { Drawer } from "../ui/Drawer";
+import NotificationsModal from "../../../../notifications/components/NotificationsModal";
 
 export const Header = () => {
   const { user } = useAuthStore();
@@ -53,7 +53,6 @@ export const Header = () => {
       link: "/",
     },
   ];
-  
 
   return (
     <div className="bg-primary text-white p-4 md:p-6 lg:p-8 rounded-b-2xl shadow-md">
@@ -72,9 +71,7 @@ export const Header = () => {
           </div>
         </div>
         <div className="flex gap-0 sm:gap-2 mt-4 md:mt-0">
-          <button className="btn btn-ghost btn-circle">
-            <Notification size="24" />
-          </button>
+          <NotificationsModal />
           <label
             htmlFor="my-drawer"
             className="btn btn-ghost btn-circle drawer-button"

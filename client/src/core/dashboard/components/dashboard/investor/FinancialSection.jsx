@@ -1,5 +1,5 @@
 import { Graph } from "iconsax-react";
-import { Link } from "react-router-dom";
+import { FinancialXModal } from "./FinancialXModal";
 
 export const FinancialSection = () => {
   return (
@@ -16,9 +16,7 @@ export const FinancialSection = () => {
           Actualiza tus datos para obtener recomendaciones más personalizadas.
         </p>
 
-        <Link className="btn btn-primary w-full">
-          Actualizar mi Radiografía
-        </Link>
+        <FinancialXModal />
       </div>
     </div>
   );

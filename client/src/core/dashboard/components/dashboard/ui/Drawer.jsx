@@ -28,10 +28,10 @@ export const Drawer = ({ menu }) => {
             </Link>
             <label
               htmlFor="my-drawer"
-              className="btn btn-square cursor-pointer text-3xl font-base"
+              className="btn btn-ghost cursor-pointer text-2xl font-base text-black"
               aria-label="Cerrar menú"
             >
-              x
+              ✕
             </label>
           </div>
 
