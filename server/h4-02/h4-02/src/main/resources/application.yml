@@ -17,6 +17,18 @@ spring:
     properties:
       hibernate:
         format_sql: true
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${EMAIL_USERNAME}
+    password: ${EMAIL_PASSWORD}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            timeout: 2000
 
 server:
   error:
@@ -25,3 +37,9 @@ server:
 jwt:
   secret: ${JWT_SECRET}
   expiration-hours: 72 # 3 days
+
+frontend:
+  url: ${FRONTEND_URL}
+
+backend:
+  url: ${BACKEND_URL}

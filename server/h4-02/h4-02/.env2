@@ -2,7 +2,7 @@ SPRING_DATASOURCE_URL=jdbc:postgresql://roundhouse.proxy.rlwy.net:28539/railway
 SPRING_DATASOURCE_USERNAME=postgres
 SPRING_DATASOURCE_PASSWORD=MudocKAshycJmQISSDIzpQWrIytnkZus
 JWT_SECRET=fGgqglUxy7KJoMO+b06brLZnK6qbzxDFpzrqE1OSHGI=
-
-
-
-
+EMAIL_USERNAME=iupifintech.sup@gmail.com
+EMAIL_PASSWORD=rynwnlxiuvqegitz
+FRONTEND_URL=https://iupi.vercel.app/
+BACKEND_URL=https://fintech-production.up.railway.app/

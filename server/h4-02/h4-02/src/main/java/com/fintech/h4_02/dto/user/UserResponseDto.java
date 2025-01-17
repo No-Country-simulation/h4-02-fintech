@@ -1,5 +1,6 @@
 package com.fintech.h4_02.dto.user;
 
+import com.fintech.h4_02.entity.OnboardingEntity;
 import com.fintech.h4_02.entity.Role;
 import com.fintech.h4_02.entity.UserEntity;
 
@@ -11,11 +12,12 @@ public record UserResponseDto(
         String email,
 
         String name,
-        Set<Role> roles
+        Set<Role> roles,
+        OnboardingEntity onboarding
 ) {
 
     public UserResponseDto(UserEntity user) {
-        this(user.getId(), user.getEmail(), user.getName(),user.getRoles() );
+        this(user.getId(), user.getEmail(), user.getName(),user.getRoles(),user.getOnboarding() );
     }
 
 }
