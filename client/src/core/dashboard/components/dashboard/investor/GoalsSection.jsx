@@ -23,7 +23,7 @@ export const GoalsSection = () => {
       <ul className="menu menu-horizontal bg-base-200 rounded-box w-full">
         <li className="w-full">
           <details>
-            <summary>
+            <summary className="flex">
               <div className="w-full space-y-2">
                 <div className="flex items-center gap-2">
                   <Airplane size="24" className="text-primary" />
@@ -33,7 +33,7 @@ export const GoalsSection = () => {
                 </div>
 
                 <div className="flex items-center">
-                  <div className="w-full min-w-[18rem] relative">
+                  <div className="w-full relative">
                     <progress
                       className="progress w-full h-8 bg-gray-300"
                       value={progressValue}
