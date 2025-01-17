@@ -124,28 +124,52 @@ class UserControllerTest {
 * */
 
 
-String json = """
-        {
-        	"userId": 352,
-        	"knowledgeLevel": "principiante",
-        	"riskPreference": "moderado",
-        	"monthlyIncome": 30.06,
-        	"monthlyExpenses": 352,
-        	"savingsPercentage": 30.5,
-        	"goals": ["bienes","retiro","proyecto"]
-        }
-        """;
+        String json = """
+                {
+                	"userId": 352,
+                	"knowledgeLevel": "principiante",
+                	"riskPreference": "moderado",
+                	"monthlyIncome": 30.06,
+                	"monthlyExpenses": 352,
+                	"savingsPercentage": 30.5,
+                	"goals": ["bienes","retiro","proyecto"]
+                }
+                """;
 
         JsonUtil.toJsonPrint("json ", json);
 
         HttpEntity<String> request = new HttpEntity<>(json, headers);
-        ResponseEntity<JsonNode> result = testRestTemplate.exchange("/api/v1/onboarding", HttpMethod.POST, request, JsonNode.class);
+        ResponseEntity<UserResponseDto> result = testRestTemplate.exchange("/api/v1/onboarding", HttpMethod.POST, request, UserResponseDto.class);
         JsonUtil.toJsonPrint("onboarding", result);
 
         assertAll(
                 () -> assertEquals(HttpStatus.CREATED, result.getStatusCode()),
-                () -> assertEquals(201, result.getStatusCode().value())
+                () -> assertEquals(201, result.getStatusCode().value()),
+                () -> assertEquals(result.getBody().onboarding().getKnowledgeLevel().toString(), "PRINCIPIANTE"),
+                () -> assertEquals(result.getBody().onboarding().getRiskPreference().toString(), "MODERADO"),
+                () -> assertEquals(result.getBody().id(), 352),
+                () -> assertEquals(result.getBody().onboarding().getMonthlyIncome().toString(), "30.06"),
+                () -> assertEquals(result.getBody().onboarding().getMonthlyExpenses().toString(), "352"),
+                () -> assertEquals(result.getBody().onboarding().getSavingsPercentage().toString(), "30.5")
 
+
+
+        );
+    }
+
+    @Test
+    @Label("login")
+    void getUserById() throws JsonProcessingException {
+
+
+        HttpEntity<String> request = new HttpEntity<>( headers);
+        ResponseEntity<UserResponseDto> result = testRestTemplate.exchange("/api/v1/user/352", HttpMethod.GET, request, UserResponseDto.class);
+        JsonUtil.toJsonPrint("user created ", result);
+
+        assertAll(
+                () -> assertEquals(HttpStatus.OK, result.getStatusCode()),
+                () -> assertEquals(200, result.getStatusCode().value()),
+                () -> assertEquals(result.getBody().id(),352)
 
         );
     }
