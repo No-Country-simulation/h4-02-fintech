@@ -6,6 +6,8 @@ import com.fintech.h4_02.entity.Role;
 import com.fintech.h4_02.entity.UserEntity;
 import com.fintech.h4_02.exception.EntityNotFoundException;
 import com.fintech.h4_02.repository.UserRepository;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -14,15 +16,6 @@ import org.springframework.stereotype.Service;
 public class UserService {
     private final UserRepository userRepository;
 
-    public UserResponseDto createUser(CreateUserRequestDto user) {
-        var userPrepared = new UserEntity(user);
-        Role role = new Role();
-        role.setName("INVERSIONISTA");
-
-        userPrepared.getRoles().add(role);
-        UserEntity userCreated = userRepository.save(userPrepared);
-        return new UserResponseDto(userCreated);
-    }
 
     public UserEntity getUserByEmail(String email) {
         return userRepository
@@ -30,4 +23,8 @@ public class UserService {
             .orElseThrow(() -> new EntityNotFoundException("User not found with email: " + email));
     }
 
+    public UserResponseDto getUserById(@Valid @NotNull Long id) {
+        UserEntity user = userRepository.findById(id).orElseThrow( ()-> new EntityNotFoundException("user not found"));
+        return new UserResponseDto(user);
+    }
 }

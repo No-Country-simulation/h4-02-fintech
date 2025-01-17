@@ -1,6 +1,7 @@
 package com.fintech.h4_02.controller;
 
 import com.fintech.h4_02.dto.onboarding.OnboardingRequest;
+import com.fintech.h4_02.dto.user.UserResponseDto;
 import com.fintech.h4_02.service.OnboardingService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -14,9 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping("api/v1/onboarding")
@@ -34,7 +33,7 @@ public class OnboardingController {
             @ApiResponse(responseCode = "201", description = "Onboarding created successfully",
                     content = @Content(
                             mediaType = MediaType.APPLICATION_JSON_VALUE,
-                            schema = @Schema(implementation = OnboardingRequest.class),
+                            schema = @Schema(implementation = UserResponseDto.class),
                             examples = @ExampleObject(name = "WishlistRequestCreate",
                                     value = " \"{\\\"id\\\":352,\\\"email\\\":\\\"liontestlogin@gmail\\\",\\\"password\\\":\\\"$2a$10$ne1FiCa5ul0NPgZJo4qYs.cE3Cyg3NAVUcR.girEsWZLBBYJvYmhS\\\",\\\"name\\\":\\\"Lione120570fb-527f-403a-bb7a-cf6384efc885\\\",\\\"dni\\\":\\\"120570fb-527f-403a-bb7a-cf6384efc885\\\",\\\"roles\\\":[{\\\"id\\\":1,\\\"name\\\":\\\"INVERSIONISTA\\\"}],\\\"onboarding\\\":{\\\"id\\\":202,\\\"goals\\\":[{\\\"id\\\":1,\\\"name\\\":\\\"bienes\\\"},{\\\"id\\\":2,\\\"name\\\":\\\"retiro\\\"},{\\\"id\\\":52,\\\"name\\\":\\\"proyecto\\\"}],\\\"riskPreference\\\":\\\"MODERADO\\\",\\\"monthlyIncome\\\":30.06,\\\"monthlyExpenses\\\":352,\\\"savingsPercentage\\\":30.5,\\\"knowledgeLevel\\\":\\\"PRINCIPIANTE\\\"}}\";\n"))
             )
@@ -44,6 +43,9 @@ public class OnboardingController {
         return ResponseEntity.status(HttpStatus.CREATED).body(onboardingService.create(onboardingRequest)) ;
 
     }
+
+
+
 
 
 }

@@ -1,6 +1,7 @@
 package com.fintech.h4_02.service;
 
 import com.fintech.h4_02.dto.onboarding.OnboardingRequest;
+import com.fintech.h4_02.dto.user.UserResponseDto;
 import com.fintech.h4_02.entity.Goals;
 import com.fintech.h4_02.entity.OnboardingEntity;
 import com.fintech.h4_02.entity.UserEntity;
@@ -10,6 +11,8 @@ import com.fintech.h4_02.exception.EntityNotFoundException;
 import com.fintech.h4_02.repository.GoalRepository;
 import com.fintech.h4_02.repository.OnboardingRepository;
 import com.fintech.h4_02.repository.UserRepository;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,7 +34,7 @@ public class OnboardingService {
 
 
 
-    public UserEntity create(OnboardingRequest onboardingRequest) {
+    public UserResponseDto create(OnboardingRequest onboardingRequest) {
 
         UserEntity user = userRepository.findById(onboardingRequest.userId()).orElseThrow(() -> new EntityNotFoundException("user not found)"));
 
@@ -66,6 +69,8 @@ public class OnboardingService {
         user.setOnboarding(onboarding);
 
         user = userRepository.save(user);
-        return user;
+        return new UserResponseDto(user);
     }
+
+
 }
