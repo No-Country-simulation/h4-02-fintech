@@ -1,9 +1,10 @@
-package com.fintech.h4_02.service;
+package com.fintech.h4_02.service.auth;
 
 import com.fintech.h4_02.config.security.JwtService;
 import com.fintech.h4_02.config.security.SecurityUserDetails;
 import com.fintech.h4_02.dto.auth.AuthResponseDto;
 import com.fintech.h4_02.dto.auth.LoginRequestDto;
+import com.fintech.h4_02.dto.auth.OAuthLoginRequestDto;
 import com.fintech.h4_02.dto.user.CreateUserRequestDto;
 import com.fintech.h4_02.dto.user.UserResponseDto;
 import com.fintech.h4_02.entity.Role;
@@ -13,6 +14,7 @@ import com.fintech.h4_02.exception.EntityNotFoundException;
 import com.fintech.h4_02.exception.InvalidTokenException;
 import com.fintech.h4_02.repository.RoleRepository;
 import com.fintech.h4_02.repository.UserRepository;
+import com.fintech.h4_02.service.EmailService;
 import com.fintech.h4_02.util.RandomString;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -34,34 +36,41 @@ public class AuthService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final EmailService emailService;
+    private final GoogleIdTokenVerifierService googleIdTokenVerifierService;
+    private final AppleIdTokenVerifierService appleIdTokenVerifierService;
 
-    public AuthResponseDto login(LoginRequestDto dto) {
-        var authentication = new UsernamePasswordAuthenticationToken(dto.email(), dto.password());
-        authenticationManager.authenticate(authentication);
-
-        Optional<UserEntity> userMaybe = userRepository.findByEmail(dto.email());
-        if (userMaybe.isEmpty()) {
-            throw new EntityNotFoundException(String.format("User not found with email: %s", dto.email()));
+    public AuthResponseDto systemLogin(LoginRequestDto dto) {
+        UserEntity user = getUserByEmailOrThrow(dto.email());
+        if (!user.getProvider().equals(UserEntity.OAuthProvider.SYSTEM)) {
+            throw new IllegalStateException("User should use provider " + user.getProvider() + " to login");
         }
 
-        UserEntity user = userMaybe.get();
+        var authentication = new UsernamePasswordAuthenticationToken(dto.email(), dto.password());
+        authenticationManager.authenticate(authentication);
+        String token = jwtService.createToken(new SecurityUserDetails(user));
+        return new AuthResponseDto(new UserResponseDto(user), token);
+    }
+
+    private AuthResponseDto oauthLogin(LoginRequestDto dto) {
+        UserEntity user = getUserByEmailOrThrow(dto.email());
+        if (user.getProvider().equals(UserEntity.OAuthProvider.SYSTEM)) {
+            throw new IllegalStateException("User should use system provider to login");
+        }
+
         String token = jwtService.createToken(new SecurityUserDetails(user));
         return new AuthResponseDto(new UserResponseDto(user), token);
     }
 
     @Transactional
-    public AuthResponseDto register(CreateUserRequestDto dto) {
-        Optional<UserEntity> userMaybe = userRepository.findByEmail(dto.email());
-        if (userMaybe.isPresent()) {
-            throw new BadRequestException(String.format("Email is already registered: %s", dto.email()));
-        }
+    public AuthResponseDto systemRegister(CreateUserRequestDto dto) {
+        throwIfUserAlreadyRegistered(dto.email());
 
         UserEntity newUser = new UserEntity();
         newUser.setEmail(dto.email());
         newUser.setPassword(passwordEncoder.encode(dto.password()));
         newUser.setName(dto.name());
         newUser.setDni(dto.dni());
-
+        newUser.setProvider(UserEntity.OAuthProvider.SYSTEM);
         Optional<Role> rol = roleRepository.findById(1L);
         Set<Role> roles = Set.of(rol.get());
         newUser.setRoles(roles);
@@ -77,21 +86,60 @@ public class AuthService {
         return new AuthResponseDto(new UserResponseDto(savedUser), token);
     }
 
-    public UserEntity getUserByToken(String resetPasswordToken) {
+    private AuthResponseDto oauthRegister(CreateUserRequestDto dto, UserEntity.OAuthProvider provider) {
+        throwIfUserAlreadyRegistered(dto.email());
+
+        UserEntity newUser = new UserEntity();
+        newUser.setEmail(dto.email());
+        newUser.setName(dto.name());
+        newUser.setDni(dto.dni());
+        newUser.setProvider(provider);
+        Optional<Role> rol = roleRepository.findById(1L);
+        Set<Role> roles = Set.of(rol.get());
+        newUser.setRoles(roles);
+        newUser.setIsEmailConfirmed(true);
+
+        // Save new user to database
+        UserEntity savedUser = userRepository.save(newUser);
+        String token = jwtService.createToken(new SecurityUserDetails(savedUser));
+
+        return new AuthResponseDto(new UserResponseDto(savedUser), token);
+    }
+
+    @Transactional
+    public AuthResponseDto loginOrRegisterWithOAuth(OAuthLoginRequestDto dto, String provider) {
+        UserEntity.OAuthProvider oauthProvider = UserEntity.OAuthProvider.fromString(provider);
+        // Verify ID token
+        switch (oauthProvider) {
+            case GOOGLE -> googleIdTokenVerifierService.verifyGoogleIdToken(dto.idToken());
+            case APPLE -> appleIdTokenVerifierService.verifyAppleIdToken(dto.idToken());
+            case SYSTEM -> throw new IllegalArgumentException("OAuth provider cannot be SYSTEM");
+            default -> throw new IllegalArgumentException("Unsupported OAuth provider: " + provider);
+        }
+
+        boolean userExists = userRepository.existsByEmail(dto.email());
+        if (userExists) {
+            var loginRequestDto = new LoginRequestDto(dto.email(), null);
+            return oauthLogin(loginRequestDto);
+        } else {
+            var createUserRequestDto = new CreateUserRequestDto(dto.email(), null, dto.name(), null);
+            return oauthRegister(createUserRequestDto, oauthProvider);
+        }
+    }
+
+    public UserEntity getUserByResetPasswordToken(String resetPasswordToken) {
         if (resetPasswordToken == null || resetPasswordToken.isEmpty()) {
             throw new IllegalArgumentException("Reset password token is not present");
         }
         return userRepository
-            .findByResetPasswordToken(resetPasswordToken)
-            .orElseThrow(() -> new EntityNotFoundException(String.format("User not found with token: %s", resetPasswordToken)));
+                .findByResetPasswordToken(resetPasswordToken)
+                .orElseThrow(() -> new EntityNotFoundException(String.format("User not found with token: %s", resetPasswordToken)));
     }
 
     @Transactional
     public String updatePasswordRecoveryToken(String email) {
         String token = RandomString.generateRandomString(45);
-        UserEntity user = userRepository
-            .findByEmail(email)
-            .orElseThrow(() -> new EntityNotFoundException("User not found with email: " + email));
+        UserEntity user = getUserByEmailOrThrow(email);
 
         user.setResetPasswordToken(token);
         user.setTokenExpirationDate(LocalDateTime.now().plusMinutes(10));
@@ -105,8 +153,8 @@ public class AuthService {
             throw new IllegalArgumentException("Reset password token is not present");
         }
         UserEntity user = userRepository
-            .findByResetPasswordToken(resetPasswordToken)
-            .orElseThrow(() -> new EntityNotFoundException("User not found with token: " + resetPasswordToken));
+                .findByResetPasswordToken(resetPasswordToken)
+                .orElseThrow(() -> new EntityNotFoundException("User not found with token: " + resetPasswordToken));
 
         boolean isTokenExpired = user.getTokenExpirationDate() != null && user.getTokenExpirationDate().isBefore(LocalDateTime.now());
         if (isTokenExpired) {
@@ -118,7 +166,7 @@ public class AuthService {
     public void updateUserPassword(String token, String newPassword) {
         throwIfPasswordResetTokenIsExpired(token);
 
-        UserEntity user = getUserByToken(token);
+        UserEntity user = getUserByResetPasswordToken(token);
         user.setPassword(passwordEncoder.encode(newPassword));
         user.setResetPasswordToken(null);
 
@@ -134,9 +182,7 @@ public class AuthService {
 
         // Check if the user exists
         String username = jwtService.getUsernameFromToken(token);
-        UserEntity user = userRepository
-            .findByEmail(username)
-            .orElseThrow(() -> new EntityNotFoundException("User not found with email: " + username));
+        UserEntity user = getUserByEmailOrThrow(username);
 
         // Throw if the user is already activated
         if (Boolean.TRUE.equals(user.isEmailConfirmed())) {
@@ -145,6 +191,21 @@ public class AuthService {
 
         user.setIsEmailConfirmed(true);
         userRepository.save(user);
+    }
+
+    private UserEntity getUserByEmailOrThrow(String email) {
+        Optional<UserEntity> userMaybe = userRepository.findByEmail(email);
+        if (userMaybe.isEmpty()) {
+            throw new EntityNotFoundException(String.format("User not found with email: %s", email));
+        }
+        return userMaybe.get();
+    }
+
+    private void throwIfUserAlreadyRegistered(String email) {
+        Optional<UserEntity> userMaybe = userRepository.findByEmail(email);
+        if (userMaybe.isPresent()) {
+            throw new BadRequestException(String.format("Email is already registered: %s", email));
+        }
     }
 
 }

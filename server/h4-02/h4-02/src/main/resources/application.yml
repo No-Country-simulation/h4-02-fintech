@@ -40,6 +40,8 @@ jwt:
 
 frontend:
   url: ${FRONTEND_URL}
+  appleClientId: ${FRONTEND_APPLE_CLIENT_ID}
+  googleClientId: ${FRONTEND_GOOGLE_CLIENT_ID}
 
 backend:
   url: ${BACKEND_URL}

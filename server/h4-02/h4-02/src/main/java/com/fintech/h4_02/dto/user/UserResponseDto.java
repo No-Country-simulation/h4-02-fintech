@@ -12,12 +12,23 @@ public record UserResponseDto(
         String email,
 
         String name,
+
         Set<Role> roles,
-        OnboardingEntity onboarding
+
+        OnboardingEntity onboarding,
+
+        UserEntity.OAuthProvider oauthProvider
 ) {
 
     public UserResponseDto(UserEntity user) {
-        this(user.getId(), user.getEmail(), user.getName(),user.getRoles(),user.getOnboarding() );
+        this(
+                user.getId(),
+                user.getEmail(),
+                user.getName(),
+                user.getRoles(),
+                user.getOnboarding(),
+                user.getProvider()
+        );
     }
 
 }
