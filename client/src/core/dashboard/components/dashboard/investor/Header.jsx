@@ -30,7 +30,11 @@ export const Header = () => {
   };
 
   const drawerItems = [
-    { icon: <Profile size="24" />, text: "Mi Perfil", link: "/" },
+    {
+      icon: <Profile size="24" />,
+      text: "Mi Perfil",
+      link: "/dashboard/profile",
+    },
     {
       icon: <MoneyRecive size="24" />,
       text: "Gestión de inversiones",
