@@ -4,6 +4,7 @@ import { OnboardingPage } from "../dashboard/pages/OnboardingPage";
 import { InvestorDashboardPage } from "../dashboard/pages/InvestorDashboardPage";
 import { AdminDashboardPage } from "../dashboard/pages/AdminDashboardPage";
 import { useAuthStore } from "../auth/store/useAuthStore";
+import { ProfileInvestorPage } from "../../modules/account/pages/ProfileInvestorPage";
 
 export const DashboardRouter = () => {
   const { user } = useAuthStore();
@@ -25,6 +26,7 @@ export const DashboardRouter = () => {
         <>
           <Route path="/" element={<InvestorDashboardPage />} />
           <Route path="/onboarding" element={<OnboardingPage />} />
+          <Route path="/profile" element={<ProfileInvestorPage />} />
         </>
       )}
 
