@@ -12,22 +12,21 @@ import { useAuthStore } from "../../../../auth/store/useAuthStore";
 import { useState } from "react";
 import { Drawer } from "../ui/Drawer";
 import NotificationsModal from "../../../../notifications/components/NotificationsModal";
+import { useFinancialStore } from "../../../store/useFinancialStore";
+import { formatCurrency } from "../../../../utils/formatCurrency";
 
 export const Header = () => {
   const { user } = useAuthStore();
-  const [balance] = useState({
-    ARS: 12500000,
-    USD: 35000,
-  });
+  const { financial, toggleCurrencyType, currencyType } = useFinancialStore();
+
   const [showBalance, setShowBalance] = useState(false);
-  const [currency, setCurrency] = useState("ARS");
 
   const toggleBalanceVisibility = () => {
     setShowBalance(!showBalance);
   };
 
-  const handleCurrencyChange = (event) => {
-    setCurrency(event.target.value);
+  const handleCurrencyChange = () => {
+    toggleCurrencyType();
   };
 
   const drawerItems = [
@@ -81,45 +80,49 @@ export const Header = () => {
         </div>
       </div>
 
-      <div>
-        <p className="text-gray-400 text-sm">Balance</p>
-        <div className="flex items-center justify-between">
-          <div className="flex flex-col sm:flex-row items-start">
-            <h1 className="text-3xl font-bold">
-              {showBalance
-                ? `${currency === "ARS" ? "" : ""}${balance[
-                    currency
-                  ].toLocaleString()}`
-                : `${currency === "ARS" ? "" : ""}${balance[currency]
-                    .toLocaleString()
-                    .replace(/\d/g, "x")}`}
-            </h1>
-            <select
-              className="select select-sm bg-transparent border-0 mx-2 my-2"
-              value={currency}
-              onChange={handleCurrencyChange}
-            >
-              <option value="ARS" className="text-black">
-                ARS
-              </option>
-              <option value="USD" className="text-black">
-                USD
-              </option>
-            </select>
-          </div>
+      {financial && (
+        <div>
+          <p className="text-gray-400 text-sm">Balance</p>
+          <div className="flex items-center justify-between">
+            <div className="flex flex-col sm:flex-row items-start">
+              <h1 className="text-3xl font-bold">
+                {showBalance
+                  ? formatCurrency(
+                      financial.balance.values[currencyType],
+                      currencyType
+                    )
+                  : formatCurrency(
+                      financial.balance.values[currencyType],
+                      currencyType
+                    ).replace(/\d/g, "x") || "0"}
+              </h1>
+              <select
+                className="select select-sm bg-transparent border-0 mx-2 my-2"
+                value={currencyType}
+                onChange={handleCurrencyChange}
+              >
+                <option value="ARS" className="text-black">
+                  ARS
+                </option>
+                <option value="USD" className="text-black">
+                  USD
+                </option>
+              </select>
+            </div>
 
-          <button
-            className="btn btn-ghost btn-circle mt-4 md:mt-0"
-            onClick={toggleBalanceVisibility}
-          >
-            {showBalance ? (
-              <Eye size="24" className="text-white" />
-            ) : (
-              <EyeSlash size="24" className="text-white" />
-            )}
-          </button>
+            <button
+              className="btn btn-ghost btn-circle mt-4 md:mt-0"
+              onClick={toggleBalanceVisibility}
+            >
+              {showBalance ? (
+                <Eye size="24" className="text-white" />
+              ) : (
+                <EyeSlash size="24" className="text-white" />
+              )}
+            </button>
+          </div>
         </div>
-      </div>
+      )}
 
       <Drawer menu={drawerItems} />
     </div>

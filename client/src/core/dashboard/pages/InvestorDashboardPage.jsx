@@ -6,9 +6,11 @@ import { InvestmentSection } from "../components/dashboard/investor/InvestmentSe
 import { OperationsSection } from "../components/dashboard/investor/OperationsSection";
 import { SavingsOverview } from "../components/dashboard/investor/SavingsOverview";
 import { useOnboardingStore } from "../../auth/store/useOnboardingStore";
+import { useFinancialStore } from "../store/useFinancialStore";
 
 export const InvestorDashboardPage = () => {
   const { isFirstSet } = useOnboardingStore();
+  const { financial } = useFinancialStore();
 
   if (isFirstSet) {
     return <Navigate to="/dashboard/onboarding" />;
@@ -19,7 +21,7 @@ export const InvestorDashboardPage = () => {
       <Header />
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-4">
-        <SavingsOverview />
+        {financial && <SavingsOverview />}
         <GoalsSection />
         <FinancialSection />
         <InvestmentSection />

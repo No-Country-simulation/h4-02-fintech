@@ -2,13 +2,29 @@ import { useState } from "react";
 import { PieChartWithPaddingAngle } from "../ui/PieChartWithPaddingAngle";
 import { Wallet } from "iconsax-react";
 
+import { formatCurrency } from "../../../../utils/formatCurrency";
+import { useFinancialStore } from "../../../store/useFinancialStore";
+
 export const FinancialXModal = () => {
   const [isOpen, setIsOpen] = useState(false);
 
+  const { financial } = useFinancialStore();
   const data = [
-    { name: "Ingresos", value: 500, percentage: 50 },
-    { name: "Ahorros", value: 300, percentage: 30 },
-    { name: "Gastos fijos", value: 160, percentage: 20 },
+    {
+      name: "Ingresos",
+      values: financial?.income.values,
+      percentage: financial?.income.percentage,
+    },
+    {
+      name: "Ahorros",
+      values: financial?.savings.values,
+      percentage: financial?.savings.percentage,
+    },
+    {
+      name: "Gastos Fijos",
+      values: financial?.fixedExpenses.values,
+      percentage: financial?.fixedExpenses.percentage,
+    },
   ];
 
   return (
@@ -48,7 +64,10 @@ export const FinancialXModal = () => {
                   </summary>
                   <ul>
                     <li>
-                      <a> ${item.value}</a>
+                      <a> {formatCurrency(item.values.ARG, "ARG")}</a>
+                    </li>
+                    <li>
+                      <a> {formatCurrency(item.values.USD, "USD")}</a>
                     </li>
                   </ul>
                 </details>
