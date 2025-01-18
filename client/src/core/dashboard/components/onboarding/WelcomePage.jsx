@@ -1,14 +1,24 @@
 import PropTypes from "prop-types";
 import onboardingImage from "../../../../assets/images/onboarding.svg";
 import { Link } from "react-router-dom";
+import { useEffect } from "react";
 import { useOnboardingStore } from "../../../auth/store/useOnboardingStore";
+import { validateComplete } from "../../../validators/complete";
 
 export const WelcomePage = ({ nextStep }) => {
-  const { updateFormData } = useOnboardingStore();
+  const { updateFormData, formData, setStep } = useOnboardingStore();
+
   const handleSaveAndContinueLater = () => {
     updateFormData({ knowledgeLevel: "" });
   };
-  
+
+  useEffect(() => {
+    const formDataComplete = validateComplete(formData);
+    if (formDataComplete) {
+      setStep(6);
+    }
+  }, [formData, setStep]);
+
   return (
     <div className="min-h-screen bg-gray-50 p-4 md:p-6 lg:p-8">
       <div className="mx-auto max-w-md w-full space-y-8">
