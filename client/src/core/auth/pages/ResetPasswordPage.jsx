@@ -1,7 +1,10 @@
 import { Eye, EyeSlash } from "iconsax-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { resetPasswordValidationSchema } from "../../validators/login";
+import {
+  passwordValidations,
+  resetPasswordValidationSchema,
+} from "../../validators/login";
 import { Navigate, useNavigate, useSearchParams } from "react-router-dom";
 import { resetPassword } from "../services/login";
 import { toast } from "sonner";
@@ -13,8 +16,8 @@ export const ResetPasswordPage = () => {
   const navigate = useNavigate();
   const token = searchParams.get("token");
   const [errorMessage, setErrorMessage] = useState("");
-
   const [showPassword, setShowPassword] = useState(false);
+  const [passwordFeedback, setPasswordFeedback] = useState({});
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const {
@@ -24,6 +27,14 @@ export const ResetPasswordPage = () => {
   } = useForm({
     resolver: yupResolver(resetPasswordValidationSchema),
   });
+
+  const handlePasswordChange = (password) => {
+    const feedback = passwordValidations.reduce((acc, validation) => {
+      acc[validation.key] = validation.regex.test(password);
+      return acc;
+    }, {});
+    setPasswordFeedback(feedback);
+  };
 
   const onSubmit = async (data) => {
     try {
@@ -63,20 +74,22 @@ export const ResetPasswordPage = () => {
           <form onSubmit={handleSubmit(onSubmit)}>
             <div className="form-control">
               <label htmlFor="password" className="label">
-                <span className="label-text">Nueva Contraseña</span>
+                <span className="label-text">Nueva contraseña</span>
               </label>
               <div className="relative">
                 <input
                   id="password"
                   type={showPassword ? "text" : "password"}
-                  placeholder="Ingrese su nueva contraseña"
-                  {...register("password")}
+                  placeholder="Ingrese su contraseña"
+                  {...register("password", {
+                    onChange: (e) => handlePasswordChange(e.target.value),
+                  })}
                   className="input input-bordered w-full"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 bg-white p-2"
                 >
                   {showPassword ? (
                     <Eye className="h-5 w-5" />
@@ -90,24 +103,36 @@ export const ResetPasswordPage = () => {
                   {errors.password.message}
                 </p>
               )}
+              <ul className="text-sm mt-2">
+                {passwordValidations.map(({ key, message }) => (
+                  <li
+                    key={key}
+                    className={`${
+                      passwordFeedback[key] ? "text-green-500" : "text-gray-500"
+                    }`}
+                  >
+                    {message}
+                  </li>
+                ))}
+              </ul>
             </div>
 
             <div className="form-control">
               <label htmlFor="confirmPassword" className="label">
-                <span className="label-text">Repetir Nueva Contraseña</span>
+                <span className="label-text">Repetir nueva contraseña</span>
               </label>
               <div className="relative">
                 <input
                   id="confirmPassword"
                   type={showConfirmPassword ? "text" : "password"}
-                  placeholder="Repita su nueva contraseña"
+                  placeholder="Ingrese su contraseña"
                   {...register("confirmPassword")}
                   className="input input-bordered w-full"
                 />
                 <button
                   type="button"
                   onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 bg-white p-2"
                 >
                   {showConfirmPassword ? (
                     <Eye className="h-5 w-5" />
