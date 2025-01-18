@@ -1,22 +1,27 @@
-import { DollarCircle, ShoppingBag } from "iconsax-react";
 import { useEffect, useState } from "react";
+import { DollarCircle, ShoppingBag } from "iconsax-react";
+import { formatCurrency } from "../../../../utils/formatCurrency";
+import { useFinancialStore } from "../../../store/useFinancialStore";
 
 export const SavingsOverview = () => {
   const [progressValue, setProgressValue] = useState(0);
 
+  const { financial, currencyType } = useFinancialStore();
+
   useEffect(() => {
     const interval = setInterval(() => {
       setProgressValue((prev) => {
-        if (prev >= 50) {
+        if (prev >= Number(financial.savings.percentage)) {
           clearInterval(interval);
-          return 50;
+          return Number(financial.savings.percentage);
         }
         return prev + 1;
       });
     }, 30);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [financial.savings.percentage]);
+
   return (
     <div className="flex w-full items-center justify-center p-2">
       <div className="flex flex-col items-center gap-2 lg:w-auto p-2">
@@ -54,7 +59,12 @@ export const SavingsOverview = () => {
           <div className="flex-1">
             <div className="flex flex-col">
               <span className="text-base font-semibold">Ingresos</span>
-              <span className="font-bold">$1.000.00</span>
+              <span className="font-bold">
+                {formatCurrency(
+                  financial.income.values[currencyType],
+                  currencyType
+                )}
+              </span>
             </div>
           </div>
         </div>
@@ -66,7 +76,13 @@ export const SavingsOverview = () => {
           <div className="flex-1">
             <div className="flex flex-col">
               <span className="text-base font-semibold">Gastos</span>
-              <span className="font-bold">-$2500.00</span>
+              <span className="font-bold">
+                -
+                {formatCurrency(
+                  financial.fixedExpenses.values[currencyType],
+                  currencyType
+                )}
+              </span>
             </div>
           </div>
         </div>
