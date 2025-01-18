@@ -25,13 +25,16 @@ export const CurrentNumbersPage = ({ nextStep, prevStep }) => {
       monthlyIncome: monthlyIncome,
       monthlyExpenses: monthlyExpenses,
       savingsPercentage:
-        savingsPercentage === ""
-          ? "5"
-          : savingsPercentage !== "5" &&
-            savingsPercentage !== "10" &&
-            savingsPercentage !== "20"
+        savingsPercentage === "" || savingsPercentage === null
           ? "otro"
-          : savingsPercentage,
+          : ["5", "10", "20"].includes(savingsPercentage)
+          ? savingsPercentage
+          : "otro",
+      customSavingsPercentage:
+        savingsPercentage !== "" &&
+        !["5", "10", "20"].includes(savingsPercentage)
+          ? savingsPercentage
+          : "",
     },
   });
 
@@ -63,7 +66,7 @@ export const CurrentNumbersPage = ({ nextStep, prevStep }) => {
             watchSavingsPercentage === "otro"
               ? watchCustomSavingsPercentage
               : watchSavingsPercentage,
-        });        
+        });
         nextStep();
       }
     } catch (error) {
