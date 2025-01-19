@@ -13,26 +13,27 @@ import org.springframework.stereotype.Service;
 
 import java.net.URL;
 import java.text.ParseException;
+import java.util.Date;
 
 @Service
-public class AppleIdTokenVerifierService {
-    private static final String APPLE_PUBLIC_KEYS_URL = "https://appleid.apple.com/auth/keys";
-    private static final String ISSUER = "https://appleid.apple.com";
+public class Auth0IdTokenVerifierService {
+    @Value("${auth0.publicKeysUri}")
+    private String auth0PublicKeysUri;
 
-    @Value("${frontend.appleClientId}")
-    private String frontendAppleClientId;
+    @Value("${auth0.clientId}")
+    private String auth0ClientId;
 
-    public VerifiedAppleUser verifyAppleIdToken(String idTokenString) {
-        return tryVerifyAppleIdToken(idTokenString);
+    public VerifiedAuth0User verifyAuth0IdToken(String idTokenString) {
+        return tryVerifyAuth0IdToken(idTokenString);
     }
 
-    private VerifiedAppleUser tryVerifyAppleIdToken(String idTokenString) {
+    private VerifiedAuth0User tryVerifyAuth0IdToken(String idTokenString) {
         try {
             // Download public keys from Apple
-            JWKSet jwkSet = JWKSet.load(new URL(APPLE_PUBLIC_KEYS_URL));
+            JWKSet jwkSet = JWKSet.load(new URL(auth0PublicKeysUri));
 
             // Decode signed token
-            SignedJWT signedJWT = SignedJWT.parse(idTokenString);
+            SignedJWT signedJwt = SignedJWT.parse(idTokenString);
             JWSObject jwsObject = JWSObject.parse(idTokenString);
 
             // Get key needed to check for id token signature
@@ -43,13 +44,13 @@ public class AppleIdTokenVerifierService {
             }
 
             // Check signature
-            boolean signatureValid = signedJWT.verify(new RSASSAVerifier(rsaKey));
+            boolean signatureValid = signedJwt.verify(new RSASSAVerifier(rsaKey));
             if (!signatureValid) {
                 throw new IllegalArgumentException("Invalid token signature.");
             }
 
-            JWTClaimsSet claims = getJwtClaimsSet(signedJWT);
-            return VerifiedAppleUser.builder()
+            JWTClaimsSet claims = getJwtClaimsSet(signedJwt);
+            return VerifiedAuth0User.builder()
                     .sub(claims.getSubject())
                     .email((String) claims.getClaim("email"))
                     .build();
@@ -58,25 +59,21 @@ public class AppleIdTokenVerifierService {
         }
     }
 
-    private JWTClaimsSet getJwtClaimsSet(SignedJWT signedJWT) throws ParseException {
-        JWTClaimsSet claims = signedJWT.getJWTClaimsSet();
-        // Check issuer and aud claims
-        if (!ISSUER.equals(claims.getIssuer())) {
-            throw new IllegalArgumentException("Invalid issuer.");
-        }
-        if (!frontendAppleClientId.equals(claims.getAudience().get(0))) {
+    private JWTClaimsSet getJwtClaimsSet(SignedJWT signedJwt) throws ParseException {
+        JWTClaimsSet claims = signedJwt.getJWTClaimsSet();
+        if (!auth0ClientId.equals(claims.getAudience().get(0))) {
             throw new IllegalArgumentException("Invalid aud.");
         }
         // Check expiration
-        if (claims.getExpirationTime() == null || claims.getExpirationTime().before(new java.util.Date())) {
-            throw new IllegalArgumentException("token has expired.");
+        if (claims.getExpirationTime() == null || claims.getExpirationTime().before(new Date())) {
+            throw new IllegalArgumentException("Token has expired.");
         }
         return claims;
     }
 
     @Builder
     @Getter
-    public static class VerifiedAppleUser {
+    public static class VerifiedAuth0User {
         private String sub;
         private String email;
     }

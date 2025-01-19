@@ -36,8 +36,7 @@ public class AuthService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final EmailService emailService;
-    private final GoogleIdTokenVerifierService googleIdTokenVerifierService;
-    private final AppleIdTokenVerifierService appleIdTokenVerifierService;
+    private final Auth0IdTokenVerifierService auth0IdTokenVerifierService;
 
     public AuthResponseDto systemLogin(LoginRequestDto dto) {
         UserEntity user = getUserByEmailOrThrow(dto.email());
@@ -109,14 +108,14 @@ public class AuthService {
     @Transactional
     public AuthResponseDto loginOrRegisterWithOAuth(OAuthLoginRequestDto dto, String provider) {
         UserEntity.OAuthProvider oauthProvider = UserEntity.OAuthProvider.fromString(provider);
-        // Verify ID token
-        switch (oauthProvider) {
-            case GOOGLE -> googleIdTokenVerifierService.verifyGoogleIdToken(dto.idToken());
-            case APPLE -> appleIdTokenVerifierService.verifyAppleIdToken(dto.idToken());
-            case SYSTEM -> throw new IllegalArgumentException("OAuth provider cannot be SYSTEM");
-            default -> throw new IllegalArgumentException("Unsupported OAuth provider: " + provider);
+        if (oauthProvider.equals(UserEntity.OAuthProvider.SYSTEM)) {
+            throw new IllegalArgumentException("Unsupported OAuth provider: " + provider);
         }
 
+        // Verify ID token
+        auth0IdTokenVerifierService.verifyAuth0IdToken(dto.idToken());
+
+        // Login or register user
         boolean userExists = userRepository.existsByEmail(dto.email());
         if (userExists) {
             var loginRequestDto = new LoginRequestDto(dto.email(), null);

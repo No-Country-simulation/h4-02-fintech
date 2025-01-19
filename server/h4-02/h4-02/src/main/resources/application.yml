@@ -38,10 +38,13 @@ jwt:
   secret: ${JWT_SECRET}
   expiration-hours: 72 # 3 days
 
+auth0:
+  clientId: ${AUTH0_CLIENT_ID}
+  publicKeysUri: ${AUTH0_PUBLIC_KEYS_URI}
+
 frontend:
   url: ${FRONTEND_URL}
-  appleClientId: ${FRONTEND_APPLE_CLIENT_ID}
-  googleClientId: ${FRONTEND_GOOGLE_CLIENT_ID}
+
 
 backend:
   url: ${BACKEND_URL}
