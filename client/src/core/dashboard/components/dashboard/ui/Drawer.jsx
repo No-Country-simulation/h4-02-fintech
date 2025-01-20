@@ -2,9 +2,25 @@ import { PropTypes } from "prop-types";
 import { ArrowRight2, Home, Logout } from "iconsax-react";
 import { Link } from "react-router-dom";
 import { useAuthStore } from "../../../../auth/store/useAuthStore";
+import { useAuth0 } from "@auth0/auth0-react";
 
 export const Drawer = ({ menu }) => {
-  const { logout } = useAuthStore();
+  const { logout: logoutStore } = useAuthStore();
+  const { logout, user } = useAuth0();
+
+  const onLogout = async () => {
+    try {
+      if (user) {
+        logout();
+        return;
+      }
+
+      await logoutStore();
+    } catch (error) {
+      console.error("Error al cerrar sesión:", error);
+    }
+  };
+
   return (
     <div className="drawer z-10">
       <input id="my-drawer" type="checkbox" className="drawer-toggle" />
@@ -54,7 +70,7 @@ export const Drawer = ({ menu }) => {
           </div>
 
           <div className="px-4 mb-4">
-            <button onClick={logout} className="w-full mt-2 btn btn-primary">
+            <button onClick={onLogout} className="w-full mt-2 btn btn-primary">
               <Logout size="24" />
               Cerrar sesión
             </button>
