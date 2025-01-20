@@ -36,7 +36,6 @@ public class AuthService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final EmailService emailService;
-    private final Auth0IdTokenVerifierService auth0IdTokenVerifierService;
 
     public AuthResponseDto systemLogin(LoginRequestDto dto) {
         UserEntity user = getUserByEmailOrThrow(dto.email());
@@ -50,11 +49,13 @@ public class AuthService {
         return new AuthResponseDto(new UserResponseDto(user), token);
     }
 
-    private AuthResponseDto oauthLogin(LoginRequestDto dto) {
+    private AuthResponseDto oauthLogin(LoginRequestDto dto, String pictureUrl) {
         UserEntity user = getUserByEmailOrThrow(dto.email());
         if (user.getProvider().equals(UserEntity.OAuthProvider.SYSTEM)) {
             throw new IllegalStateException("User should use system provider to login");
         }
+
+        user.setPictureUrl(pictureUrl);
 
         String token = jwtService.createToken(new SecurityUserDetails(user));
         return new AuthResponseDto(new UserResponseDto(user), token);
@@ -69,6 +70,7 @@ public class AuthService {
         newUser.setPassword(passwordEncoder.encode(dto.password()));
         newUser.setName(dto.name());
         newUser.setDni(dto.dni());
+        newUser.setPictureUrl(dto.pictureUrl());
         newUser.setProvider(UserEntity.OAuthProvider.SYSTEM);
         Optional<Role> rol = roleRepository.findById(1L);
         Set<Role> roles = Set.of(rol.get());
@@ -92,6 +94,7 @@ public class AuthService {
         newUser.setEmail(dto.email());
         newUser.setName(dto.name());
         newUser.setDni(dto.dni());
+        newUser.setPictureUrl(dto.pictureUrl());
         newUser.setProvider(provider);
         Optional<Role> rol = roleRepository.findById(1L);
         Set<Role> roles = Set.of(rol.get());
@@ -119,9 +122,13 @@ public class AuthService {
         boolean userExists = userRepository.existsByEmail(dto.email());
         if (userExists) {
             var loginRequestDto = new LoginRequestDto(dto.email(), null);
-            return oauthLogin(loginRequestDto);
+            return oauthLogin(loginRequestDto, dto.picture());
         } else {
-            var createUserRequestDto = new CreateUserRequestDto(dto.email(), null, dto.name(), null);
+            var createUserRequestDto = CreateUserRequestDto.builder()
+                    .name(dto.name())
+                    .email(dto.email())
+                    .pictureUrl(dto.picture())
+                    .build();
             return oauthRegister(createUserRequestDto, oauthProvider);
         }
     }

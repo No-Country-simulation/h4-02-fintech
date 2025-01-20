@@ -36,6 +36,9 @@ public class UserEntity {
     @Column(name = "dni", unique = true)
     private String dni;
 
+    @Column(name = "picture_url")
+    private String pictureUrl;
+
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "user_roles",
             joinColumns = @JoinColumn(name = "user_id"),
