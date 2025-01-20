@@ -22,6 +22,13 @@ export const ProfileInvestor = () => {
       phone: "",
       email: "",
       address: "",
+      milestoneAchieved: false,
+      savingsGoalMet: false,
+      investmentOpportunities: false,
+      investmentExpirations: false,
+      dailyNotifications: false,
+      weeklyNotifications: false,
+      monthlyNotifications: false,
     },
   });
 
@@ -50,6 +57,13 @@ export const ProfileInvestor = () => {
         phone: profile.phone || "",
         email: profile.email || "",
         address: profile.address || "",
+        milestoneAchieved: profile.milestoneAchieved || false,
+        savingsGoalMet: profile.savingsGoalMet || false,
+        investmentOpportunities: profile.investmentOpportunities || false,
+        investmentExpirations: profile.investmentExpirations || false,
+        dailyNotifications: profile.dailyNotifications || false,
+        weeklyNotifications: profile.weeklyNotifications || false,
+        monthlyNotifications: profile.monthlyNotifications || false,
       });
     } catch (error) {
       console.error("Error al obtener el perfil:", error);
@@ -167,6 +181,99 @@ export const ProfileInvestor = () => {
               {errors.address.message}
             </p>
           )}
+        </div>
+
+        {/* Notificaciones */}
+        <h2 className="text-lg font-bold mt-6">Notificaciones</h2>
+        <div className="mt-8 p-2 space-y-4">
+          <p className="text-md mb-4 font-semibold">Progreso de objetivos</p>
+
+          <div className="form-control flex flex-row justify-between items-center mb-4">
+            <label className="label">
+              <span className="label-text">Alcance de hitos importantes</span>
+            </label>
+            <input
+              type="checkbox"
+              {...register("milestoneAchieved")}
+              className="toggle toggle-primary"
+            />
+          </div>
+
+          <div className="form-control flex flex-row justify-between items-center">
+            <label className="label">
+              <span className="label-text">Superar un ahorro mensual</span>
+            </label>
+            <input
+              type="checkbox"
+              {...register("savingsGoalMet")}
+              className="toggle toggle-primary"
+            />
+          </div>
+
+          <p className="text-md mb-4 font-semibold">
+            Recomendaciones de inversión
+          </p>
+
+          <div className="form-control flex flex-row justify-between items-center mb-4">
+            <label className="label">
+              <span className="label-text">
+                Nuevas oportunidades de inversión
+              </span>
+            </label>
+            <input
+              type="checkbox"
+              {...register("investmentOpportunities")}
+              className="toggle toggle-primary"
+            />
+          </div>
+
+          <div className="form-control flex flex-row justify-between items-center">
+            <label className="label">
+              <span className="label-text">Vencimiento de inversiones</span>
+            </label>
+            <input
+              type="checkbox"
+              {...register("investmentExpirations")}
+              className="toggle toggle-primary"
+            />
+          </div>
+
+          <p className="text-md mb-4 font-semibold">
+            Configuración de frecuencia
+          </p>
+
+          <div className="form-control flex flex-row justify-between items-center mb-4">
+            <label className="label">
+              <span className="label-text">Diarias</span>
+            </label>
+            <input
+              type="checkbox"
+              {...register("dailyNotifications")}
+              className="toggle toggle-primary"
+            />
+          </div>
+
+          <div className="form-control flex flex-row justify-between items-center mb-4">
+            <label className="label">
+              <span className="label-text">Semanales</span>
+            </label>
+            <input
+              type="checkbox"
+              {...register("weeklyNotifications")}
+              className="toggle toggle-primary"
+            />
+          </div>
+
+          <div className="form-control flex flex-row justify-between items-center">
+            <label className="label">
+              <span className="label-text">Mensuales</span>
+            </label>
+            <input
+              type="checkbox"
+              {...register("monthlyNotifications")}
+              className="toggle toggle-primary"
+            />
+          </div>
         </div>
 
         <button type="submit" className="btn btn-neutral w-full mt-4 sm:mt-6">
