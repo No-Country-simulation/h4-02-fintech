@@ -14,9 +14,14 @@ import { Drawer } from "../ui/Drawer";
 import NotificationsModal from "../../../../notifications/components/NotificationsModal";
 import { useFinancialStore } from "../../../store/useFinancialStore";
 import { formatCurrency } from "../../../../utils/formatCurrency";
+import { useOnboardingStore } from "../../../../auth/store/useOnboardingStore";
+import { validateComplete } from "../../../../validators/complete";
+import OnboardingModal from "../../onboarding/OnboardingModal";
 
 export const Header = () => {
   const { user } = useAuthStore();
+  const { formData } = useOnboardingStore();
+  const formDataComplete = validateComplete(formData);
 
   const { financial, toggleCurrencyType, currencyType } = useFinancialStore();
 
@@ -43,7 +48,9 @@ export const Header = () => {
     },
     {
       icon: <Edit size="24" />,
-      text: "Terminar mi onboarding",
+      text: !formDataComplete
+        ? "Terminar mi onboarding"
+        : "Editar mi onboarding",
       link: "/dashboard/onboarding",
     },
     {
@@ -130,6 +137,7 @@ export const Header = () => {
       )}
 
       <Drawer menu={drawerItems} />
+      {!formDataComplete && <OnboardingModal />}
     </div>
   );
 };
