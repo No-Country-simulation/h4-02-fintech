@@ -1,11 +1,12 @@
 import { useForm } from "react-hook-form";
-import { Eye, EyeSlash } from "iconsax-react";
+import { Apple, Eye, EyeSlash, Google } from "iconsax-react";
 import { getErrorMessage } from "../../validators/errorHandler";
-import { useState } from "react";
 import { useAuthStore } from "../store/useAuthStore";
-import { loginWithEmail } from "../services/login";
+import { loginWithEmail, loginWithSocial } from "../services/login";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { loginValidationSchema } from "../../validators/login";
+import { useAuth0 } from "@auth0/auth0-react";
+import { useState, useEffect } from "react";
 
 export const LoginPage = () => {
   const {
@@ -19,6 +20,45 @@ export const LoginPage = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const { login } = useAuthStore();
+  const { loginWithPopup, user, isAuthenticated, isLoading } = useAuth0();
+
+  const [provider, setProvider] = useState("");
+
+  useEffect(() => {
+    if (!isLoading && isAuthenticated && user && provider) {
+      const loginWithProvider = async () => {
+        try {
+          const response = await loginWithSocial(provider, user);
+          const { user: userBackendResponse, token } = response;
+
+          if (!userBackendResponse) {
+            setErrorMessage(`Error al iniciar sesión con ${provider}`);
+            return;
+          }
+
+          login(userBackendResponse);
+          localStorage.setItem("token", token);
+        } catch (error) {
+          setErrorMessage(`Error al iniciar sesión con ${provider}`);
+          console.error(error);
+        }
+      };
+
+      loginWithProvider();
+    }
+  }, [isAuthenticated, isLoading, user, provider, login]);
+
+  const loginWithProviderPopup = async (selectedProvider) => {
+    try {
+      setProvider(selectedProvider);
+      await loginWithPopup({
+        connection: selectedProvider === "google" ? "google-oauth2" : "apple",
+      });
+    } catch (error) {
+      setErrorMessage(`Error al iniciar sesión con ${selectedProvider}`);
+      console.error(error);
+    }
+  };
 
   const onSubmit = async (data) => {
     try {
@@ -84,7 +124,7 @@ export const LoginPage = () => {
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 bg-white p-2"
                 >
                   {showPassword ? (
                     <Eye className="h-5 w-5" />
@@ -111,13 +151,33 @@ export const LoginPage = () => {
             </button>
           </form>
 
-          <div className="text-end mt-4">
+          <div className="text-end mt-1">
             <p className="text-sm">
               ¿Eres nuevo?{" "}
               <a href="/auth/register" className="btn btn-link p-0">
                 Regístrate
               </a>
             </p>
+          </div>
+
+          <div className="flex flex-col gap-4 items-center mt-1">
+            <button
+              type="button"
+              onClick={() => loginWithProviderPopup("google")}
+              className="btn btn-outline w-full flex items-center justify-center gap-2"
+            >
+              <Google size="24" variant="Bold" />
+              <span>Continuar con Google</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => loginWithProviderPopup("apple")}
+              className="btn btn-outline w-full flex items-center justify-center gap-2"
+            >
+              <Apple size="24" variant="Bold" />
+              <span>Continuar con Apple</span>
+            </button>
           </div>
         </div>
       </div>

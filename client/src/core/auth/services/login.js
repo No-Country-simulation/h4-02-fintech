@@ -14,3 +14,11 @@ export const resetPassword = async (token, password) => {
   const { data } = await iupiApi.post("/reset-password", { password, token });
   return data;
 };
+
+export const loginWithSocial = async (provider, credentials) => {
+  const { data } = await iupiApi.post(
+    `/auth/oauth?provider=${provider}`,
+    credentials
+  );
+  return data;
+};

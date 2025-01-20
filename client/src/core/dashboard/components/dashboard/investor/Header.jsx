@@ -17,6 +17,7 @@ import { formatCurrency } from "../../../../utils/formatCurrency";
 
 export const Header = () => {
   const { user } = useAuthStore();
+
   const { financial, toggleCurrencyType, currencyType } = useFinancialStore();
 
   const [showBalance, setShowBalance] = useState(false);
@@ -63,13 +64,13 @@ export const Header = () => {
         <div className="flex items-center gap-3">
           <div className="avatar placeholder">
             <div className="bg-neutral text-neutral-content w-16 h-16 rounded-full ring ring-primary">
-              <span className="text-3xl">{user?.name[0]}</span>
+              <span className="text-3xl">{user?.name?.[0] ?? ""}</span>
             </div>
           </div>
           <div>
             <p className="text-gray-400 text-sm">Bienvenido!</p>
             <h2 className="text-xl font-semibold">
-              {user?.name.split(" ")[0]}
+              {user?.name?.split(" ")[0] ?? ""}
             </h2>
           </div>
         </div>
