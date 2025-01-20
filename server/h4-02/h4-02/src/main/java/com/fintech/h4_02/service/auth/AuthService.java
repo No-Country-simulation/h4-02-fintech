@@ -113,7 +113,7 @@ public class AuthService {
         }
 
         // Verify ID token
-        auth0IdTokenVerifierService.verifyAuth0IdToken(dto.idToken());
+        // auth0IdTokenVerifierService.verifyAuth0IdToken(dto.idToken());
 
         // Login or register user
         boolean userExists = userRepository.existsByEmail(dto.email());
@@ -141,7 +141,7 @@ public class AuthService {
         UserEntity user = getUserByEmailOrThrow(email);
 
         user.setResetPasswordToken(token);
-        user.setTokenExpirationDate(LocalDateTime.now().plusMinutes(10));
+        user.setTokenExpirationDate(LocalDateTime.now().plusMinutes(30));
         userRepository.save(user);
 
         return token;
