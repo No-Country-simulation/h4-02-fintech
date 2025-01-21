@@ -3,26 +3,34 @@ package com.fintech.h4_02.dto.wallet;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
-public record WalletRequest(@NotNull
-                            Long user,
+import java.time.LocalDate;
 
+public record WalletRequest(
+        @NotNull
+        Long user,
+        String description,
+        @NotBlank
+        String value,
 
-                            String description,
-                            @NotBlank
-                            String value,
+        @NotBlank
+        String state,
+        @NotBlank
+        String date
+) {
+    public WalletRequest(
+            @NotNull
+            Long user,
 
-                            @NotBlank
-                            String state) {
-    public WalletRequest(Long user,
+            String description,
+            @NotBlank
+            Double value,
 
-
-                         String description,
-
-                         Double value,
-
-
-                         String state) {
-        this(user, description, String.valueOf(value), state);
+            @NotBlank
+            String state,
+            @NotBlank
+            String date
+    ) {
+        this(user, description, String.valueOf(value), state, date);
 
     }
 }

@@ -180,10 +180,11 @@ class UserControllerTest {
     @Label("ingresar dinero")
     void walletCreateIn() throws JsonProcessingException {
 
-        WalletRequest wallet = new WalletRequest(1L, "Engreso de aginaldo", 150.000,"in");
+        WalletRequest wallet = new WalletRequest(1L, "Engreso de aginaldo", 150.000,"in","2024-01-21");
         String json = "{\"user\":\"" + wallet.user() + "\","
                 + "\"description\":\"" + wallet.description() + "\","
                 + "\"value\":\"" + wallet.value() + "\","
+                + "\"date\":\"" + wallet.date() + "\","
                 + "\"state\":\"" + wallet.state() + "\""
                 + "}";
 
@@ -207,10 +208,11 @@ class UserControllerTest {
     @Label("egreso de  dinero")
     void walletCreateOut() throws JsonProcessingException {
 
-        WalletRequest wallet = new WalletRequest(1L, "Factura de luz", 15.000,"out");
+        WalletRequest wallet = new WalletRequest(1L, "Factura de luz", 15.000,"out","2024-01-21");
         String json = "{\"user\":\"" + wallet.user() + "\","
                 + "\"description\":\"" + wallet.description() + "\","
                 + "\"value\":\"" + wallet.value() + "\","
+                + "\"date\":\"" + wallet.date() + "\","
                 + "\"state\":\"" + wallet.state() + "\""
                 + "}";
 
