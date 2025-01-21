@@ -15,9 +15,29 @@ public record UserResponseDto(
 
         Set<Role> roles,
 
-        OnboardingEntity onboarding,
+        UserEntity.OAuthProvider oauthProvider,
 
-        UserEntity.OAuthProvider oauthProvider
+        String picture,
+
+        String phone,
+
+        String address,
+
+        boolean notifyMilestoneAchieved,
+
+        boolean notifySavingsGoalMet,
+
+        boolean notifyInvestmentOpportunities,
+
+        boolean notifyInvestmentExpirations,
+
+        boolean dailyNotifications,
+
+        boolean weeklyNotifications,
+
+        boolean monthlyNotifications,
+
+        OnboardingEntity onboarding
 ) {
 
     public UserResponseDto(UserEntity user) {
@@ -26,8 +46,18 @@ public record UserResponseDto(
                 user.getEmail(),
                 user.getName(),
                 user.getRoles(),
-                user.getOnboarding(),
-                user.getProvider()
+                user.getProvider(),
+                user.getPictureUrl(),
+                user.getPhone(),
+                user.getAddress(),
+                user.getNotifySavingsGoalMet(),
+                user.getNotifySavingsGoalMet(),
+                user.getNotifyInvestmentOpportunities(),
+                user.getNotifyInvestmentExpirations(),
+                user.getDailyNotifications(),
+                user.getWeeklyNotifications(),
+                user.getMonthlyNotifications(),
+                user.getOnboarding()
         );
     }
 
