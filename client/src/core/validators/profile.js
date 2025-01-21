@@ -5,13 +5,13 @@ export const profileValidationSchema = yup.object().shape({
   dni: yup
     .string()
     .required("El DNI es obligatorio")
-    .matches(/^[0-9]{7,8}$/, "El DNI debe ser un número de 7 u 8 dígitos"),
+    .matches(/^[0-9]{7,8}$/, "El DNI debe ser un número de 7 u 8 dígitos."),
   phone: yup
     .string()
     .required("El teléfono es obligatorio.")
     .matches(
-      /^\+\d{1,3}\s\d{4}\s\d{4}$/,
-      "El teléfono debe tener el formato +99 9999 9999."
+      /^\+549?(\d{10})$/,
+      "El teléfono debe tener el formato +549XXXXXXXXXX o +54XXXXXXXXXX."
     ),
   email: yup
     .string()
