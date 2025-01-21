@@ -5,6 +5,7 @@ import com.fintech.h4_02.enums.StateWallet;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.Type;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -35,6 +36,8 @@ public class WalletEntity {
 
     @Enumerated(EnumType.STRING)
     private StateWallet state;
+
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     @Column(name = "date")
     private Date date;
 }
