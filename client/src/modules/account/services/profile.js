@@ -6,6 +6,6 @@ export const getProfile = async (id) => {
 };
 
 export const updateProfile = async (id, newData) => {
-  const { data } = await iupiApi.put(`/user/${id}`, newData);
+  const { data } = await iupiApi.put(`/user/${id}/profile`, newData);
   return data;
 };
