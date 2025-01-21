@@ -23,10 +23,10 @@ export const SavingsOverview = () => {
   }, [financial.savings.percentage]);
 
   return (
-    <div className="flex w-full items-center justify-center p-2">
-      <div className="flex flex-col items-center gap-2 lg:w-auto p-2">
+    <div className="flex w-full items-center justify-center p-2 bg-secondary bg-opacity-20 rounded-xl shadow-xl">
+      <div className="flex flex-col items-center gap-2 lg:w-auto p-2 ">
         <div
-          className="w-20 h-20 bg-gray-200 rounded-full flex items-center justify-center radial-progress"
+          className="w-20 h-20 bg-gray-300 rounded-full flex items-center justify-center radial-progress"
           style={{
             "--value": progressValue,
             "--size": "5rem",
@@ -55,11 +55,11 @@ export const SavingsOverview = () => {
 
       <div className="flex-1 w-full lg:w-auto">
         <div className="flex items-center gap-2">
-          <DollarCircle size="32" variant="Bold" />
+          <DollarCircle size="36" variant="Bold" />
           <div className="flex-1">
             <div className="flex flex-col">
               <span className="text-base font-semibold">Ingresos</span>
-              <span className="font-bold">
+              <span className="font-bold text-lg">
                 {formatCurrency(
                   financial.income.values[currencyType],
                   currencyType
@@ -72,11 +72,11 @@ export const SavingsOverview = () => {
         <div className="divider divider-primary m-0"></div>
 
         <div className="flex items-center gap-2">
-          <ShoppingBag size="32" variant="Bold" />
+          <ShoppingBag size="36" variant="Bold" />
           <div className="flex-1">
             <div className="flex flex-col">
               <span className="text-base font-semibold">Gastos</span>
-              <span className="font-bold">
+              <span className="font-bold text-lg">
                 -
                 {formatCurrency(
                   financial.fixedExpenses.values[currencyType],

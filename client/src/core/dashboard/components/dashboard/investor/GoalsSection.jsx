@@ -1,114 +1,120 @@
-import { Airplane, Card, Setting, User } from "iconsax-react";
-import { useEffect, useState } from "react";
+import { Airplane, Bag, Money, Home, Card, Setting, User } from "iconsax-react";
+import CreateGoalModal from "./CreateGoalModal";
+import { useGoalStore } from "../../../store/useGoalStore";
+import { Progress } from "../ui/Progress";
 
 export const GoalsSection = () => {
-  const [progressValue, setProgressValue] = useState(0);
+  const goals = useGoalStore((state) => state.goals);
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setProgressValue((prev) => {
-        if (prev >= 50) {
-          clearInterval(interval);
-          return 50;
-        }
-        return prev + 1;
-      });
-    }, 30);
-
-    return () => clearInterval(interval);
-  }, []);
+  const getCategoryIcon = (category) => {
+    switch (category) {
+      case "vacaciones":
+        return <Airplane size="24" className="text-primary" />;
+      case "retiro":
+        return <Money size="24" className="text-primary" />;
+      case "bienes":
+        return <Home size="24" className="text-primary" />;
+      case "otros":
+        return <Bag size="24" className="text-primary" />;
+      default:
+        return <Airplane size="24" className="text-primary" />;
+    }
+  };
 
   return (
-    <div className="p-4 space-y-8">
-      <ul className="menu menu-horizontal bg-base-200 rounded-box w-full">
-        <li className="w-full">
-          <details>
-            <summary className="flex">
-              <div className="w-full space-y-2">
-                <div className="flex items-center gap-2">
-                  <Airplane size="24" className="text-primary" />
-                  <h3 className="text-xl font-medium text-gray-800">
-                    Vacaciones 2025
-                  </h3>
-                </div>
+    <>
+      {/* Goals */}
+      <>
+        {goals.map((goal, index) => (
+          <div key={index} className="space-y-4">
+            <div className="flex items-center gap-2">
+              {getCategoryIcon(goal.category)}
+              <h3 className="text-xl font-medium text-gray-800">
+                {goal.goalName}
+              </h3>
+            </div>
+            <ul className="menu menu-horizontal bg-base-200 rounded-box w-full">
+              <li className="w-full">
+                <details>
+                  <summary className="flex">
+                    <div className="w-full space-y-2">
+                      <div className="flex items-center">
+                        <Progress progress={goal.progress} />
+                      </div>
+                    </div>
+                  </summary>
+                  <ul className="z-20">
+                    <li>
+                      <details>
+                        <summary>
+                          <User size="16" /> Fecha límite
+                        </summary>
+                        <ul>
+                          <li>
+                            <a>
+                              Próxima meta:{" "}
+                              {new Date(goal.deadline).toLocaleDateString()}
+                            </a>
+                          </li>
+                          <li>
+                            <a>
+                              Tiempo restante:{" "}
+                              {Math.ceil(
+                                (new Date(goal.deadline) - new Date()) /
+                                  (1000 * 60 * 60 * 24 * 30)
+                              )}{" "}
+                              meses
+                            </a>
+                          </li>
+                        </ul>
+                      </details>
+                    </li>
+                    <li>
+                      <details>
+                        <summary>
+                          <Card size="16" /> Historial de aportes
+                        </summary>
+                        <ul>
+                          {goal.contributions.map((contribution, idx) => (
+                            <li key={idx}>
+                              <a>
+                                Aporte de {contribution.amount} en{" "}
+                                {new Date(
+                                  contribution.date
+                                ).toLocaleDateString()}
+                              </a>
+                            </li>
+                          ))}
+                        </ul>
+                      </details>
+                    </li>
 
-                <div className="flex items-center">
-                  <div className="w-full relative">
-                    <progress
-                      className="progress w-full h-8 bg-gray-300"
-                      value={progressValue}
-                      max="100"
-                    ></progress>
-                    <p className="absolute inset-0 flex items-center justify-start ml-4 text-sm text-white font-bold">
-                      {progressValue}% completado
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </summary>
-            <ul>
-              <li>
-                <details>
-                  <summary>
-                    <User size="16" /> Fecha límite
-                  </summary>
-                  <ul>
                     <li>
-                      <a>Próxima meta: 30 de junio de 2025</a>
-                    </li>
-                    <li>
-                      <a>Tiempo restante: 1 año y 5 meses</a>
-                    </li>
-                  </ul>
-                </details>
-              </li>
-              <li>
-                <details>
-                  <summary>
-                    <Card size="16" /> Historial de aportes
-                  </summary>
-                  <ul>
-                    <li>
-                      <a>Aporte mensual: $500 USD</a>
-                    </li>
-                    <li>
-                      <a>Último aporte: 15 de enero de 2025</a>
-                    </li>
-                    <li>
-                      <a>Total acumulado: $8,500 USD</a>
-                    </li>
-                  </ul>
-                </details>
-              </li>
-
-              <li>
-                <details>
-                  <summary>
-                    <Setting size="16" /> Sugerencias
-                  </summary>
-                  <ul>
-                    <li>
-                      <a>Incrementa tu ahorro mensual en un 10%</a>
-                    </li>
-                    <li>
-                      <a>
-                        Invierte en fondos de bajo riesgo para mayor seguridad
-                      </a>
-                    </li>
-                    <li>
-                      <a>Revisa las comisiones de tu cuenta de ahorro</a>
+                      <details>
+                        <summary>
+                          <Setting size="16" /> Sugerencias
+                        </summary>
+                        <ul>
+                          {goal.suggestions.map((suggestion, idx) => (
+                            <li key={idx}>
+                              <a>{suggestion}</a>
+                            </li>
+                          ))}
+                        </ul>
+                      </details>
                     </li>
                   </ul>
                 </details>
               </li>
             </ul>
-          </details>
-        </li>
-      </ul>
 
-      <p className="text-base font-semibold text-gray-600">
-        ¡Gran avance! Tu consistencia está dando frutos.
-      </p>
-    </div>
+            
+          </div>
+        ))}
+      </>
+      
+      {/* Create Goal */}
+      <CreateGoalModal />
+    </>
   );
 };
