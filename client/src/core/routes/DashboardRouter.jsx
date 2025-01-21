@@ -6,6 +6,7 @@ import { AdminDashboardPage } from "../dashboard/pages/AdminDashboardPage";
 import { useAuthStore } from "../auth/store/useAuthStore";
 import { ProfileInvestorPage } from "../../modules/account/pages/ProfileInvestorPage";
 import { useAuth0 } from "@auth0/auth0-react";
+import { TransactionsPage } from "../../modules/transactions/pages/TransactionsPage";
 
 export const DashboardRouter = () => {
   const { user } = useAuthStore();
@@ -38,6 +39,7 @@ export const DashboardRouter = () => {
           <Route path="/" element={<InvestorDashboardPage />} />
           <Route path="/onboarding" element={<OnboardingPage />} />
           <Route path="/profile" element={<ProfileInvestorPage />} />
+          <Route path="/transactions" element={<TransactionsPage />} />
         </>
       )}
 
