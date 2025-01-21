@@ -8,6 +8,8 @@ import com.fintech.h4_02.dto.auth.LoginRequestDto;
 import com.fintech.h4_02.dto.onboarding.OnboardingRequest;
 import com.fintech.h4_02.dto.user.CreateUserRequestDto;
 import com.fintech.h4_02.dto.user.UserResponseDto;
+import com.fintech.h4_02.dto.wallet.WalletRequest;
+import com.fintech.h4_02.dto.wallet.WalletResponse;
 import com.fintech.h4_02.entity.OnboardingEntity;
 import com.fintech.h4_02.entity.UserEntity;
 import com.fintech.h4_02.util.JsonUtil;
@@ -158,7 +160,7 @@ class UserControllerTest {
     }
 
     @Test
-    @Label("login")
+    @Label("obtener usuario por id")
     void getUserById() throws JsonProcessingException {
 
 
@@ -174,5 +176,31 @@ class UserControllerTest {
         );
     }
 
+    @Test
+    @Label("crear ususarios con seguridad")
+    void walletCreate() throws JsonProcessingException {
+
+        WalletRequest wallet = new WalletRequest(1L, "Engreso de aginaldo", 150.000,"in");
+        String json = "{\"user\":\"" + wallet.user() + "\","
+                + "\"description\":\"" + wallet.description() + "\","
+                + "\"value\":\"" + wallet.value() + "\","
+                + "\"state\":\"" + wallet.state() + "\""
+                + "}";
+
+
+        JsonUtil.toJsonPrint("json ", json);
+
+        HttpEntity<String> request = new HttpEntity<>(json, headers);
+        ResponseEntity<WalletResponse> result = testRestTemplate.exchange("/api/v1/wallet", HttpMethod.POST, request, WalletResponse.class);
+        JsonUtil.toJsonPrint("wallet created: ", result);
+
+        assertAll(
+                () -> assertEquals(HttpStatus.CREATED, result.getStatusCode()),
+                () -> assertEquals(201, result.getStatusCode().value()),
+                () -> assertEquals(result.getBody().user().getId(), wallet.user()),
+                () -> assertEquals(result.getBody().description(), wallet.description()),
+                () -> assertNotNull(result.getBody().id())
+        );
+    }
 
 }
