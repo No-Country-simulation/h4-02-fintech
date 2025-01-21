@@ -38,7 +38,25 @@ public class WalleController {
                             mediaType = MediaType.APPLICATION_JSON_VALUE,
                             schema = @Schema(implementation = WalletResponse.class),
                             examples = @ExampleObject(name = "change of wallet to user",
-                                    value = ""))
+                                    value = "{\n" +
+                                            "    \"id\" : 202,\n" +
+                                            "    \"user\" : {\n" +
+                                            "      \"id\" : 1,\n" +
+                                            "      \"email\" : \"lionel@gmail\",\n" +
+                                            "      \"password\" : \"1234\",\n" +
+                                            "      \"name\" : \"Lionel\",\n" +
+                                            "      \"dni\" : \"258698741\",\n" +
+                                            "      \"roles\" : [ ],\n" +
+                                            "      \"onboarding\" : null,\n" +
+                                            "      \"resetPasswordToken\" : null,\n" +
+                                            "      \"tokenExpirationDate\" : null,\n" +
+                                            "      \"emailConfirmed\" : false\n" +
+                                            "    },\n" +
+                                            "    \"description\" : \"Factura de luz\",\n" +
+                                            "    \"value\" : 15.0,\n" +
+                                            "    \"state\" : \"OUT\",\n" +
+                                            "    \"date\" : \"2024-01-21\"\n" +
+                                            "  }"))
             )
     })
     @PostMapping
