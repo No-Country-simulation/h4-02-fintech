@@ -177,10 +177,37 @@ class UserControllerTest {
     }
 
     @Test
-    @Label("crear ususarios con seguridad")
-    void walletCreate() throws JsonProcessingException {
+    @Label("ingresar dinero")
+    void walletCreateIn() throws JsonProcessingException {
 
         WalletRequest wallet = new WalletRequest(1L, "Engreso de aginaldo", 150.000,"in");
+        String json = "{\"user\":\"" + wallet.user() + "\","
+                + "\"description\":\"" + wallet.description() + "\","
+                + "\"value\":\"" + wallet.value() + "\","
+                + "\"state\":\"" + wallet.state() + "\""
+                + "}";
+
+
+        JsonUtil.toJsonPrint("json ", json);
+
+        HttpEntity<String> request = new HttpEntity<>(json, headers);
+        ResponseEntity<WalletResponse> result = testRestTemplate.exchange("/api/v1/wallet", HttpMethod.POST, request, WalletResponse.class);
+        JsonUtil.toJsonPrint("wallet created: ", result);
+
+        assertAll(
+                () -> assertEquals(HttpStatus.CREATED, result.getStatusCode()),
+                () -> assertEquals(201, result.getStatusCode().value()),
+                () -> assertEquals(result.getBody().user().getId(), wallet.user()),
+                () -> assertEquals(result.getBody().description(), wallet.description()),
+                () -> assertNotNull(result.getBody().id())
+        );
+    }
+
+    @Test
+    @Label("egreso de  dinero")
+    void walletCreateOut() throws JsonProcessingException {
+
+        WalletRequest wallet = new WalletRequest(1L, "Factura de luz", 15.000,"out");
         String json = "{\"user\":\"" + wallet.user() + "\","
                 + "\"description\":\"" + wallet.description() + "\","
                 + "\"value\":\"" + wallet.value() + "\","
