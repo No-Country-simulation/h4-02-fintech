@@ -6,13 +6,15 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { profileValidationSchema } from "../../../core/validators/profile";
 import { useAuthStore } from "../../../core/auth/store/useAuthStore";
 import { useAuth0 } from "@auth0/auth0-react";
+import { getErrorMessage } from "../../../core/validators/errorHandler";
 
 export const ProfileInvestor = () => {
-  const { user } = useAuthStore();
+  const { user, login } = useAuthStore();
   const { user: userAuth0 } = useAuth0();
   const [pictureOptions /* setPictureOptions */] = useState([
-    user?.picture || userAuth0?.picture || "",
-    "https://api.dicebear.com/9.x/adventurer/svg?seed=Riley",
+    "",
+    userAuth0?.picture ||
+      "https://api.dicebear.com/9.x/adventurer/svg?seed=Riley",
     "https://api.dicebear.com/9.x/adventurer/svg?seed=Maria",
     "https://api.dicebear.com/9.x/adventurer/svg?seed=Aidan",
     "https://api.dicebear.com/9.x/adventurer/svg?seed=Chase",
@@ -48,14 +50,15 @@ export const ProfileInvestor = () => {
 
   const onSubmit = async (data) => {
     try {
-      console.log("Datos enviados:", data);
       await updateProfile(user.id, data);
-      toast.success("Perfil actualizado", {
+      toast("Perfil actualizado", {
         description: "El perfil se ha guardado correctamente.",
       });
+      login({ ...user, name: data.name, picture: data.picture });
     } catch (error) {
-      console.error("Error al actualizar perfil:", error);
-      toast.error("Hubo un problema al actualizar el perfil.");
+      const errorMessage = getErrorMessage(error);
+      toast.error(errorMessage);
+      console.error(error);
     }
   };
 
@@ -64,6 +67,7 @@ export const ProfileInvestor = () => {
       if (user?.id == null) return;
 
       const profile = await getProfile(user.id);
+      setSelectPicture(profile.picture || "");
 
       reset({
         name: profile.name || "",
@@ -71,10 +75,10 @@ export const ProfileInvestor = () => {
         phone: profile.phone || "",
         email: profile.email || "",
         address: profile.address || "",
-        milestoneAchieved: profile.milestoneAchieved || false,
-        savingsGoalMet: profile.savingsGoalMet || false,
-        investmentOpportunities: profile.investmentOpportunities || false,
-        investmentExpirations: profile.investmentExpirations || false,
+        milestoneAchieved: profile.notifyMilestoneAchieved || false,
+        savingsGoalMet: profile.notifySavingsGoalMet || false,
+        investmentOpportunities: profile.notifyInvestmentOpportunities || false,
+        investmentExpirations: profile.notifyInvestmentExpirations || false,
         dailyNotifications: profile.dailyNotifications || false,
         weeklyNotifications: profile.weeklyNotifications || false,
         monthlyNotifications: profile.monthlyNotifications || false,
@@ -120,7 +124,7 @@ export const ProfileInvestor = () => {
               key={index}
               onClick={() => handlePictureSelect(picture)}
               className={`w-16 h-16 rounded-full overflow-hidden bg-gray-200 focus:ring-2 focus:ring-primary ${
-                user?.picture === picture ? "ring-2 ring-primary" : ""
+                selectPicture === picture ? "ring-2 ring-primary" : ""
               }`}
             >
               {picture === "" ? (

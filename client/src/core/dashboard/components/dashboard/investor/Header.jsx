@@ -71,7 +71,17 @@ export const Header = () => {
         <div className="flex items-center gap-3">
           <div className="avatar placeholder">
             <div className="bg-neutral text-neutral-content w-16 h-16 rounded-full ring ring-primary">
-              <span className="text-3xl">{user?.name?.[0] ?? ""}</span>
+              {user?.picture ? (
+                <img
+                  src={user?.picture}
+                  alt="Profile"
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                <span className="text-3xl font-semibold text-gray-700">
+                  {user?.name?.[0]?.toUpperCase() || ""}
+                </span>
+              )}
             </div>
           </div>
           <div>
