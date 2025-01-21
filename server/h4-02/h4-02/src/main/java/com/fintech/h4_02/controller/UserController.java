@@ -33,7 +33,7 @@ public class UserController {
             tags = {"UserEntity"}
     )
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "get user ok",
+            @ApiResponse(responseCode = "200", description = "get user ok",
                     content = @Content(
                             mediaType = MediaType.APPLICATION_JSON_VALUE,
                             schema = @Schema(implementation = UserResponseDto.class),

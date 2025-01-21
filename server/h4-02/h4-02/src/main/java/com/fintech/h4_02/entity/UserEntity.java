@@ -1,11 +1,14 @@
 package com.fintech.h4_02.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fintech.h4_02.dto.user.CreateUserRequestDto;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
@@ -14,7 +17,7 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity(name = "UserEntity")
-@Table(name = "User_entity")
+@Table(name = "user_entity")
 @EqualsAndHashCode(of = "id")
 public class UserEntity {
     @Id
@@ -54,6 +57,10 @@ public class UserEntity {
     @Getter(AccessLevel.NONE)
     @Column(name = "is_email_confirmed")
     private Boolean isEmailConfirmed;
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL,orphanRemoval = true)
+    @JsonIgnore
+    private List<WalletEntity> wallets = new ArrayList<>();
 
     public UserEntity(CreateUserRequestDto user) {
         this.email = user.email();
