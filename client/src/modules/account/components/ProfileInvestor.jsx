@@ -1,19 +1,32 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { getProfile, updateProfile } from "../services/profile";
 import { toast } from "sonner";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { profileValidationSchema } from "../../../core/validators/profile";
 import { useAuthStore } from "../../../core/auth/store/useAuthStore";
+import { useAuth0 } from "@auth0/auth0-react";
 
 export const ProfileInvestor = () => {
   const { user } = useAuthStore();
+  const { user: userAuth0 } = useAuth0();
+  const [pictureOptions /* setPictureOptions */] = useState([
+    user?.picture || userAuth0?.picture || "",
+    "https://api.dicebear.com/9.x/adventurer/svg?seed=Riley",
+    "https://api.dicebear.com/9.x/adventurer/svg?seed=Maria",
+    "https://api.dicebear.com/9.x/adventurer/svg?seed=Aidan",
+    "https://api.dicebear.com/9.x/adventurer/svg?seed=Chase",
+    "https://api.dicebear.com/9.x/adventurer/svg?seed=Easton",
+  ]);
+
+  const [selectPicture, setSelectPicture] = useState(user?.picture || "");
 
   const {
     register,
     handleSubmit,
     formState: { errors },
     reset,
+    setValue,
   } = useForm({
     resolver: yupResolver(profileValidationSchema),
     defaultValues: {
@@ -29,6 +42,7 @@ export const ProfileInvestor = () => {
       dailyNotifications: false,
       weeklyNotifications: false,
       monthlyNotifications: false,
+      picture: "",
     },
   });
 
@@ -64,6 +78,7 @@ export const ProfileInvestor = () => {
         dailyNotifications: profile.dailyNotifications || false,
         weeklyNotifications: profile.weeklyNotifications || false,
         monthlyNotifications: profile.monthlyNotifications || false,
+        picture: profile.picture || "",
       });
     } catch (error) {
       console.error("Error al obtener el perfil:", error);
@@ -75,15 +90,20 @@ export const ProfileInvestor = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const handlePictureSelect = (picture) => {
+    setSelectPicture(picture);
+    setValue("picture", picture);
+  };
+
   return (
     <div className="p-4 sm:p-6 max-w-lg mx-auto bg-gray-50">
-      {/* Imagen de perfil */}
-      <div className="flex justify-center mb-8">
-        <div className="relative">
+      {/* Selección de imagen de perfil */}
+      <div className="flex flex-col items-center mb-8">
+        <div className="relative mb-4">
           <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-full overflow-hidden bg-gray-200 flex items-center justify-center">
-            {user?.profile ? (
+            {selectPicture ? (
               <img
-                src={user.profile}
+                src={selectPicture}
                 alt="Profile"
                 className="w-full h-full object-cover"
               />
@@ -93,10 +113,29 @@ export const ProfileInvestor = () => {
               </span>
             )}
           </div>
-
-          <button className="btn btn-circle btn-sm btn-disabled btn-primary absolute bottom-1 right-1 sm:bottom-2 sm:right-2">
-            <span className="text-lg sm:text-xl">+</span>
-          </button>
+        </div>
+        <div className="grid grid-cols-3 gap-2">
+          {pictureOptions.map((picture, index) => (
+            <button
+              key={index}
+              onClick={() => handlePictureSelect(picture)}
+              className={`w-16 h-16 rounded-full overflow-hidden bg-gray-200 focus:ring-2 focus:ring-primary ${
+                user?.picture === picture ? "ring-2 ring-primary" : ""
+              }`}
+            >
+              {picture === "" ? (
+                <span className="text-3xl font-semibold text-gray-700">
+                  {user?.name?.[0]?.toUpperCase() || ""}
+                </span>
+              ) : (
+                <img
+                  src={picture}
+                  alt={`Option ${index + 1}`}
+                  className="w-full h-full object-cover"
+                />
+              )}
+            </button>
+          ))}
         </div>
       </div>
 
@@ -124,7 +163,7 @@ export const ProfileInvestor = () => {
             </label>
             <input
               type="text"
-              placeholder="99.999.999"
+              placeholder="99999999"
               {...register("dni")}
               className="input input-bordered w-full"
             />
@@ -139,7 +178,7 @@ export const ProfileInvestor = () => {
             </label>
             <input
               type="tel"
-              placeholder="+99 9999 9999"
+              placeholder="+54XXXXXXXXXX"
               {...register("phone")}
               className="input input-bordered w-full"
             />
@@ -160,6 +199,7 @@ export const ProfileInvestor = () => {
             placeholder="user@mail.com"
             {...register("email")}
             className="input input-bordered w-full"
+            disabled
           />
           {errors.email && (
             <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>
