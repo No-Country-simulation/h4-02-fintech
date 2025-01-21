@@ -13,6 +13,8 @@ public record UserResponseDto(
 
         String name,
 
+        String dni,
+
         Set<Role> roles,
 
         UserEntity.OAuthProvider oauthProvider,
@@ -45,6 +47,7 @@ public record UserResponseDto(
                 user.getId(),
                 user.getEmail(),
                 user.getName(),
+                user.getDni(),
                 user.getRoles(),
                 user.getProvider(),
                 user.getPictureUrl(),
