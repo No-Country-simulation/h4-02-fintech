@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fintech.h4_02.dto.user.CreateUserRequestDto;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -39,17 +40,39 @@ public class UserEntity {
     @Column(name = "picture_url")
     private String pictureUrl;
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "user_roles",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id")
-    )
-    private Set<Role> roles;
+    @Column(name = "phone")
+    private String phone;
 
-    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "onboarding_entity_id", referencedColumnName = "id")
-    @JsonManagedReference
-    private OnboardingEntity onboarding;
+    @Column(name = "address")
+    private String address;
+
+    @Column(name = "notify_milestone_achieved")
+    @ColumnDefault("false")
+    private Boolean notifyMilestoneAchieved = false;
+
+    @Column(name = "notify_savings_goal_met")
+    @ColumnDefault("false")
+    private Boolean notifySavingsGoalMet = false;
+
+    @Column(name = "notify_investment_opportunities")
+    @ColumnDefault("false")
+    private Boolean notifyInvestmentOpportunities = false;
+
+    @Column(name = "notify_investment_expirations")
+    @ColumnDefault("false")
+    private Boolean notifyInvestmentExpirations = false;
+
+    @Column(name = "daily_notifications")
+    @ColumnDefault("false")
+    private Boolean dailyNotifications = false;
+
+    @Column(name = "weekly_notifications")
+    @ColumnDefault("false")
+    private Boolean weeklyNotifications = false;
+
+    @Column(name = "monthly_notifications")
+    @ColumnDefault("false")
+    private Boolean monthlyNotifications = false;
 
     @Column(name = "reset_password_token")
     private String resetPasswordToken;
@@ -64,6 +87,19 @@ public class UserEntity {
     @Column(name = "oauth_provider")
     @Enumerated(EnumType.STRING)
     private OAuthProvider provider;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "user_roles",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id")
+    )
+    private Set<Role> roles;
+
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "onboarding_entity_id", referencedColumnName = "id")
+    @JsonManagedReference
+    private OnboardingEntity onboarding;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
