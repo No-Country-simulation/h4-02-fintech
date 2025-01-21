@@ -36,6 +36,9 @@ public class UserEntity {
     @Column(name = "dni", unique = true)
     private String dni;
 
+    @Column(name = "picture_url")
+    private String pictureUrl;
+
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "user_roles",
             joinColumns = @JoinColumn(name = "user_id"),
@@ -58,7 +61,11 @@ public class UserEntity {
     @Column(name = "is_email_confirmed")
     private Boolean isEmailConfirmed;
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL,orphanRemoval = true)
+    @Column(name = "oauth_provider")
+    @Enumerated(EnumType.STRING)
+    private OAuthProvider provider;
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
     private List<WalletEntity> wallets = new ArrayList<>();
 
@@ -71,6 +78,22 @@ public class UserEntity {
 
     public boolean isEmailConfirmed() {
         return Objects.requireNonNullElse(isEmailConfirmed, false);
+    }
+
+    public enum OAuthProvider {
+        GOOGLE,
+        APPLE,
+        SYSTEM;
+
+        public static OAuthProvider fromString(String value) {
+            for (OAuthProvider provider : OAuthProvider.values()) {
+                if (provider.name().equalsIgnoreCase(value)) {
+                    return provider;
+                }
+            }
+            throw new IllegalArgumentException("No enum constant for value: " + value);
+        }
+
     }
 
 }

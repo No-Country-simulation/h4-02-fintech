@@ -1,6 +1,6 @@
 package com.fintech.h4_02.controller;
 
-import com.fintech.h4_02.service.AuthService;
+import com.fintech.h4_02.service.auth.AuthService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -33,14 +33,14 @@ public class AccountActivationController {
     private String frontendUrl;
 
     @Operation(
-        summary = "Activate a user account",
-        description = """
-                 Activates a user account using a token sent to the user's email upon registration.\s
-                 If the token is valid, the account is activated and the user is redirected to the login form in the frontend.
-            \s""",
-        responses = {
-            @ApiResponse(responseCode = "302", description = "Account successfully activated, redirects to login form"),
-        }
+            summary = "Activate a user account",
+            description = """
+                         Activates a user account using a token sent to the user's email upon registration.\s
+                         If the token is valid, the account is activated and the user is redirected to the login form in the frontend.
+                    \s""",
+            responses = {
+                    @ApiResponse(responseCode = "302", description = "Account successfully activated, redirects to login form"),
+            }
     )
     @GetMapping("/confirm-account")
     public ResponseEntity<Void> activateAccount(@RequestParam("token") String token) {

@@ -38,8 +38,13 @@ jwt:
   secret: ${JWT_SECRET}
   expiration-hours: 72 # 3 days
 
+auth0:
+  clientId: ${AUTH0_CLIENT_ID}
+  publicKeysUri: ${AUTH0_PUBLIC_KEYS_URI}
+
 frontend:
   url: ${FRONTEND_URL}
+
 
 backend:
   url: ${BACKEND_URL}
