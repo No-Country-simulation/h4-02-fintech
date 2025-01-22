@@ -46,7 +46,6 @@ export default function CreateGoalModal() {
 
   return (
     <div className="px-4 py-2">
-     
       <button
         className="btn btn-outline w-full"
         onClick={() => setIsOpen(true)}
@@ -110,6 +109,7 @@ export default function CreateGoalModal() {
                 <option value="vacaciones">Vacaciones</option>
                 <option value="retiro">Ahorrar para mi retiro</option>
                 <option value="bienes">Comprar bienes</option>
+                <option value="proyecto">Financiar proyecto</option>
                 <option value="otros">Otro</option>
               </select>
               {errors.category && (

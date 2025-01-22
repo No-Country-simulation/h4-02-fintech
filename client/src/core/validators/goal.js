@@ -11,7 +11,7 @@ export const goalValidationSchema = yup.object().shape({
     .string()
     .required("La categoría es obligatoria.")
     .oneOf(
-      ["vacaciones", "retiro", "bienes", "otros"],
+      ["vacaciones", "retiro", "bienes", "proyecto", "otros"],
       "Seleccione una categoría válida."
     ),
 
@@ -22,7 +22,5 @@ export const goalValidationSchema = yup.object().shape({
     .positive("El monto debe ser un número positivo.")
     .min(1, "El monto debe ser al menos 1."),
 
-  deadline: yup
-    .date()
-    .required("La fecha límite es obligatoria.")
+  deadline: yup.date().required("La fecha límite es obligatoria."),
 });

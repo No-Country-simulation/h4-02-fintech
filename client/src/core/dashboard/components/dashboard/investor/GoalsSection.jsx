@@ -1,4 +1,13 @@
-import { Airplane, Bag, Money, Home, Card, Setting, User } from "iconsax-react";
+import {
+  Airplane,
+  Bag,
+  Money,
+  Home,
+  Card,
+  Setting,
+  User,
+  Folder,
+} from "iconsax-react";
 import CreateGoalModal from "./CreateGoalModal";
 import { useGoalStore } from "../../../store/useGoalStore";
 import { Progress } from "../ui/Progress";
@@ -14,6 +23,8 @@ export const GoalsSection = () => {
         return <Money size="24" className="text-primary" />;
       case "bienes":
         return <Home size="24" className="text-primary" />;
+      case "proyecto":
+        return <Folder size="24" className="text-primary" />;
       case "otros":
         return <Bag size="24" className="text-primary" />;
       default:
