@@ -7,6 +7,13 @@ import { useAuthStore } from "../auth/store/useAuthStore";
 import { ProfileInvestorPage } from "../../modules/account/pages/ProfileInvestorPage";
 import { useAuth0 } from "@auth0/auth0-react";
 import { TransactionsPage } from "../../modules/transactions/pages/TransactionsPage";
+import { InvestmentLayout } from "../../modules/investment/pages/InvestmentLayout";
+import { InvestmentPage } from "../../modules/investment/pages/InvestmentPage";
+import { RecommendationPage } from "../../modules/investment/pages/RecommendationPage";
+import { BondsPage } from "../../modules/investment/pages/investment/BondsPage";
+import { CedearsPage } from "../../modules/investment/pages/investment/CedearsPage";
+import { FundsPage } from "../../modules/investment/pages/investment/FundsPage";
+import { ActionsPage } from "../../modules/investment/pages/investment/ActionsPage";
 
 export const DashboardRouter = () => {
   const { user } = useAuthStore();
@@ -40,6 +47,16 @@ export const DashboardRouter = () => {
           <Route path="/onboarding" element={<OnboardingPage />} />
           <Route path="/profile" element={<ProfileInvestorPage />} />
           <Route path="/transactions" element={<TransactionsPage />} />
+
+          {/* Rutas de inversión con layout */}
+          <Route path="/investment" element={<InvestmentLayout />}>
+            <Route index element={<InvestmentPage />} /> {/* Ruta base */}
+            <Route path="recommendation" element={<RecommendationPage />} />
+          </Route>
+          <Route path="/investment/bonds" element={<BondsPage />} />
+          <Route path="/investment/cedears" element={<CedearsPage />} />
+          <Route path="/investment/funds" element={<FundsPage />} />
+          <Route path="/investment/actions" element={<ActionsPage />} />
         </>
       )}
 
@@ -47,9 +64,7 @@ export const DashboardRouter = () => {
       {(roles.includes("ADMIN") ||
         roles.includes("ADMINISTRADOR") ||
         roles.includes("ADMINISTRATOR")) && (
-        <>
-          <Route path="/admin" element={<AdminDashboardPage />} />
-        </>
+        <Route path="/admin" element={<AdminDashboardPage />} />
       )}
 
       {/* Redirección por defecto */}

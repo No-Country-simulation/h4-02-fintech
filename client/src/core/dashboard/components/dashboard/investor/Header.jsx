@@ -44,7 +44,7 @@ export const Header = () => {
     {
       icon: <MoneyRecive size="24" />,
       text: "Gestión de inversiones",
-      link: "/",
+      link: "/dashboard/investment",
     },
     {
       icon: <Edit size="24" />,
