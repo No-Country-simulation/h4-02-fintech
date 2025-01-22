@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { DollarCircle, ShoppingBag } from "iconsax-react";
 import { formatCurrency } from "../../../../utils/formatCurrency";
 import { useFinancialStore } from "../../../store/useFinancialStore";
+import { Link } from "react-router-dom";
 
 export const SavingsOverview = () => {
   const [progressValue, setProgressValue] = useState(0);
@@ -23,7 +24,10 @@ export const SavingsOverview = () => {
   }, [financial.savings.percentage]);
 
   return (
-    <div className="flex w-full items-center justify-center p-2 bg-secondary bg-opacity-20 rounded-xl shadow-xl">
+    <Link
+      className="flex w-full items-center justify-center p-2 bg-secondary bg-opacity-20 rounded-xl shadow hover:shadow-lg"
+      to={"/dashboard/transactions"}
+    >
       <div className="flex flex-col items-center gap-2 lg:w-auto p-2 ">
         <div
           className="w-20 h-20 bg-gray-300 rounded-full flex items-center justify-center radial-progress"
@@ -87,6 +91,6 @@ export const SavingsOverview = () => {
           </div>
         </div>
       </div>
-    </div>
+    </Link>
   );
 };
