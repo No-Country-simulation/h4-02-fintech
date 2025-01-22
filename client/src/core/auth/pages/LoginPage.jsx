@@ -39,7 +39,7 @@ export const LoginPage = () => {
             return;
           }
 
-          login(userBackendResponse);
+          login({ ...userBackendResponse, provider: provider });
           localStorage.setItem("token", token);
         } catch (error) {
           setErrorMessage(`Error al iniciar sesión con ${provider}`);

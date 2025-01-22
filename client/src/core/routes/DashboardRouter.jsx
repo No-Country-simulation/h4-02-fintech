@@ -30,11 +30,11 @@ export const DashboardRouter = () => {
   useEffect(() => {
     if (
       !userAuth0 &&
-      (user.oauthProvider === "GOOGLE" || user.oauthProvider === "APPLE")
+      (user.provider === "google" || user.provider === "apple")
     ) {
       logoutStore();
     }
-  }, [logoutStore, user.oauthProvider, userAuth0]);
+  }, [logoutStore, user.provider, userAuth0]);
 
   return (
     <Routes>
