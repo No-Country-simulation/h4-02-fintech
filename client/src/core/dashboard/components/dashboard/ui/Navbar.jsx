@@ -10,18 +10,29 @@ import {
   Profile2User,
 } from "iconsax-react";
 import { Drawer } from "./Drawer";
+import { validateComplete } from "../../../../validators/complete";
+import { useOnboardingStore } from "../../../../auth/store/useOnboardingStore";
 
 export const Navbar = ({ title }) => {
+  const { formData } = useOnboardingStore();
+  const formDataComplete = validateComplete(formData);
+
   const drawerItems = [
-    { icon: <Profile size="24" />, text: "Mi Perfil", link: "/" },
+    {
+      icon: <Profile size="24" />,
+      text: "Mi Perfil",
+      link: "/dashboard/profile",
+    },
     {
       icon: <MoneyRecive size="24" />,
       text: "Gestión de inversiones",
-      link: "/",
+      link: "/dashboard/investment",
     },
     {
       icon: <Edit size="24" />,
-      text: "Terminar mi onboarding",
+      text: !formDataComplete
+        ? "Terminar mi onboarding"
+        : "Editar mi onboarding",
       link: "/dashboard/onboarding",
     },
     {

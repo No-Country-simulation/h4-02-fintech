@@ -48,7 +48,7 @@ export default function NotificationsModal() {
             {notifications.map((notification) => (
               <div key={notification.id} className="flex gap-3 items-start">
                 {!notification.isRead ? (
-                  <div className="w-2 h-2 rounded-full bg-secondary mt-2"></div>
+                  <div className="w-2 h-2 rounded-full bg-primary mt-2"></div>
                 ) : (
                   <div className="w-2 h-2 mt-2"></div>
                 )}
