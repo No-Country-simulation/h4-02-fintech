@@ -1,7 +1,13 @@
 import * as yup from "yup";
 
 export const profileValidationSchema = yup.object().shape({
-  name: yup.string().required("El nombre es obligatorio."),
+  name: yup
+    .string()
+    .required("El nombre es obligatorio")
+    .matches(
+      /^[a-zA-ZñÑáéíóúÁÉÍÓÚ¨\-. ]+$/,
+      "El nombre solo puede contener letras, acentos, espacios y los símbolos, - y ."
+    ),
   dni: yup
     .string()
     .required("El DNI es obligatorio")

@@ -5,8 +5,20 @@ export const registerValidationSchema = yup.object().shape({
     .string()
     .required("El DNI es obligatorio")
     .matches(/^[0-9]{7,8}$/, "El DNI debe ser un número de 7 u 8 dígitos"),
-  name: yup.string().required("El nombre es obligatorio"),
-  surname: yup.string().required("El apellido es obligatorio"),
+  name: yup
+    .string()
+    .required("El nombre es obligatorio")
+    .matches(
+      /^[a-zA-ZñÑáéíóúÁÉÍÓÚ¨\-. ]+$/,
+      "El nombre solo puede contener letras, acentos, espacios y los símbolos, - y ."
+    ),
+  surname: yup
+    .string()
+    .required("El apellido es obligatorio")
+    .matches(
+      /^[a-zA-ZñÑáéíóúÁÉÍÓÚ¨\-. ]+$/,
+      "El apellido solo puede contener letras, acentos, espacios y los símbolos, - y ."
+    ),
   email: yup
     .string()
     .email("El email no es válido")
