@@ -116,6 +116,13 @@ public class UserEntity {
         return Objects.requireNonNullElse(isEmailConfirmed, false);
     }
 
+    public OAuthProvider getProvider() {
+        if (provider == null) {
+            return OAuthProvider.SYSTEM;
+        }
+        return provider;
+    }
+
     public enum OAuthProvider {
         GOOGLE,
         APPLE,
