@@ -42,6 +42,7 @@ export default function CreateTransactionModal() {
         value: data.amount,
         state: state,
         user: user.id,
+        date: new Date(data.date).toISOString().split("T")[0],
       });
       console.log(resp);
       toast("Transacción exitosa", {
@@ -71,6 +72,15 @@ export default function CreateTransactionModal() {
   return (
     <div className="px-4 py-2">
       {/* Categories Grid */}
+      <div className="flex justify-center items-center gap-2 mb-4 mt-2">
+        <button
+          className="btn btn-primary shadow-2xl rounded"
+          onClick={() => onClickCategory("IN")}
+        >
+          Agregar ingreso
+        </button>
+      </div>
+      <h2 className="text-start font-semibold mb-2">Agregar Gastos</h2>
       <div className="grid grid-cols-3 gap-4">
         {[
           {
@@ -111,7 +121,7 @@ export default function CreateTransactionModal() {
           {
             icon: <Money size={32} variant="Bold" />,
             label: "Ahorro",
-            state: "IN",
+            state: "OUT",
           },
           {
             icon: <Add size={32} variant="Bold" />,
