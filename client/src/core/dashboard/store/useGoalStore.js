@@ -17,10 +17,16 @@ export const useGoalStore = create(
             "Invierte en fondos de bajo riesgo para mayor seguridad",
             "Revisa las comisiones de tu cuenta de ahorro",
           ],
+          message: "¡Gran avance! Tu consistencia está dando frutos.",
         },
       ],
       addGoal: (goal) =>
-        set((state) => ({ goals: [...state.goals, { ...goal, progress: 0 }] })),
+        set((state) => ({
+          goals: [
+            ...state.goals,
+            { ...goal, progress: 0, message: "¡Vas por buen camino!" },
+          ],
+        })),
       addContribution: (amount) =>
         set((state) => {
           const updatedGoals = [...state.goals];
@@ -36,6 +42,25 @@ export const useGoalStore = create(
           updatedGoals[0].suggestions.push(suggestion);
           return { goals: updatedGoals };
         }),
+      reset: () =>
+        set(() => ({
+          goals: [
+            {
+              goalName: "Vacaciones 2025",
+              category: "vacaciones",
+              desiredAmount: 50000,
+              deadline: new Date("2025-12-31"),
+              progress: 50,
+              contributions: [{ amount: 100, date: new Date("2025-01-01") }],
+              suggestions: [
+                "Incrementa tu ahorro mensual en un 10%",
+                "Invierte en fondos de bajo riesgo para mayor seguridad",
+                "Revisa las comisiones de tu cuenta de ahorro",
+              ],
+              message: "¡Gran avance! Tu consistencia está dando frutos.",
+            },
+          ],
+        })),
     }),
     {
       name: "goals-storage",

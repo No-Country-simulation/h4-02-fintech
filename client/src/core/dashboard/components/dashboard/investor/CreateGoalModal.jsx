@@ -46,9 +46,7 @@ export default function CreateGoalModal() {
 
   return (
     <div className="px-4 py-2">
-      <p className="text-base font-semibold text-gray-600 mb-4">
-        ¡Gran avance! Tu consistencia está dando frutos.
-      </p>
+     
       <button
         className="btn btn-outline w-full"
         onClick={() => setIsOpen(true)}
