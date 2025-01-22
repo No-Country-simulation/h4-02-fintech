@@ -1,0 +1,68 @@
+package com.fintech.h4_02.service;
+
+import com.fintech.h4_02.dto.goal.CreateGoalDto;
+import com.fintech.h4_02.dto.goal.GoalContributionDto;
+import com.fintech.h4_02.entity.UserEntity;
+import com.fintech.h4_02.entity.goal.Goal;
+import com.fintech.h4_02.entity.goal.GoalContribution;
+import com.fintech.h4_02.exception.EntityNotFoundException;
+import com.fintech.h4_02.repository.goal.GoalContributionRepository;
+import com.fintech.h4_02.repository.goal.GoalRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.math.BigDecimal;
+import java.util.List;
+
+@Service
+@RequiredArgsConstructor
+public class GoalService {
+    private final GoalRepository goalRepository;
+    private final GoalContributionRepository goalContributionRepository;
+    private final UserService userService;
+
+    public List<Goal> getGoals(Long userId) {
+        UserEntity user = userService.getUserById(userId);
+        return user.getGoals();
+    }
+
+    @Transactional
+    public Goal createGoal(Long userId, CreateGoalDto dto) {
+        UserEntity user = userService.getUserById(userId);
+
+        Goal goal = new Goal(dto.goalName());
+        goal.setCategory(dto.category());
+        goal.setDesiredAmount(dto.desiredAmount());
+        goal.setDeadline(dto.deadline());
+        user.addGoal(goal);
+
+        return goalRepository.save(goal);
+    }
+
+    @Transactional
+    public Goal addGoalContribution(Long goalId, GoalContributionDto dto) {
+        Goal goal = getGoalOrThrow(goalId);
+
+        GoalContribution goalContribution = new GoalContribution();
+        goalContribution.setAmount(dto.amount());
+        goal.addGoalContribution(goalContribution);
+        goal.setProgress(goalContributionRepository.findTotalAmountByGoalId(goalId));
+        Goal savedGoal = goalRepository.save(goal);
+
+        // If the contribution is positive, publish a progress event
+        if (dto.amount().compareTo(BigDecimal.ZERO) > 0) {
+            Double progress = savedGoal.getProgress();
+            // eventPublisher.publishGoalProgressionEvent(progress);
+        }
+
+        return savedGoal;
+    }
+
+    private Goal getGoalOrThrow(Long goalId) {
+        return goalRepository
+                .findById(goalId)
+                .orElseThrow(() -> new EntityNotFoundException("Goal with id " + goalId + " not found"));
+    }
+
+}
