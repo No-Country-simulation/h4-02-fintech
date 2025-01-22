@@ -107,12 +107,13 @@ export const GoalsSection = () => {
                 </details>
               </li>
             </ul>
-
-            
+            <p className="text-base font-semibold text-gray-600 mb-4">
+              {goal.message}
+            </p>
           </div>
         ))}
       </>
-      
+
       {/* Create Goal */}
       <CreateGoalModal />
     </>
