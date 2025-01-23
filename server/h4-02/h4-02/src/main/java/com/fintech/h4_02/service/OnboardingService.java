@@ -2,14 +2,14 @@ package com.fintech.h4_02.service;
 
 import com.fintech.h4_02.dto.onboarding.OnboardingRequest;
 import com.fintech.h4_02.dto.user.UserResponseDto;
-import com.fintech.h4_02.entity.Goals;
 import com.fintech.h4_02.entity.OnboardingEntity;
 import com.fintech.h4_02.entity.UserEntity;
+import com.fintech.h4_02.entity.goal.Goal;
 import com.fintech.h4_02.enums.KnowledgeLevel;
 import com.fintech.h4_02.enums.RiskPreference;
 import com.fintech.h4_02.exception.EntityNotFoundException;
-import com.fintech.h4_02.repository.GoalRepository;
 import com.fintech.h4_02.repository.UserRepository;
+import com.fintech.h4_02.repository.goal.GoalRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,11 +33,11 @@ public class OnboardingService {
             onboarding.setKnowledgeLevel(KnowledgeLevel.valueOf(request.knowledgeLevel().toUpperCase()));
         }
         if (request.goals() != null) {
-            List<Goals> goals = new ArrayList<>();
+            List<Goal> goals = new ArrayList<>();
             for (String g : request.goals()) {
-                Goals goalDb = goalRepository.findByName(g);
+                Goal goalDb = goalRepository.findByName(g);
                 if (goalDb == null) {
-                    goalDb = goalRepository.save((new Goals(g)));
+                    goalDb = goalRepository.save((new Goal(g)));
                 }
                 goals.add(goalDb);
             }
