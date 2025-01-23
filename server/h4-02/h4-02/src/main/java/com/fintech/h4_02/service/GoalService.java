@@ -8,6 +8,7 @@ import com.fintech.h4_02.entity.goal.GoalContribution;
 import com.fintech.h4_02.exception.EntityNotFoundException;
 import com.fintech.h4_02.repository.goal.GoalContributionRepository;
 import com.fintech.h4_02.repository.goal.GoalRepository;
+import com.fintech.h4_02.service.notification.GlobalEventPublisher;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,6 +22,13 @@ public class GoalService {
     private final GoalRepository goalRepository;
     private final GoalContributionRepository goalContributionRepository;
     private final UserService userService;
+    private final GlobalEventPublisher eventPublisher;
+
+    public Goal getGoalByIdOrThrow(Long goalId) {
+        return goalRepository
+                .findById(goalId)
+                .orElseThrow(() -> new EntityNotFoundException("Goal with id " + goalId + " not found"));
+    }
 
     public List<Goal> getGoals(Long userId) {
         UserEntity user = userService.getUserById(userId);
@@ -42,7 +50,7 @@ public class GoalService {
 
     @Transactional
     public Goal addGoalContribution(Long goalId, GoalContributionDto dto) {
-        Goal goal = getGoalOrThrow(goalId);
+        Goal goal = getGoalByIdOrThrow(goalId);
 
         GoalContribution goalContribution = new GoalContribution();
         goalContribution.setAmount(dto.amount());
@@ -52,17 +60,10 @@ public class GoalService {
 
         // If the contribution is positive, publish a progress event
         if (dto.amount().compareTo(BigDecimal.ZERO) > 0) {
-            Double progress = savedGoal.getProgress();
-            // eventPublisher.publishGoalProgressionEvent(progress);
+            eventPublisher.publishGoalProgressionEvent(savedGoal.getId());
         }
 
         return savedGoal;
-    }
-
-    private Goal getGoalOrThrow(Long goalId) {
-        return goalRepository
-                .findById(goalId)
-                .orElseThrow(() -> new EntityNotFoundException("Goal with id " + goalId + " not found"));
     }
 
 }
