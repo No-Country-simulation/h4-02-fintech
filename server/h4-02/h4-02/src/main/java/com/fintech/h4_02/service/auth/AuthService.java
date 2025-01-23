@@ -51,9 +51,6 @@ public class AuthService {
 
     private AuthResponseDto oauthLogin(LoginRequestDto dto, String pictureUrl) {
         UserEntity user = getUserByEmailOrThrow(dto.email());
-        if (user.getProvider().equals(UserEntity.OAuthProvider.SYSTEM)) {
-            throw new IllegalStateException("User should use system provider to login");
-        }
 
         user.setPictureUrl(pictureUrl);
 
