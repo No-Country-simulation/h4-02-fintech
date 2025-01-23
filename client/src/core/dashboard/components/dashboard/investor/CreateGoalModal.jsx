@@ -4,9 +4,15 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { goalValidationSchema } from "../../../../validators/goal";
 import { useGoalStore } from "../../../store/useGoalStore";
+import { toast } from "sonner";
+import { createGoal } from "../../../services/goals";
+import { useAuthStore } from "../../../../auth/store/useAuthStore";
+import { getErrorMessage } from "../../../../validators/errorHandler";
 
 export default function CreateGoalModal() {
+  const { user } = useAuthStore();
   const [isOpen, setIsOpen] = useState(false);
+  const addGoal = useGoalStore((state) => state.addGoal);
 
   const {
     register,
@@ -37,20 +43,25 @@ export default function CreateGoalModal() {
     }
   };
 
-  const addGoal = useGoalStore((state) => state.addGoal);
-
-  const onSubmit = (data) => {
-    addGoal({
-      goalName: data.goalName,
-      category: data.category,
-      desiredAmount: data.desiredAmount
-        .replace(/[^\d,.]/g, "")
-        .replace(",", "."),
-      deadline: new Date(data.deadline),
-      progress: 0,
-      contributions: [],
-      suggestions: [],
-    });
+  const onSubmit = async (data) => {
+    try {
+      const resp = await createGoal(user.id, {
+        goalName: data.goalName,
+        category: data.category,
+        desiredAmount: parseFloat(data.desiredAmount.replace(", ", ".")),
+        deadline: new Date(data.deadline).toISOString().split("T")[0],
+      });
+      addGoal(resp);
+      toast("Objetivo creado", {
+        description: "El objetivo se ha creado con éxito",
+      });
+    } catch (error) {
+      const errorMessage = getErrorMessage(error);
+      toast.error("No se puedo crear el objetivo", {
+        description: errorMessage,
+      });
+      console.error("Error creando objetivo", error);
+    }
 
     setIsOpen(false);
     reset();
