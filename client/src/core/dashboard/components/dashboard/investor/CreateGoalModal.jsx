@@ -3,7 +3,6 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { goalValidationSchema } from "../../../../validators/goal";
-import { formatCurrency } from "../../../../utils/formatCurrency";
 import { useGoalStore } from "../../../store/useGoalStore";
 
 export default function CreateGoalModal() {
@@ -23,8 +22,19 @@ export default function CreateGoalModal() {
   const watchDesiredAmount = watch("desiredAmount");
 
   const handleCurrencyInput = (e) => {
-    const value = e.target.value.replace(/\D/g, "");
-    setValue("desiredAmount", value ? parseFloat(value) : "");
+    let value = e.target.value.replace(/[^\d,.]/g, "");
+
+    if (value) {
+      let formattedValue = value.replace(".", ",");
+      const matchedValue = formattedValue.match(/^\d*(,\d{0,2})/);
+      if (matchedValue) {
+        formattedValue = matchedValue[0];
+      }
+
+      setValue("desiredAmount", `${formattedValue}`);
+    } else {
+      setValue("desiredAmount", "");
+    }
   };
 
   const addGoal = useGoalStore((state) => state.addGoal);
@@ -33,7 +43,9 @@ export default function CreateGoalModal() {
     addGoal({
       goalName: data.goalName,
       category: data.category,
-      desiredAmount: data.desiredAmount,
+      desiredAmount: data.desiredAmount
+        .replace(/[^\d,.]/g, "")
+        .replace(",", "."),
       deadline: new Date(data.deadline),
       progress: 0,
       contributions: [],
@@ -43,6 +55,10 @@ export default function CreateGoalModal() {
     setIsOpen(false);
     reset();
   };
+
+  const formattedDesiredAmount = watchDesiredAmount
+    ? `$ ${watchDesiredAmount.replace(".", ",")}`
+    : "";
 
   return (
     <div className="px-4 py-2">
@@ -127,7 +143,7 @@ export default function CreateGoalModal() {
               <input
                 id="desiredAmount"
                 type="text"
-                value={formatCurrency(watchDesiredAmount)}
+                value={formattedDesiredAmount}
                 onChange={handleCurrencyInput}
                 placeholder="Monto Deseado"
                 className="input input-bordered w-full"

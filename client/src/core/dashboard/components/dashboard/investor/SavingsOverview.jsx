@@ -66,7 +66,8 @@ export const SavingsOverview = () => {
               <span className="font-bold text-lg">
                 {formatCurrency(
                   financial.income.values[currencyType],
-                  currencyType
+                  currencyType,
+                  2
                 )}
               </span>
             </div>
@@ -84,7 +85,8 @@ export const SavingsOverview = () => {
                 -
                 {formatCurrency(
                   financial.fixedExpenses.values[currencyType],
-                  currencyType
+                  currencyType,
+                  2
                 )}
               </span>
             </div>

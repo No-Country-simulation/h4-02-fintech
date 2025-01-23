@@ -1,11 +1,12 @@
-export const formatCurrency = (value, currencyType = "ARS") => {
+export const formatCurrency = (value, currencyType = "ARS", digits = 0) => {
   if (!value) return "";
 
   const options = {
     style: "currency",
     currency: currencyType === "USD" ? "USD" : "ARS",
-    maximumFractionDigits: 0,
+    minimumFractionDigits: digits,
+    maximumFractionDigits: digits,
   };
 
-  return new Intl.NumberFormat("es-AR", options).format(parseInt(value));
+  return new Intl.NumberFormat("es-AR", options).format(parseFloat(value));
 };

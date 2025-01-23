@@ -13,7 +13,6 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { transactionValidationSchema } from "../../../core/validators/transactions";
-import { formatCurrency } from "../../../core/utils/formatCurrency";
 import { getErrorMessage } from "../../../core/validators/errorHandler";
 import { toast } from "sonner";
 import { createTransaction } from "../services/transactions";
@@ -39,7 +38,7 @@ export default function CreateTransactionModal() {
     try {
       const resp = await createTransaction({
         description: data.title,
-        value: data.amount,
+        value: parseFloat(data.amount.replace(",", ".")),
         state: state,
         user: user.id,
         date: new Date(data.date).toISOString().split("T")[0],
@@ -60,9 +59,24 @@ export default function CreateTransactionModal() {
   const watchAmount = watch("amount");
 
   const handleCurrencyInput = (e) => {
-    const value = e.target.value.replace(/\D/g, "");
-    setValue("amount", value ? parseFloat(value) : "");
+    let value = e.target.value.replace(/[^\d,.]/g, "");
+
+    if (value) {
+      let formattedValue = value.replace(",", ".");
+      const matchedValue = formattedValue.match(/^\d*(\.\d{0,2})/);
+      if (matchedValue) {
+        formattedValue = matchedValue[0];
+      }
+
+      setValue("amount", formattedValue.replace(".", ","));
+    } else {
+      setValue("amount", "");
+    }
   };
+
+  const formattedAmount = watchAmount
+    ? `$ ${watchAmount.replace(".", ",")}`
+    : "";
 
   const onClickCategory = (category) => {
     setIsOpen(true);
@@ -193,7 +207,7 @@ export default function CreateTransactionModal() {
               <input
                 id="amount"
                 type="text"
-                value={formatCurrency(watchAmount)}
+                value={formattedAmount}
                 onChange={handleCurrencyInput}
                 placeholder="Monto de la transacción"
                 className="input input-bordered w-full"
