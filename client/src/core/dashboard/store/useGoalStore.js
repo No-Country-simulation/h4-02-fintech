@@ -5,7 +5,7 @@ export const useGoalStore = create(
   persist(
     (set) => ({
       goals: [
-        {
+        /* {
           goalName: "Vacaciones 2025",
           category: "vacaciones",
           desiredAmount: 50000,
@@ -16,10 +16,10 @@ export const useGoalStore = create(
             "Incrementa tu ahorro mensual en un 10%",
             "Invierte en fondos de bajo riesgo para mayor seguridad",
             "Revisa las comisiones de tu cuenta de ahorro",
-          ],
-          message: "¡Gran avance! Tu consistencia está dando frutos.",
-        },
+          ],          
+        }, */
       ],
+      setGoals: (goals) => set({ goals }),
       addGoal: (goal) =>
         set((state) => ({
           goals: [
@@ -45,7 +45,7 @@ export const useGoalStore = create(
       reset: () =>
         set(() => ({
           goals: [
-            {
+            /* {
               goalName: "Vacaciones 2025",
               category: "vacaciones",
               desiredAmount: 50000,
@@ -58,7 +58,7 @@ export const useGoalStore = create(
                 "Revisa las comisiones de tu cuenta de ahorro",
               ],
               message: "¡Gran avance! Tu consistencia está dando frutos.",
-            },
+            }, */
           ],
         })),
     }),
