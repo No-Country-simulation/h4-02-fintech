@@ -3,6 +3,7 @@ import { persist } from "zustand/middleware";
 import { useOnboardingStore } from "./useOnboardingStore";
 import { validateAndTransformOnboardingData } from "../../validators/onboarding";
 import { useGoalStore } from "../../dashboard/store/useGoalStore";
+import { useNotificationStore } from "../../notifications/store/useNotificatiosStore";
 
 export const useAuthStore = create(
   persist(
@@ -23,6 +24,7 @@ export const useAuthStore = create(
         localStorage.clear();
         useOnboardingStore.getState().reset();
         useGoalStore.getState().reset();
+        useNotificationStore.getState().reset();
         set({ status: "not-authenticated", user: null });
       },
     }),
