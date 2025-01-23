@@ -12,9 +12,13 @@ import java.util.List;
 public class SecurityUserDetails implements UserDetails {
     private final UserEntity user;
 
+    public Long getId() {
+        return user.getId();
+    }
+
     @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of();
+    public String getUsername() {
+        return user.getEmail();
     }
 
     @Override
@@ -23,8 +27,9 @@ public class SecurityUserDetails implements UserDetails {
     }
 
     @Override
-    public String getUsername() {
-        return user.getEmail();
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of();
     }
+
 
 }
