@@ -54,4 +54,9 @@ public class NotificationService {
         notificationRepository.save(notification);
     }
 
+    @Transactional
+    public void markMultipleGoalProgressionNotificationsAsRead(List<Long> notificationsIds) {
+        notificationRepository.markNotificationsAsReadByIds(notificationsIds);
+    }
+
 }
