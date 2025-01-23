@@ -2,6 +2,7 @@ package com.fintech.h4_02.entity;
 
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fintech.h4_02.entity.goal.Goal;
 import com.fintech.h4_02.enums.KnowledgeLevel;
 import com.fintech.h4_02.enums.RiskPreference;
 import jakarta.persistence.*;
@@ -27,11 +28,12 @@ public class OnboardingEntity {
     private KnowledgeLevel KnowledgeLevel;
 
     @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "onboardingEntity_goals",
+    @JoinTable(
+            name = "onboardingEntity_goals",
             joinColumns = @JoinColumn(name = "onboardingEntity_id"),
             inverseJoinColumns = @JoinColumn(name = "goals_id")
     )
-    private List<Goals> goals;
+    private List<Goal> goals;
 
     @Column(name = "riskPreference")
     @Enumerated(EnumType.STRING)

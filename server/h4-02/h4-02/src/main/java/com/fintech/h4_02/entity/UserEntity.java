@@ -3,6 +3,7 @@ package com.fintech.h4_02.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fintech.h4_02.dto.user.CreateUserRequestDto;
+import com.fintech.h4_02.entity.goal.Goal;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
@@ -101,15 +102,33 @@ public class UserEntity {
     @JsonManagedReference
     private OnboardingEntity onboarding;
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(
+            mappedBy = "user",
+            fetch = FetchType.LAZY,
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
     @JsonIgnore
     private List<WalletEntity> wallets = new ArrayList<>();
+
+    @OneToMany(
+            mappedBy = "user",
+            fetch = FetchType.LAZY,
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    private List<Goal> goals;
 
     public UserEntity(CreateUserRequestDto user) {
         this.email = user.email();
         this.name = user.name();
         this.password = user.password();
         this.dni = user.dni();
+    }
+
+    public void addGoal(Goal goal) {
+        goals.add(goal);
+        goal.setUser(this);
     }
 
     public boolean isEmailConfirmed() {
