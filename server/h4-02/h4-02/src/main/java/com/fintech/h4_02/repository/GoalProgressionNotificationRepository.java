@@ -3,6 +3,7 @@ package com.fintech.h4_02.repository;
 import com.fintech.h4_02.entity.GoalProgressionNotification;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -16,5 +17,9 @@ public interface GoalProgressionNotificationRepository extends JpaRepository<Goa
     List<GoalProgressionNotification> findAllByUserId(@Param("userId") Long userId, Pageable pageable);
 
     boolean existsByLowerBoundPercentage(Integer lowerBoundPercentage);
+
+    @Modifying
+    @Query("UPDATE GoalProgressionNotification g SET g.isRead = true WHERE g.id IN :ids")
+    void markNotificationsAsReadByIds(List<Long> ids);
 
 }
