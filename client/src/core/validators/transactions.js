@@ -3,14 +3,23 @@ import * as yup from "yup";
 export const transactionValidationSchema = yup.object().shape({
   title: yup
     .string()
-    .required("El título es obligatorio.")
-    .max(50, "El título no puede tener más de 50 caracteres."),
+    .required("El título es obligatorio")
+    .min(3, "El título debe tener al menos 3 caracteres")
+    .max(100, "El título no puede tener más de 100 caracteres"),
 
   amount: yup
-    .number()
-    .typeError("El importe debe ser un número válido.")
-    .positive("El importe debe ser mayor a cero.")
-    .required("El importe es obligatorio."),
+    .string()
+    .matches(
+      /^\d+([.,]\d{1,2})?$/,
+      "El monto debe ser un número válido, usando coma o punto para separar los decimales."
+    )
+    .required("El monto deseado es obligatorio.")
+    .test("is-positive", "El monto debe ser un número positivo.", (value) => {
+      const numericValue = parseFloat(
+        value.replace(/[^\d.,]/g, "").replace(",", ".")
+      );
+      return numericValue > 0;
+    }),
 
   date: yup
     .date()

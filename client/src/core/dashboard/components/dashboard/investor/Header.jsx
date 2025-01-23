@@ -111,11 +111,13 @@ export const Header = () => {
                 {showBalance
                   ? formatCurrency(
                       financial.balance.values[currencyType],
-                      currencyType
+                      currencyType,
+                      2
                     )
                   : formatCurrency(
                       financial.balance.values[currencyType],
-                      currencyType
+                      currencyType,
+                      2
                     ).replace(/\d/g, "x") || "0"}
               </h1>
               <select

@@ -16,11 +16,25 @@ export const goalValidationSchema = yup.object().shape({
     ),
 
   desiredAmount: yup
-    .number()
-    .typeError("El monto deseado debe ser un número.")
+    .string()
+    .matches(
+      /^\d+([.,]\d{1,2})?$/,
+      "El monto debe ser un número válido, usando coma o punto para separar los decimales."
+    )
     .required("El monto deseado es obligatorio.")
-    .positive("El monto debe ser un número positivo.")
-    .min(1, "El monto debe ser al menos 1."),
+    .test("is-positive", "El monto debe ser un número positivo.", (value) => {
+      const numericValue = parseFloat(
+        value.replace(/[^\d.,]/g, "").replace(",", ".")
+      );
+      return numericValue > 0;
+    }),
 
-  deadline: yup.date().required("La fecha límite es obligatoria."),
+  deadline: yup
+    .date()
+    .typeError("La fecha no es válida.")
+    .required("La fecha es obligatoria.")
+    .min(
+      new Date().toISOString().split("T")[0],
+      "La fecha debe ser hoy o en el futuro."
+    ),
 });
