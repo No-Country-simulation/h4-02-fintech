@@ -1,22 +1,24 @@
 import { useEffect, useState } from "react";
+import { formatCurrency } from "../../../../utils/formatCurrency";
 
-export const Progress = ({ progress }) => {
+export const Progress = ({ progress, total }) => {
   const [progressValue, setProgressValue] = useState(0);
 
   useEffect(() => {
+    setProgressValue(0);
+
     const interval = setInterval(() => {
       setProgressValue((prev) => {
-        if (prev >= progress) {
+        if (prev >= Math.min(progress, 100)) {
           clearInterval(interval);
-          return progress;
+          return Math.min(progress, 100);
         }
         return prev + 1;
       });
     }, 30);
 
     return () => clearInterval(interval);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [progress]);
 
   return (
     <div className="w-full relative">
@@ -25,13 +27,16 @@ export const Progress = ({ progress }) => {
         value={progressValue}
         max="100"
       ></progress>
-      <p className="absolute inset-0 flex items-center justify-start ml-4 text-sm text-white font-bold">
-        {progressValue}% completado
-      </p>
+
+      <div className="absolute inset-0 flex items-center justify-between ml-4 text-sm text-white font-bold mx-2">
+        <span>{progressValue}% completado</span>
+        <span>{formatCurrency(total)}</span>
+      </div>
     </div>
   );
 };
 
 Progress.propTypes = {
   progress: Number,
+  total: Number,
 };
