@@ -2,7 +2,7 @@ package com.fintech.h4_02.entity;
 
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fintech.h4_02.entity.goal.Goal;
 import com.fintech.h4_02.enums.KnowledgeLevel;
 import com.fintech.h4_02.enums.RiskPreference;
 import jakarta.persistence.*;
@@ -10,7 +10,6 @@ import lombok.*;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.Set;
 
 @Getter
 @Setter
@@ -20,23 +19,21 @@ import java.util.Set;
 @Table(name = "onboarding_entity")
 @EqualsAndHashCode(of = "id")
 public class OnboardingEntity {
-
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
-
 
     @Column(name = "knowledgeLevel")
     @Enumerated(EnumType.STRING)
     private KnowledgeLevel KnowledgeLevel;
 
     @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "onboardingEntity_goals",
+    @JoinTable(
+            name = "onboardingEntity_goals",
             joinColumns = @JoinColumn(name = "onboardingEntity_id"),
             inverseJoinColumns = @JoinColumn(name = "goals_id")
     )
-    private List<Goals> goals;
-
+    private List<Goal> goals;
 
     @Column(name = "riskPreference")
     @Enumerated(EnumType.STRING)
@@ -51,8 +48,15 @@ public class OnboardingEntity {
     @Column(name = "savingsPercentage")
     private BigDecimal savingsPercentage;
 
-
     @OneToOne(mappedBy = "onboarding")
     @JsonBackReference
     private UserEntity user;
+
+    public boolean isCompleted() {
+        if (goals == null || goals.isEmpty()) {
+            return false;
+        }
+        return KnowledgeLevel != null && riskPreference != null && monthlyIncome != null && monthlyExpenses != null && savingsPercentage != null;
+    }
+
 }
