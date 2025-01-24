@@ -88,57 +88,57 @@ export default function CreateTransactionModal() {
       {/* Categories Grid */}
       <div className="flex justify-center items-center gap-2 mb-4 mt-2">
         <button
-          className="btn btn-primary shadow-2xl rounded"
+          className="btn btn-accent shadow-2xl rounded"
           onClick={() => onClickCategory("IN")}
         >
           Agregar ingreso
         </button>
       </div>
       <h2 className="text-start font-semibold mb-2">Agregar Gastos</h2>
-      <div className="grid grid-cols-3 gap-4">
+      <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-5 gap-4">
         {[
           {
-            icon: <Home2 size={32} variant="Bold" />,
+            icon: <Home2 size={32} variant="Bold" className="text-white" />,
             label: "Alquiler",
             state: "OUT",
           },
           {
-            icon: <Car size={32} variant="Bold" />,
+            icon: <Car size={32} variant="Bold" className="text-white" />,
             label: "Transporte",
             state: "OUT",
           },
           {
-            icon: <Health size={32} variant="Bold" />,
+            icon: <Health size={32} variant="Bold" className="text-white" />,
             label: "Medicina",
             state: "OUT",
           },
           {
-            icon: <Bank size={32} variant="Bold" />,
+            icon: <Bank size={32} variant="Bold" className="text-white" />,
             label: "Impuestos",
             state: "OUT",
           },
           {
-            icon: <Shop size={32} variant="Bold" />,
+            icon: <Shop size={32} variant="Bold" className="text-white" />,
             label: "Almacén",
             state: "OUT",
           },
           {
-            icon: <Game size={32} variant="Bold" />,
+            icon: <Game size={32} variant="Bold" className="text-white" />,
             label: "Esparcimiento",
             state: "OUT",
           },
           {
-            icon: <Teacher size={32} variant="Bold" />,
+            icon: <Teacher size={32} variant="Bold" className="text-white" />,
             label: "Escolaridad",
             state: "OUT",
           },
           {
-            icon: <Money size={32} variant="Bold" />,
+            icon: <Money size={32} variant="Bold" className="text-white" />,
             label: "Ahorro",
             state: "OUT",
           },
           {
-            icon: <Add size={32} variant="Bold" />,
+            icon: <Add size={32} variant="Bold" className="text-white" />,
             label: "Otros",
             state: "OUT",
           },
@@ -148,7 +148,7 @@ export default function CreateTransactionModal() {
             className="flex flex-col justify-center items-center gap-1 normal-case"
           >
             <button
-              className="btn btn-primary btn-square shadow-2xl rounded-2xl"
+              className="btn btn-secondary btn-square shadow-2xl rounded-2xl"
               onClick={() => onClickCategory(item.state)}
             >
               <span>{item.icon}</span>
@@ -174,7 +174,7 @@ export default function CreateTransactionModal() {
           </button>
 
           <div className="mb-6">
-            <h2 className="text-xl font-semibold mb-2 text-black">
+            <h2 className="text-xl font-semibold mb-2 text-primary">
               Agregar {state === "IN" ? "ingreso" : "gasto"}
             </h2>
           </div>

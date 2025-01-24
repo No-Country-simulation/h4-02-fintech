@@ -3,9 +3,9 @@ import CreateTransactionModal from "./CreateTransactionModal";
 
 export const Transaction = () => {
   return (
-    <div className="max-w-md mx-auto p-4 bg-gray-50">
+    <div className="max-w-xl mx-auto p-4 bg-gray-50">
       {/* Balance Card */}
-      <div className="card bg-base-300 shadow-xl mb-6 rounded-3xl">
+      <div className="card bg-[#CAE1FF] shadow-xl mb-6 rounded-3xl p-4">
         <div className="card-body p-4">
           <div className="flex justify-between mb-2">
             <div>

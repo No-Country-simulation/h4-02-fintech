@@ -100,8 +100,15 @@ export const LoginPage = () => {
           </div>
         </div>
 
-        <div className="card w-full shadow-none sm:shadow-xl bg-none sm:bg-base-200 sm:w-1/2 rounded-none sm:rounded-[4px]">
-          <h1 className="text-xl sm:text-2xl font-bold text-center mb-8 sm:my-4 sm:mb-0">
+        <div className="card w-full shadow-none sm:shadow-xl bg-none sm:bg-[#DCFFF8] sm:w-1/2 rounded-none sm:rounded-[4px]">
+          <div className="flex justify-center sm:hidden">
+            <img
+              src={iupiDesktopImage}
+              alt="iupi-desktop"
+              className="w-[170] h-[100] max-w-[180]"
+            />
+          </div>
+          <h1 className="text-2xl sm:text-2xl font-bold text-center mb-8 sm:my-4 sm:mb-0 text-primary">
             Bienvenido a la plataforma
           </h1>
           <div className="card-body p-0 sm:p-8">

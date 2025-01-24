@@ -97,7 +97,7 @@ export default function CreateGoalModal() {
           </button>
 
           <div className="mb-6">
-            <h2 className="text-xl font-semibold mb-2 text-black">
+            <h2 className="text-xl font-semibold mb-2 text-primary">
               Crear Nuevo Objetivo
             </h2>
           </div>
@@ -130,7 +130,7 @@ export default function CreateGoalModal() {
               <select
                 id="category"
                 {...register("category")}
-                className="select select-bordered w-full"
+                className="select select-bordered w-full text-primary"
               >
                 <option value="">Selecciona una categoría</option>
                 <option value="vacaciones">Vacaciones</option>

@@ -12,14 +12,14 @@ export default {
       {
         mytheme: {          
           primary: "#004AAD",
-          secondary: "#FFFFFF",
+          secondary: "#049276",
           accent: "#EDA464",
           neutral: "#D1D2D3",
           "base-100": "#FFFFFF",
-          "base-200": "#F2F2F2",
+          "base-200": "#DCFFF8",
           "base-300": "#E5E5E5",
           info: "#3ABFF8",
-          success: "#36D399",
+          success: "#52C41A",
           warning: "#FBBD23",
           error: "#F87272",
         },

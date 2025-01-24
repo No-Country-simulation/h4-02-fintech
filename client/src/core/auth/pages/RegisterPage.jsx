@@ -9,6 +9,9 @@ import {
   passwordValidations,
   registerValidationSchema,
 } from "../../validators/register";
+import loginDesktopImage from "../../../assets/images/login-desktop.svg";
+import iupiDesktopImage from "../../../assets/images/iupi-desktop.svg";
+import sloganDesktopImage from "../../../assets/images/slogan-desktop.svg";
 
 export const RegisterPage = () => {
   const {
@@ -54,10 +57,33 @@ export const RegisterPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
-      <div className="card w-full max-w-sm md:max-w-md shadow-none sm:shadow-xl bg-none sm:bg-white">
-        <div className="card-body p-0 sm:p-8">
-          <h1 className="text-xl sm:text-2xl font-bold text-center mb-8">
+    <div className="hero min-h-screen bg-gray-50 p-4">
+      <div className="sm:hero-content w-full flex-col sm:flex-row">
+        <div className="text-center lg:text-left sm:w-1/2 hidden sm:flex ">
+          <div className="flex justify-center items-center flex-col">
+            <img src={loginDesktopImage} alt="login-desktop" />
+            <img
+              src={iupiDesktopImage}
+              alt="iupi-desktop"
+              className="w-[200] h-[130] max-w-[260]"
+            />
+            <img
+              src={sloganDesktopImage}
+              alt="slogan-desktop"
+              className="w-[200] h-[130] max-w-[260] mt-2"
+            />
+          </div>
+        </div>
+
+        <div className="card w-full shadow-none sm:shadow-xl bg-none sm:bg-[#DCFFF8] sm:w-1/2 rounded-none sm:rounded-[4px] p-12">
+          <div className="flex justify-center sm:hidden">
+            <img
+              src={iupiDesktopImage}
+              alt="iupi-desktop"
+              className="w-[170] h-[100] max-w-[180]"
+            />
+          </div>
+          <h1 className="text-xl text-primary sm:text-2xl font-bold text-center mb-8">
             Bienvenido a la plataforma
           </h1>
 
@@ -174,7 +200,7 @@ export const RegisterPage = () => {
                   <li
                     key={key}
                     className={`${
-                      passwordFeedback[key] ? "text-green-500" : "text-gray-500"
+                      passwordFeedback[key] ? "text-success" : "text-gray-500"
                     }`}
                   >
                     {message}

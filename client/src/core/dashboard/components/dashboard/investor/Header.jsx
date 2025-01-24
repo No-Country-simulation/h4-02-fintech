@@ -71,7 +71,7 @@ export const Header = () => {
         <div className="flex items-center gap-3">
           <div className="avatar placeholder">
             <div className="bg-neutral text-neutral-content w-16 h-16 rounded-full ring ring-primary">
-              {user?.picture || user?.picture !== "" ? (
+              {user?.picture ? (
                 <img
                   src={user?.picture}
                   alt="Profile"
