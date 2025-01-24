@@ -3,6 +3,7 @@ package com.fintech.h4_02.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fintech.h4_02.dto.CoinDto;
 import com.fintech.h4_02.dto.auth.AuthResponseDto;
 import com.fintech.h4_02.dto.auth.LoginRequestDto;
 import com.fintech.h4_02.dto.onboarding.OnboardingRequest;
@@ -239,12 +240,14 @@ class UserControllerTest {
 
 
         HttpEntity<String> request = new HttpEntity<>( headers);
-        ResponseEntity<JsonNode> result = testRestTemplate.exchange("/api/v1/exchange/all/ETF", HttpMethod.GET, request, JsonNode.class);
+        ResponseEntity<List<CoinDto>> result = testRestTemplate.exchange("/api/v1/exchange/all/ETF", HttpMethod.GET, request, new ParameterizedTypeReference<List<CoinDto>>() {
+        });
         JsonUtil.toJsonPrint("user created ", result);
 
         assertAll(
                 () -> assertEquals(HttpStatus.OK, result.getStatusCode()),
-                () -> assertEquals(200, result.getStatusCode().value())
+                () -> assertEquals(200, result.getStatusCode().value()),
+                () -> assertNotNull(!result.getBody().isEmpty())
 
 
         );
