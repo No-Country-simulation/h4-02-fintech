@@ -70,7 +70,7 @@ export default function CreateContributionModal({ goal }) {
 
   return (
     <div>
-      <button className="btn btn-square" onClick={() => setIsOpen(true)}>
+      <button className="btn btn-square btn-ghost" onClick={() => setIsOpen(true)}>
         <Add size="24" />
       </button>
 

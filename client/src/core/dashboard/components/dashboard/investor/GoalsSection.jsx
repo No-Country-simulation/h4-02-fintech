@@ -14,6 +14,7 @@ import {
   Setting,
   User,
   Folder,
+  Flag,
 } from "iconsax-react";
 import { getErrorMessage } from "../../../../validators/errorHandler";
 import CreateContributionModal from "./CreateContributionModal";
@@ -65,17 +66,19 @@ export const GoalsSection = () => {
         .slice()
         .sort((a, b) => a.id - b.id)
         .map((goal, index) => (
-          <div key={index} className="space-y-4">
+          <div
+            key={index}
+            className="space-y-3 sm:border-2 sm:p-2 sm:rounded-xl"
+          >
             <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1">
                 {getCategoryIcon(goal.category)}
-                <h3 className="text-xl font-medium text-gray-800">
+                <h3 className="text-xl text-primary font-medium">
                   {goal.goalName}
                 </h3>
               </div>
-              {goal.progress < 100 && <CreateContributionModal goal={goal} />}
             </div>
-            <ul className="menu menu-horizontal bg-base-200 rounded-box w-full">
+            <ul className="menu menu-horizontal bg-transparent rounded-box w-full">
               <li className="w-full">
                 <details>
                   <summary className="flex">
@@ -87,6 +90,9 @@ export const GoalsSection = () => {
                         />
                       </div>
                     </div>
+                    {goal.progress < 100 && (
+                      <CreateContributionModal goal={goal} />
+                    )}
                   </summary>
                   <ul className="z-20">
                     <li>
@@ -152,7 +158,7 @@ export const GoalsSection = () => {
                 </details>
               </li>
             </ul>
-            <p className="text-base font-semibold text-gray-600 mb-4">
+            <p className="text-base font-semibold text-gray-600 mb-2">
               {goal.progress >= 0 && goal.progress < 25
                 ? "¡Vamos por buen camino!"
                 : goal.progress >= 25 && goal.progress < 50
@@ -167,7 +173,19 @@ export const GoalsSection = () => {
             </p>
           </div>
         ))}
-      <CreateGoalModal />
+
+      <div className="sm:border-2 sm:p-2 sm:rounded-xl">
+        <div className="hidden sm:block">
+          <div className="flex items-center gap-2">
+            <Flag size="24" className="text-primary" />
+            <h3 className="text-xl font-medium text-primary mb-2">Objetivos</h3>
+          </div>
+          <p className="text-base text-gray-600">
+            Transforma tus sueños en metas alcanzables. ¡Crea tu objetivo
+          </p>
+        </div>
+        <CreateGoalModal />
+      </div>
     </>
   );
 };

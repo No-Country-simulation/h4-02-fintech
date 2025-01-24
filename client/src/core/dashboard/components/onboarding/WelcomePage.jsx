@@ -23,7 +23,7 @@ export const WelcomePage = ({ nextStep }) => {
     <div className="min-h-screen bg-gray-50 p-4 md:p-6 lg:p-8">
       <div className="mx-auto max-w-md w-full space-y-8">
         <div className="space-y-8 text-center">
-          <h1 className="text-2xl md:text-3xl font-semibold px-4">
+          <h1 className="text-2xl text-primary md:text-3xl font-semibold px-4">
             Bienvenido a iUpi: tu aliado en el ahorro e inversión.
           </h1>
 
@@ -31,7 +31,7 @@ export const WelcomePage = ({ nextStep }) => {
             <img src={onboardingImage} alt="onboarding-image" />
           </div>
 
-          <p className="text-lg font-semibold px-4">
+          <p className="text-lg text-secondary font-semibold px-4">
             En unos simples pasos crearemos un perfil financiero adaptado a tus
             necesidades. ¡Comencemos!
           </p>

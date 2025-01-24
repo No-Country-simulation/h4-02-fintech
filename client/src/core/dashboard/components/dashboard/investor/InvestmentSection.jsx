@@ -1,17 +1,18 @@
 import { MoneyRecive } from "iconsax-react";
+import { Link } from "react-router-dom";
 
 export const InvestmentSection = () => {
   return (
-    <div className="space-y-4 p-4">
+    <div className="space-y-4 p-4 sm:border-2 sm:p-2 sm:rounded-xl">
       <div className="space-y-4">
         <div className="flex items-center gap-2">
-          <MoneyRecive size="24" />
-          <h3 className="text-xl font-medium text-gray-800">
+          <MoneyRecive size="24" className="text-primary" />
+          <h3 className="text-xl font-medium text-primary">
             Inversiones recomendadas
           </h3>
         </div>
 
-        <div className="bg-white rounded-xl p-6 shadow-sm space-y-4">
+        <div className="bg-base-200 rounded-xl p-6 shadow-sm space-y-4">
           <h4 className="text-lg font-semibold text-gray-800">
             Plazo Fijo en Dólares
           </h4>
@@ -33,9 +34,12 @@ export const InvestmentSection = () => {
               <p className="text-sm text-gray-400 ml-4">3 % anual</p>
             </div>
 
-            <button className="btn btn-neutral w-full">
+            <Link
+              to="/dashboard/investment/recommendation"
+              className="btn btn-primary w-full"
+            >
               Explorar más detalles
-            </button>
+            </Link>
           </div>
         </div>
       </div>

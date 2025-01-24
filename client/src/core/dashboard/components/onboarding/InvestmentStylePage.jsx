@@ -65,7 +65,7 @@ export const InvestmentStylePage = ({ nextStep, prevStep }) => {
 
         <div className="space-y-8">
           <div className="space-y-4 text-center">
-            <h1 className="text-2xl md:text-3xl font-semibold">
+            <h1 className="text-2xl text-primary md:text-3xl font-semibold">
               Tu estilo de inversión
             </h1>
             <h2 className="text-xl font-semibold">
@@ -157,9 +157,9 @@ export const InvestmentStylePage = ({ nextStep, prevStep }) => {
                     className={`h-8 w-8 rounded-full border-2 flex items-center justify-center
                     ${
                       step === 3
-                        ? "border-primary bg-primary text-white"
+                        ? "border-secondary bg-secondary text-white"
                         : step < 3
-                        ? "border-primary bg-white text-primary"
+                        ? "border-secondary bg-white text-secondary"
                         : "border-gray-300 text-gray-300"
                     }`}
                   >

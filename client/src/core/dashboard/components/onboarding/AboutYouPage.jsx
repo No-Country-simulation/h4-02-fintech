@@ -65,7 +65,7 @@ export const AboutYouPage = ({ nextStep, prevStep }) => {
               <ArrowLeft2 className="w-6 h-6" />
             </button>
             <div className="space-y-4 text-center">
-              <h1 className="text-2xl md:text-3xl font-semibold">
+              <h1 className="text-2xl text-primary  md:text-3xl font-semibold">
                 Queremos conocerte mejor
               </h1>
               <h2 className="text-xl font-semibold">
@@ -156,7 +156,7 @@ export const AboutYouPage = ({ nextStep, prevStep }) => {
                       className={`h-8 w-8 rounded-full border-2 flex items-center justify-center
                   ${
                     step === 1
-                      ? "border-primary bg-primary text-white"
+                      ? "border-secondary bg-secondary text-white"
                       : "border-gray-300 text-gray-300"
                   }`}
                     >

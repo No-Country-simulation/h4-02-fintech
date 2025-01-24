@@ -2,7 +2,7 @@ import { PropTypes } from "prop-types";
 import { useState } from "react";
 import { PieChart, Pie, Cell } from "recharts";
 
-const COLORS = ["#263238", "#A1A1AA", "#5E5F60", "#3c3d3d"];
+const COLORS = ["#004AAD", "#049276", "#F94646", "#3c3d3d"];
 
 /**
  * Componente Reutilizable de PieChart

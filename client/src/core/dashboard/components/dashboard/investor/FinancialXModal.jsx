@@ -59,8 +59,8 @@ export const FinancialXModal = () => {
             {data.map((item, index) => (
               <li key={index}>
                 <details className="border-2 rounded-[8px] p-2">
-                  <summary>
-                    <Wallet size="24" /> {item.name}
+                  <summary className="text-primary font-bold">
+                    <Wallet size="24" className="text-secondary"/> {item.name}
                   </summary>
                   <ul>
                     <li>

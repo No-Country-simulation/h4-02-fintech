@@ -90,7 +90,7 @@ export const CurrentNumbersPage = ({ nextStep, prevStep }) => {
         </button>
 
         <div className="space-y-8">
-          <h1 className="text-2xl md:text-3xl font-semibold text-center">
+          <h1 className="text-2xl text-primary md:text-3xl font-semibold text-center">
             Tus números actuales
           </h1>
 
@@ -179,9 +179,9 @@ export const CurrentNumbersPage = ({ nextStep, prevStep }) => {
                   className={`h-8 w-8 rounded-full border-2 flex items-center justify-center
                   ${
                     step === 4
-                      ? "border-primary bg-primary text-white"
+                      ? "border-secondary bg-secondary text-white"
                       : step < 4
-                      ? "border-primary bg-white text-primary"
+                      ? "border-secondary bg-white text-secondary"
                       : "border-gray-300 text-gray-300"
                   }`}
                 >

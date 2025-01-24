@@ -23,12 +23,12 @@ export const Progress = ({ progress, total }) => {
   return (
     <div className="w-full relative">
       <progress
-        className="progress w-full h-8 bg-gray-300"
+        className="progress progress-accent w-full h-8 bg-gray-300"
         value={progressValue}
         max="100"
       ></progress>
 
-      <div className="absolute inset-0 flex items-center justify-between ml-4 text-sm text-white font-bold mx-2">
+      <div className="absolute inset-0 flex items-center justify-between ml-4 text-sm text-black font-bold mx-2">
         <span>{progressValue}% completado</span>
         <span>{formatCurrency(total)}</span>
       </div>

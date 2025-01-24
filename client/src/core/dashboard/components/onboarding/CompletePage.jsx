@@ -15,7 +15,7 @@ export const CompletePage = () => {
     <div className="min-h-screen bg-gray-50 p-4 md:p-6 lg:p-8">
       <div className="mx-auto max-w-md w-full space-y-8">
         <div className="space-y-8">
-          <h1 className="text-2xl md:text-3xl font-semibold text-center">
+          <h1 className="text-2xl text-primary md:text-3xl font-semibold text-center">
             ¡Tu Perfil está listo!
           </h1>
 
@@ -31,7 +31,7 @@ export const CompletePage = () => {
 
           <div className="space-y-4">
             <div className="flex items-center space-x-4 p-4 bg-white rounded border">
-              <Book className="h-6 w-6 text-primary" />
+              <Book className="h-6 w-6 text-secondary" />
               <div>
                 <h2 className="font-semibold text-lg">
                   Nivel de Conocimientos
@@ -41,7 +41,7 @@ export const CompletePage = () => {
             </div>
 
             <div className="flex items-center space-x-4 p-4 bg-white rounded border">
-              <Medal className="h-6 w-6 text-primary" />
+              <Medal className="h-6 w-6 text-secondary" />
               <div>
                 <h2 className="font-semibold text-lg">Objetivos</h2>
                 {goals.map((goal) => (
@@ -53,7 +53,7 @@ export const CompletePage = () => {
             </div>
 
             <div className="flex items-center space-x-4 p-4 bg-white rounded border">
-              <Diagram className="h-6 w-6 text-primary" />
+              <Diagram className="h-6 w-6 text-secondary" />
               <div>
                 <h2 className="font-semibold text-lg">
                   Preferencia de Riesgos
@@ -63,7 +63,7 @@ export const CompletePage = () => {
             </div>
 
             <div className="flex items-center space-x-4 p-4 bg-white rounded border">
-              <DollarCircle className="h-6 w-6 text-primary" />
+              <DollarCircle className="h-6 w-6 text-secondary" />
               <div>
                 <h2 className="font-semibold text-lg">Capacidad de Ahorro</h2>
                 <p className="text-gray-500 capitalize">

@@ -72,10 +72,10 @@ export const InvestmentLayout = () => {
               </div>
 
               <div className="mb-6 text-xl text-semibold">
-                <p className="text-bold text-2xl text-center text-black">
+                <p className="text-bold text-2xl text-center text-primary">
                   ¡Ups! Aún faltan algunos datos
                 </p>
-                <p className="text-center text-black mt-2">
+                <p className="text-center text-secondary mt-2">
                   {`Completa tu perfil para que podamos mostrarte recomendaciones personalizadas.
                   ¡Es súper rápido y te ayudará a sacarle el máximo provecho a Iupi!`}
                 </p>
