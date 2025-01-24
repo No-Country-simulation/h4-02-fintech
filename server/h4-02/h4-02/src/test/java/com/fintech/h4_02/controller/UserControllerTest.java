@@ -31,7 +31,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class UserControllerTest {
-    ObjectMapper objectMapper;
     private TestRestTemplate testRestTemplate;
     private HttpHeaders headers;
     @Autowired
@@ -229,6 +228,25 @@ class UserControllerTest {
               //  () -> assertEquals(result.getBody().user().getId(), wallet.user()),
                // () -> assertEquals(result.getBody().description(), wallet.description()),
                // () -> assertNotNull(result.getBody().id())
+        );
+    }
+
+
+
+    @Test
+    @Label("obtener lista de Fondos cotizado")
+    void getAllExcange() throws JsonProcessingException {
+
+
+        HttpEntity<String> request = new HttpEntity<>( headers);
+        ResponseEntity<JsonNode> result = testRestTemplate.exchange("/api/v1/exchange/all/etf", HttpMethod.GET, request, JsonNode.class);
+        JsonUtil.toJsonPrint("user created ", result);
+
+        assertAll(
+                () -> assertEquals(HttpStatus.OK, result.getStatusCode()),
+                () -> assertEquals(200, result.getStatusCode().value())
+
+
         );
     }
 
