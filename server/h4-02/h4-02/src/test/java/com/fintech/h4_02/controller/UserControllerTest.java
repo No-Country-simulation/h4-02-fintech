@@ -241,7 +241,7 @@ class UserControllerTest {
 
 
         HttpEntity<String> request = new HttpEntity<>( headers);
-        ResponseEntity<List<CoinDtoRequest>> result = testRestTemplate.exchange("/api/v1/exchange/all", HttpMethod.GET, request, new ParameterizedTypeReference<List<CoinDtoRequest>>() {
+        ResponseEntity<List<CoinDtoRequest>> result = testRestTemplate.exchange("/api/v1/exchange/all/FOREX", HttpMethod.GET, request, new ParameterizedTypeReference<List<CoinDtoRequest>>() {
         });
         JsonUtil.toJsonPrint("user created ", result);
 

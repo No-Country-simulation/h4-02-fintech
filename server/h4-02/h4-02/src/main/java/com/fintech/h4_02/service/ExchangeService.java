@@ -12,7 +12,6 @@ import org.springframework.web.client.RestTemplate;
 import com.fasterxml.jackson.core.type.TypeReference;
 
 import javax.xml.parsers.ParserConfigurationException;
-import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -27,7 +26,7 @@ public class ExchangeService {
     public List<CoinDto> listCoinAll(Coin coin) throws ParserConfigurationException {
 
 
-         final String API_URL = "https://api.twelvedata.com/symbol_search?symbol_type="+coin+"&exchange=BUENOSAIRES&apikey=9c41e2e67bc44ce180fcced64b41ea11";
+        final String API_URL = "https://api.twelvedata.com/symbol_search?symbol_type=" + coin + "&exchange=BUENOSAIRES&apikey=9c41e2e67bc44ce180fcced64b41ea11";
         try {
             // Obtener la respuesta como String
             String jsonResponse = restTemplate.getForObject(API_URL, String.class);
@@ -37,33 +36,39 @@ public class ExchangeService {
             JsonNode dataNode = rootNode.get("data");
 
             // Deserializar el nodo "data" como una lista de CoinDto
-            List<CoinDto> list = mapper.readValue(dataNode.toString(), new TypeReference<List<CoinDto>>() {});
+            List<CoinDto> list = mapper.readValue(dataNode.toString(), new TypeReference<List<CoinDto>>() {
+            });
 
             return list;
         } catch (Exception e) {
-             throw new ParserConfigurationException("Parcer error");
+            throw new ParserConfigurationException("Parcer error");
         }
     }
 
-    public List<CoinDtoRequest> listCoinAllForex() throws JsonProcessingException {
-       final String forex = "https://api.twelvedata.com/forex_pairs";
-        return parcearDtoApi(forex);
+    public List<CoinDtoRequest> listCoinAllForex(Coin coin) throws JsonProcessingException {
+        String url = null;
+        final String forex = "https://api.twelvedata.com/forex_pairs";
+        final String etfs = "https://api.twelvedata.com/etfs/list?apikey=demo&source=docs";
+        final String commodities = "https://api.twelvedata.com/commodities?source=docs";
+        if(coin.name().equalsIgnoreCase("forex")) url = forex;
+        return parcearDtoApi(url);
     }
 
 
-  private List<CoinDtoRequest>  parcearDtoApi(final String API_URL) throws JsonProcessingException {
+    private List<CoinDtoRequest> parcearDtoApi(final String API_URL) throws JsonProcessingException {
 
-          // Obtener la respuesta como String
-          String jsonResponse = restTemplate.getForObject(API_URL, String.class);
+        // Obtener la respuesta como String
+        String jsonResponse = restTemplate.getForObject(API_URL, String.class);
 
-          // Parsear la respuesta y extraer el nodo "data"
-          JsonNode rootNode = mapper.readTree(jsonResponse);
-          JsonNode dataNode = rootNode.get("data");
+        // Parsear la respuesta y extraer el nodo "data"
+        JsonNode rootNode = mapper.readTree(jsonResponse);
+        JsonNode dataNode = rootNode.get("data");
 
-          // Deserializar el nodo "data" como una lista de CoinDto
-          List<CoinDtoRequest> list = mapper.readValue(dataNode.toString(), new TypeReference<List<CoinDtoRequest>>() {});
+        // Deserializar el nodo "data" como una lista de CoinDto
+        List<CoinDtoRequest> list = mapper.readValue(dataNode.toString(), new TypeReference<List<CoinDtoRequest>>() {
+        });
 
-          return list;
+        return list;
 
     }
 }

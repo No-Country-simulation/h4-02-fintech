@@ -1,11 +1,10 @@
 package com.fintech.h4_02.enums;
 
 public enum Coin {
-    EQUITY("equity"),
+    FOREX("forex"),
     ETF("etf"),
-    FUND("fund"),
-    BOND("bond"),
-    CE("ce");
+    COMMODITIES("commodities");
+
 
     private final String value;
 

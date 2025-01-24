@@ -69,9 +69,9 @@ public class ExchangeController {
     }
 
 
-    @GetMapping("/all")
-    public ResponseEntity<List<CoinDtoRequest>> getAllExcange() throws JsonProcessingException {
-        return ResponseEntity.status(HttpStatus.OK).body(exchangeService.listCoinAllForex());
+    @GetMapping("/all/{coin}")
+    public ResponseEntity<List<CoinDtoRequest>> getAllExcange(@PathVariable Coin coin) throws JsonProcessingException {
+        return ResponseEntity.status(HttpStatus.OK).body(exchangeService.listCoinAllForex(coin));
 
     }
 
