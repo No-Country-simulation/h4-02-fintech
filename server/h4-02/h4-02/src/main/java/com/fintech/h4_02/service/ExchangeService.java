@@ -48,9 +48,14 @@ public class ExchangeService {
     public List<CoinDtoRequest> listCoinAllForex(Coin coin) throws JsonProcessingException {
         String url = null;
         final String forex = "https://api.twelvedata.com/forex_pairs";
-        final String etfs = "https://api.twelvedata.com/etfs/list?apikey=demo&source=docs";
         final String commodities = "https://api.twelvedata.com/commodities?source=docs";
-        if(coin.name().equalsIgnoreCase("forex")) url = forex;
+        if(coin.name().equalsIgnoreCase("forex")) {
+            url = forex;
+        }else if(coin.name().equalsIgnoreCase("commodities")) {
+            url = forex;
+        }else if(coin.name().equalsIgnoreCase("etfs")) {
+           return listarEtfs();
+        }
         return parcearDtoApi(url);
     }
 
@@ -70,5 +75,24 @@ public class ExchangeService {
 
         return list;
 
+    }
+
+    private List<CoinDtoRequest> listarEtfs(){
+        final String etfs = "https://api.twelvedata.com/etfs/list?apikey=demo&source=docs";
+        String jsonResponse = restTemplate.getForObject(etfs, String.class);
+
+        // Convert the response to a JSONObject
+        JSONObject jsonObject = new JSONObject(jsonResponse);
+
+        // Access the 'list' array
+        JSONArray list = jsonObject.getJSONObject("result").getJSONArray("list");
+
+        // Loop through the array and print each 'symbol'
+        for (int i = 0; i < list.length(); i++) {
+            JSONObject item = list.getJSONObject(i);
+            String symbol = item.getString("symbol");
+            System.out.println(symbol);
+        }
+    }
     }
 }

@@ -236,14 +236,33 @@ class UserControllerTest {
 
 
     @Test
-    @Label("obtener lista de Fondos cotizado")
-    void getAllExcange() throws JsonProcessingException {
+    @Label("obtener lista de Fondos forex")
+    void getAllForex() throws JsonProcessingException {
 
 
         HttpEntity<String> request = new HttpEntity<>( headers);
         ResponseEntity<List<CoinDtoRequest>> result = testRestTemplate.exchange("/api/v1/exchange/all/FOREX", HttpMethod.GET, request, new ParameterizedTypeReference<List<CoinDtoRequest>>() {
         });
-        JsonUtil.toJsonPrint("user created ", result);
+        JsonUtil.toJsonPrint("forex ", result);
+
+        assertAll(
+                () -> assertEquals(HttpStatus.OK, result.getStatusCode()),
+                () -> assertEquals(200, result.getStatusCode().value()),
+                () -> assertNotNull(!result.getBody().isEmpty())
+
+
+        );
+    }
+
+    @Test
+    @Label("obtener lista de Fondos commodities")
+    void getAllcommodities() throws JsonProcessingException {
+
+
+        HttpEntity<String> request = new HttpEntity<>( headers);
+        ResponseEntity<List<CoinDtoRequest>> result = testRestTemplate.exchange("/api/v1/exchange/all/COMMODITIES", HttpMethod.GET, request, new ParameterizedTypeReference<List<CoinDtoRequest>>() {
+        });
+        JsonUtil.toJsonPrint("commodities ", result);
 
         assertAll(
                 () -> assertEquals(HttpStatus.OK, result.getStatusCode()),
