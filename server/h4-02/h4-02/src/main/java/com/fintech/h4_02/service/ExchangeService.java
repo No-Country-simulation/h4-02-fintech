@@ -1,20 +1,45 @@
 package com.fintech.h4_02.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fintech.h4_02.dto.CoinDto;
 import com.fintech.h4_02.enums.Coin;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import com.fasterxml.jackson.core.type.TypeReference;
+
+import javax.xml.parsers.ParserConfigurationException;
+import java.util.Collections;
+import java.util.List;
 
 @Service
 public class ExchangeService {
 
     @Autowired
     private RestTemplate restTemplate;
-    public JsonNode listCoinAll(Coin coin) {
+
+    @Autowired
+    private ObjectMapper mapper;
+
+    public List<CoinDto> listCoinAll(Coin coin) throws ParserConfigurationException {
 
 
          final String API_URL = "https://api.twelvedata.com/symbol_search?symbol_type="+coin+"&exchange=BUENOSAIRES&apikey=9c41e2e67bc44ce180fcced64b41ea11";
-        return restTemplate.getForObject(API_URL, JsonNode.class);
+        try {
+            // Obtener la respuesta como String
+            String jsonResponse = restTemplate.getForObject(API_URL, String.class);
+
+            // Parsear la respuesta y extraer el nodo "data"
+            JsonNode rootNode = mapper.readTree(jsonResponse);
+            JsonNode dataNode = rootNode.get("data");
+
+            // Deserializar el nodo "data" como una lista de CoinDto
+            List<CoinDto> list = mapper.readValue(dataNode.toString(), new TypeReference<List<CoinDto>>() {});
+
+            return list;
+        } catch (Exception e) {
+             throw new ParserConfigurationException("Parcer error");
+        }
     }
 }

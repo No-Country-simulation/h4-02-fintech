@@ -1,5 +1,6 @@
 package com.fintech.h4_02.controller;
 
+import com.fintech.h4_02.dto.CoinDto;
 import com.fintech.h4_02.dto.wallet.WalletResponse;
 import com.fintech.h4_02.enums.Coin;
 import com.fintech.h4_02.service.ExchangeService;
@@ -17,6 +18,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import javax.xml.parsers.ParserConfigurationException;
+import java.util.List;
 
 @Controller
 @RequestMapping("api/v1/exchange")
@@ -59,7 +63,7 @@ public class ExchangeController {
             )
     })
     @GetMapping("/all/{coin}")
-    public ResponseEntity<?> getAllExcange(@PathVariable Coin coin){
+    public ResponseEntity<List<CoinDto>> getAllExcange(@PathVariable Coin coin) throws ParserConfigurationException {
         return ResponseEntity.status(HttpStatus.OK).body(exchangeService.listCoinAll(coin));
 
     }
