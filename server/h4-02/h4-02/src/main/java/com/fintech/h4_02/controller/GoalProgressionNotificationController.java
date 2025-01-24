@@ -1,6 +1,7 @@
 package com.fintech.h4_02.controller;
 
 import com.fintech.h4_02.dto.notification.GoalProgressionNotificationDto;
+import com.fintech.h4_02.dto.notification.MultipleNotificationIdsDto;
 import com.fintech.h4_02.entity.GoalProgressionNotification;
 import com.fintech.h4_02.service.notification.NotificationService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -9,6 +10,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -63,11 +65,31 @@ public class GoalProgressionNotificationController {
             ),
     })
     @PostMapping("/{notificationId}/mark-as-read")
-    public ResponseEntity<Void> markGoalProgressionNotificationAsRead(
+    public ResponseEntity<Void> markNotificationAsRead(
             @PathVariable String userId,
             @PathVariable Long notificationId
     ) {
         notificationService.markGoalProgressionNotificationAsRead(notificationId);
+        return ResponseEntity.noContent().build();
+    }
+
+    @Operation(
+            summary = "Mark multiple notifications as read",
+            description = "Marks the specified notifications as read."
+    )
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "204",
+                    description = "Notifications marked as read successfully.",
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE)
+            ),
+    })
+    @PostMapping("/mark-as-read")
+    public ResponseEntity<Void> markMultipleNotificationsAsRead(
+            @PathVariable String userId,
+            @RequestBody @Valid MultipleNotificationIdsDto dto
+    ) {
+        notificationService.markMultipleGoalProgressionNotificationsAsRead(dto.notificationIds());
         return ResponseEntity.noContent().build();
     }
 
