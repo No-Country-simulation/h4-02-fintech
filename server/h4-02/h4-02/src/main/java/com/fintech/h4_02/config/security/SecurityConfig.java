@@ -23,7 +23,7 @@ import java.util.List;
 @EnableMethodSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
-    private static final String[] PUBLIC_PATHS = {
+    public static final String[] PUBLIC_PATHS = {
             "/api/v1/auth/login",
             "/api/v1/auth/register",
             "/api/v1/auth/oauth",
