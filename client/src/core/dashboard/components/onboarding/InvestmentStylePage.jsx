@@ -158,12 +158,14 @@ export const InvestmentStylePage = ({ nextStep, prevStep }) => {
                     ${
                       step === 3
                         ? "border-primary bg-primary text-white"
+                        : step < 3
+                        ? "border-primary bg-white text-primary"
                         : "border-gray-300 text-gray-300"
                     }`}
                   >
-                    {step}
+                    {step < 3 ? "✓" : step}
                   </div>
-                  {step < 4 && <div className="w-8 h-0.5 bg-gray-300" />}
+                  {step < 4 && <div className="w-8 h-0.5 bg-gray-300"></div>}
                 </div>
               ))}
             </div>

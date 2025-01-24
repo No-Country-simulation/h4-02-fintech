@@ -172,6 +172,26 @@ export const CurrentNumbersPage = ({ nextStep, prevStep }) => {
             </div>
           </div>
 
+          <div className="flex justify-center items-center py-4">
+            {[1, 2, 3, 4].map((step) => (
+              <div key={step} className="flex items-center">
+                <div
+                  className={`h-8 w-8 rounded-full border-2 flex items-center justify-center
+                  ${
+                    step === 4
+                      ? "border-primary bg-primary text-white"
+                      : step < 4
+                      ? "border-primary bg-white text-primary"
+                      : "border-gray-300 text-gray-300"
+                  }`}
+                >
+                  {step < 4 ? "✓" : step}
+                </div>
+                {step < 4 && <div className="w-8 h-0.5 bg-gray-300"></div>}
+              </div>
+            ))}
+          </div>
+
           <div className="space-y-4 pt-4">
             <button
               className="w-full btn btn-primary"
