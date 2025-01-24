@@ -239,7 +239,7 @@ class UserControllerTest {
 
 
         HttpEntity<String> request = new HttpEntity<>( headers);
-        ResponseEntity<JsonNode> result = testRestTemplate.exchange("/api/v1/exchange/all/etf", HttpMethod.GET, request, JsonNode.class);
+        ResponseEntity<JsonNode> result = testRestTemplate.exchange("/api/v1/exchange/all/ETF", HttpMethod.GET, request, JsonNode.class);
         JsonUtil.toJsonPrint("user created ", result);
 
         assertAll(
