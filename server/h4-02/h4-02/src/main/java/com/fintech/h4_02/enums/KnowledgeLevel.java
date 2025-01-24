@@ -2,12 +2,13 @@ package com.fintech.h4_02.enums;
 
 public enum KnowledgeLevel {
     PRINCIPIANTE("principiante"),
-    INTERMEDIO("intermedio");
+    INTERMEDIO("intermedio"),
+    ADVANCED("avanzado");
 
     private final String value;
 
-    KnowledgeLevel(String dato) {
-        this.value = dato;
+    KnowledgeLevel(String value) {
+        this.value = value;
     }
-    
+
 }
