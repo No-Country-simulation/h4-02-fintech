@@ -7,18 +7,23 @@ import { profileValidationSchema } from "../../../core/validators/profile";
 import { useAuthStore } from "../../../core/auth/store/useAuthStore";
 import { useAuth0 } from "@auth0/auth0-react";
 import { getErrorMessage } from "../../../core/validators/errorHandler";
+import { useGoalStore } from "../../../core/dashboard/store/useGoalStore";
 
 export const ProfileInvestor = () => {
   const { user, login } = useAuthStore();
+  const { goals } = useGoalStore();
+
   const { user: userAuth0 } = useAuth0();
-  const [pictureOptions /* setPictureOptions */] = useState([
-    "",
-    userAuth0?.picture ||
-      "https://api.dicebear.com/9.x/adventurer/svg?seed=Riley",
+  const [pictureOptions, setPictureOptions] = useState([
+    userAuth0?.picture || "",
+    "https://api.dicebear.com/9.x/adventurer/svg?seed=Riley",
     "https://api.dicebear.com/9.x/adventurer/svg?seed=Maria",
     "https://api.dicebear.com/9.x/adventurer/svg?seed=Aidan",
     "https://api.dicebear.com/9.x/adventurer/svg?seed=Chase",
     "https://api.dicebear.com/9.x/adventurer/svg?seed=Easton",
+    "https://api.dicebear.com/9.x/adventurer/svg?seed=Liliana",
+    "https://api.dicebear.com/9.x/adventurer/svg?seed=Jocelyn",
+    "https://api.dicebear.com/9.x/adventurer/svg?seed=Avery",
   ]);
 
   const [selectPicture, setSelectPicture] = useState(user?.picture || "");
@@ -69,6 +74,48 @@ export const ProfileInvestor = () => {
       const profile = await getProfile(user.id);
       setSelectPicture(profile.picture || "");
 
+      // Avatar si tiene el onboarding completo
+      if (profile?.onboarding?.completed) {
+        setPictureOptions((prevOptions) =>
+          prevOptions.includes(
+            "https://api.dicebear.com/9.x/bottts-neutral/svg?seed=Ryan"
+          )
+            ? prevOptions
+            : [
+                ...prevOptions,
+                "https://api.dicebear.com/9.x/bottts-neutral/svg?seed=Ryan",
+              ]
+        );
+      }
+
+      // Avatar si tiene al menos un objetivo
+      if (goals?.length > 0) {
+        setPictureOptions((prevOptions) =>
+          prevOptions.includes(
+            "https://api.dicebear.com/9.x/bottts-neutral/svg?seed=Easton"
+          )
+            ? prevOptions
+            : [
+                ...prevOptions,
+                "https://api.dicebear.com/9.x/bottts-neutral/svg?seed=Easton",
+              ]
+        );
+      }
+
+      // Avatar si tiene al menos un objetivo con 100 de progreso
+      if (goals?.some((goal) => goal.progress >= 100)) {
+        setPictureOptions((prevOptions) =>
+          prevOptions.includes(
+            "https://api.dicebear.com/9.x/bottts-neutral/svg?seed=Valentina"
+          )
+            ? prevOptions
+            : [
+                ...prevOptions,
+                "https://api.dicebear.com/9.x/bottts-neutral/svg?seed=Valentina",
+              ]
+        );
+      }
+      
       reset({
         name: profile.name || "",
         dni: profile.dni || "",
@@ -320,7 +367,7 @@ export const ProfileInvestor = () => {
           </div>
         </div>
 
-        <button type="submit" className="btn btn-neutral w-full mt-4 sm:mt-6">
+        <button type="submit" className="btn btn-primary w-full mt-4 sm:mt-6">
           Guardar perfil
         </button>
       </form>
