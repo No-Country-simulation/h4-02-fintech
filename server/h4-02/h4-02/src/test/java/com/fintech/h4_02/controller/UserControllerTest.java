@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fintech.h4_02.dto.CoinDto;
 import com.fintech.h4_02.dto.auth.AuthResponseDto;
 import com.fintech.h4_02.dto.auth.LoginRequestDto;
+import com.fintech.h4_02.dto.coin.CoinDtoRequest;
 import com.fintech.h4_02.dto.onboarding.OnboardingRequest;
 import com.fintech.h4_02.dto.user.CreateUserRequestDto;
 import com.fintech.h4_02.dto.user.UserResponseDto;
@@ -240,7 +241,7 @@ class UserControllerTest {
 
 
         HttpEntity<String> request = new HttpEntity<>( headers);
-        ResponseEntity<List<CoinDto>> result = testRestTemplate.exchange("/api/v1/exchange/all/ETF", HttpMethod.GET, request, new ParameterizedTypeReference<List<CoinDto>>() {
+        ResponseEntity<List<CoinDtoRequest>> result = testRestTemplate.exchange("/api/v1/exchange/all", HttpMethod.GET, request, new ParameterizedTypeReference<List<CoinDtoRequest>>() {
         });
         JsonUtil.toJsonPrint("user created ", result);
 

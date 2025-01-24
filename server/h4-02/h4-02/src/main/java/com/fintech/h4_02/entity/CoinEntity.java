@@ -19,12 +19,5 @@ public class CoinEntity {
     private Long id;
 
     private String symbol;
-    private String instrumentName;
-    private String exchange;
-    private String micCode;
-    private String exchangeTimezone;
-    private String instrumentType;
-    private String country;
-    private String currency;
 
 }

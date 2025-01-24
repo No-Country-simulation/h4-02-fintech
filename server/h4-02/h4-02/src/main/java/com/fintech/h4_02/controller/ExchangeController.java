@@ -1,6 +1,8 @@
 package com.fintech.h4_02.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fintech.h4_02.dto.CoinDto;
+import com.fintech.h4_02.dto.coin.CoinDtoRequest;
 import com.fintech.h4_02.dto.wallet.WalletResponse;
 import com.fintech.h4_02.enums.Coin;
 import com.fintech.h4_02.service.ExchangeService;
@@ -15,9 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import javax.xml.parsers.ParserConfigurationException;
 import java.util.List;
@@ -62,9 +62,21 @@ public class ExchangeController {
                                             "]"))
             )
     })
-    @GetMapping("/all/{coin}")
-    public ResponseEntity<List<CoinDto>> getAllExcange(@PathVariable Coin coin) throws ParserConfigurationException {
+    @GetMapping("/all-error/{coin}")
+    public ResponseEntity<List<CoinDto>> getAllExcangeRror(@PathVariable Coin coin) throws ParserConfigurationException {
         return ResponseEntity.status(HttpStatus.OK).body(exchangeService.listCoinAll(coin));
 
     }
+
+
+    @GetMapping("/all")
+    public ResponseEntity<List<CoinDtoRequest>> getAllExcange() throws JsonProcessingException {
+        return ResponseEntity.status(HttpStatus.OK).body(exchangeService.listCoinAllForex());
+
+    }
+
+  /*  @PostMapping
+    public ResponseEntity crateExchange(@RequestBody ){
+        return ResponseEntity.status(HttpStatus.OK).body(exchangeService.create());
+    }*/
 }

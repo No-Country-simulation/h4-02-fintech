@@ -1,8 +1,10 @@
 package com.fintech.h4_02.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fintech.h4_02.dto.CoinDto;
+import com.fintech.h4_02.dto.coin.CoinDtoRequest;
 import com.fintech.h4_02.enums.Coin;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -41,5 +43,27 @@ public class ExchangeService {
         } catch (Exception e) {
              throw new ParserConfigurationException("Parcer error");
         }
+    }
+
+    public List<CoinDtoRequest> listCoinAllForex() throws JsonProcessingException {
+       final String forex = "https://api.twelvedata.com/forex_pairs";
+        return parcearDtoApi(forex);
+    }
+
+
+  private List<CoinDtoRequest>  parcearDtoApi(final String API_URL) throws JsonProcessingException {
+
+          // Obtener la respuesta como String
+          String jsonResponse = restTemplate.getForObject(API_URL, String.class);
+
+          // Parsear la respuesta y extraer el nodo "data"
+          JsonNode rootNode = mapper.readTree(jsonResponse);
+          JsonNode dataNode = rootNode.get("data");
+
+          // Deserializar el nodo "data" como una lista de CoinDto
+          List<CoinDtoRequest> list = mapper.readValue(dataNode.toString(), new TypeReference<List<CoinDtoRequest>>() {});
+
+          return list;
+
     }
 }
