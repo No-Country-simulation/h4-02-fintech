@@ -119,6 +119,14 @@ public class UserEntity {
     )
     private List<Goal> goals;
 
+    @OneToMany(
+            mappedBy = "user",
+            fetch = FetchType.LAZY,
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    private List<Post> posts;
+
     public UserEntity(CreateUserRequestDto user) {
         this.email = user.email();
         this.name = user.name();
@@ -129,6 +137,11 @@ public class UserEntity {
     public void addGoal(Goal goal) {
         goals.add(goal);
         goal.setUser(this);
+    }
+
+    public void addPost(Post post) {
+        posts.add(post);
+        post.setUser(this);
     }
 
     public boolean isEmailConfirmed() {
