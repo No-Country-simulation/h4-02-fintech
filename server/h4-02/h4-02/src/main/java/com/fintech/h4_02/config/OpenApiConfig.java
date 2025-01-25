@@ -12,9 +12,9 @@ import io.swagger.v3.oas.annotations.info.License;
                 version = "1.0",
                 description = "IUPI Fintech API documentation v1.0",
                 contact = @Contact(
-                        name = "Lionel",
-                        email = "staricofflionel@gmail.com",
-                        url = "lionel.com"
+                        name = "IUPI Fintech",
+                        email = "iupifintech.sup@gmail.com",
+                        url = "https://iupi.vercel.app/"
                 ),
                 license = @License(
                         name = "Apache 2.0",

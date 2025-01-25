@@ -15,6 +15,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
+import org.springframework.web.util.UriUtils;
 
 import java.io.IOException;
 
@@ -30,6 +31,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             @NonNull HttpServletResponse response,
             @NonNull FilterChain filterChain
     ) throws ServletException, IOException {
+        String requestPath = UriUtils.decode(request.getRequestURI(), "UTF-8");
+        // Do not validate the auth token if is a public path
+        if (isPublicPath(requestPath)) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
         final String token = getTokenFromRequest(request);
         final String username;
         if (token == null) {
@@ -46,6 +54,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             }
         }
         filterChain.doFilter(request, response);
+    }
+
+    private boolean isPublicPath(String path) {
+        for (String publicPath : SecurityConfig.PUBLIC_PATHS) {
+            if (path.startsWith(publicPath)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private String getTokenFromRequest(HttpServletRequest request) {

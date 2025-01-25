@@ -11,6 +11,7 @@ import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
@@ -72,6 +73,17 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<ErrorResponse> handleExceptionF(Exception ex, WebRequest request) {
         ErrorResponse error = ErrorResponse.builder()
                 .message(ex.getMessage())
+                .statusCode(HttpStatus.INTERNAL_SERVER_ERROR.value())
+                .details(request.getDescription(false))
+                .build();
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
+    }
+
+
+    @ExceptionHandler(RestClientException.class)
+    public ResponseEntity<ErrorResponse> handleRestClientException(Exception ex, WebRequest request) {
+        ErrorResponse error = ErrorResponse.builder()
+                .message("error de conexion con la api")
                 .statusCode(HttpStatus.INTERNAL_SERVER_ERROR.value())
                 .details(request.getDescription(false))
                 .build();
