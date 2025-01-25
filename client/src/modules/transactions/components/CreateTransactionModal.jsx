@@ -36,14 +36,14 @@ export default function CreateTransactionModal() {
 
   const onSubmit = async (data) => {
     try {
-      const resp = await createTransaction({
+      await createTransaction({
         description: data.title,
         value: parseFloat(data.amount.replace(",", ".")),
         state: state,
         user: user.id,
         date: new Date(data.date).toISOString().split("T")[0],
       });
-      console.log(resp);
+      
       toast("Transacción exitosa", {
         description: "Transacción creada con éxito",
       });

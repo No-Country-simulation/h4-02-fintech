@@ -15,6 +15,7 @@ import { CedearsPage } from "../../modules/investment/pages/investment/CedearsPa
 import { FundsPage } from "../../modules/investment/pages/investment/FundsPage";
 import { ActionsPage } from "../../modules/investment/pages/investment/ActionsPage";
 import { InstrumentDetailsPage } from "../../modules/investment/pages/instruments/InstrumentDetailsPage";
+import { FiltersPage } from "../../modules/investment/pages/investment/FiltersPage";
 
 export const DashboardRouter = () => {
   const { user } = useAuthStore();
@@ -63,6 +64,7 @@ export const DashboardRouter = () => {
             path="/investment/instrument/:type/:id"
             element={<InstrumentDetailsPage />}
           />
+          <Route path="/investment/filter" element={<FiltersPage />} />
         </>
       )}
 
