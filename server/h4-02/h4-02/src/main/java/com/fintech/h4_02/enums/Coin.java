@@ -2,7 +2,7 @@ package com.fintech.h4_02.enums;
 
 public enum Coin {
     FOREX("forex"),
-    ETF("etf"),
+    ETFS("etfs"),
     COMMODITIES("commodities");
 
 

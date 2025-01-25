@@ -25,8 +25,6 @@ public class ExchangeEntity {
     private BigDecimal value;
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate date;
-    @ManyToOne
-    @JoinColumn(name = "coin_entity_id", referencedColumnName = "id")
-    private CoinEntity coin;
+    private String coin;
 
 }

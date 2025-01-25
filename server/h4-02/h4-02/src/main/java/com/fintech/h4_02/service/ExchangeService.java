@@ -6,12 +6,17 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fintech.h4_02.dto.CoinDto;
 import com.fintech.h4_02.dto.coin.CoinDtoRequest;
 import com.fintech.h4_02.enums.Coin;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 import com.fasterxml.jackson.core.type.TypeReference;
 
 import javax.xml.parsers.ParserConfigurationException;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -45,7 +50,7 @@ public class ExchangeService {
         }
     }
 
-    public List<CoinDtoRequest> listCoinAllForex(Coin coin) throws JsonProcessingException {
+    public List<CoinDtoRequest> listCoinAllForex(Coin coin) throws JsonProcessingException, JSONException {
         String url = null;
         final String forex = "https://api.twelvedata.com/forex_pairs";
         final String commodities = "https://api.twelvedata.com/commodities?source=docs";
@@ -77,22 +82,42 @@ public class ExchangeService {
 
     }
 
-    private List<CoinDtoRequest> listarEtfs(){
-        final String etfs = "https://api.twelvedata.com/etfs/list?apikey=demo&source=docs";
-        String jsonResponse = restTemplate.getForObject(etfs, String.class);
 
-        // Convert the response to a JSONObject
-        JSONObject jsonObject = new JSONObject(jsonResponse);
 
-        // Access the 'list' array
-        JSONArray list = jsonObject.getJSONObject("result").getJSONArray("list");
 
-        // Loop through the array and print each 'symbol'
-        for (int i = 0; i < list.length(); i++) {
-            JSONObject item = list.getJSONObject(i);
-            String symbol = item.getString("symbol");
-            System.out.println(symbol);
+
+    private List<CoinDtoRequest> listarEtfs() throws JSONException, JsonProcessingException {
+        final String etfs = "https://api.twelvedata.com/etfs/list?apikey=9c41e2e67bc44ce180fcced64b41ea11&source=docs";
+        List<CoinDtoRequest> listCoin = new ArrayList<>();
+
+        try {
+            JsonNode jsonResponse = restTemplate.getForObject(etfs, JsonNode.class);
+
+            // Verificar si la respuesta contiene un error
+            if (jsonResponse.has("error")) {
+                throw new RestClientException("Error en la respuesta de la API: " + jsonResponse.get("error").asText());
+            }
+
+            // Procesar la respuesta
+            ObjectMapper mapper = new ObjectMapper();
+            JsonNode list = jsonResponse.get("result").get("list");
+
+            if (list.isArray()) {
+                for (JsonNode item : list) {
+                    String symbol = item.get("symbol").asText();
+                    CoinDtoRequest coin = new CoinDtoRequest(symbol);
+                    listCoin.add(coin);
+                }
+            }
+
+            return listCoin;
+        } catch (RestClientException e) {
+            // Manejar excepciones de la API
+            e.printStackTrace();
+            throw e;
         }
     }
-    }
+
+
+
 }
