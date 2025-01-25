@@ -25,6 +25,7 @@ export const GoalsSection = () => {
 
   const onHandleGoals = useCallback(async () => {
     try {
+      if (!sessionStorage.getItem("token")) return;
       if (!user) return;
       const rep = await getGoals(user.id);
       if (rep) {
@@ -40,6 +41,7 @@ export const GoalsSection = () => {
   }, [user, setGoals]);
 
   useEffect(() => {
+    if (!sessionStorage.getItem("token")) return;
     onHandleGoals();
   }, [onHandleGoals]);
 

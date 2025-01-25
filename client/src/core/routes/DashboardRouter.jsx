@@ -30,8 +30,9 @@ export const DashboardRouter = () => {
 
   useEffect(() => {
     if (
-      !userAuth0 &&
-      (user.provider === "google" || user.provider === "apple")
+      (!userAuth0 &&
+        (user.provider === "google" || user.provider === "apple")) ||
+      !sessionStorage.getItem("token")
     ) {
       logoutStore();
     }

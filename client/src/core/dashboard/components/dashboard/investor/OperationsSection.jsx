@@ -2,7 +2,7 @@ import { Chart } from "iconsax-react";
 
 export const OperationsSection = () => {
   return (
-    <div className="space-y-4 p-4 sm:border-2 sm:p-2 flex flex-col sm:justify-center">
+    <div className="space-y-4 p-4">
       <div className="flex items-center gap-2">
         <Chart size="24" className="text-primary"/>
         <h3 className="text-xl font-medium text-primary">

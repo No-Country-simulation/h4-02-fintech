@@ -96,17 +96,16 @@ export const BondsPage = () => {
       </div>
 
       {/* Lista de bonos */}
-      <div className="bg-white rounded-t-3xl min-h-screen">
+      <div className="bg-gray-50 min-h-screen pt-4">
         {filteredBonds.length > 0 ? (
           filteredBonds.map((bond) => (
-            <div
-              key={bond.id}
-              className="border-b p-4 hover:shadow-lg"
-              onClick={() =>
-                navigate(`/dashboard/investment/instrument/bond/${bond.id}`)
-              }
-            >
-              <div className="flex items-center justify-between">
+            <div key={bond.id}>
+              <button
+                className="btn btn-ghost w-full flex items-center justify-between"
+                onClick={() =>
+                  navigate(`/dashboard/investment/instrument/bond/${bond.id}`)
+                }
+              >
                 <div className="flex items-center gap-3">
                   {bond.logo ? (
                     <div className="w-8 h-8">
@@ -121,7 +120,7 @@ export const BondsPage = () => {
                       <Coin className="w-5 h-5 text-blue-500" />
                     </div>
                   )}
-                  <div>
+                  <div className="flex flex-col items-start">
                     <h3 className="font-bold text-lg">{bond.name}</h3>
                     <p className="text-gray-500">{bond.description}</p>
                   </div>
@@ -147,7 +146,8 @@ export const BondsPage = () => {
                     </span>
                   </div>
                 </div>
-              </div>
+              </button>
+              <div className="divider my-0 mx-4"></div>
             </div>
           ))
         ) : (

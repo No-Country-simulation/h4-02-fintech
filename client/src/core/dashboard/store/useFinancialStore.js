@@ -51,7 +51,7 @@ export const useFinancialStore = create(
     }),
     {
       name: "financial-storage",
-      getStorage: () => localStorage,
+      getStorage: () => sessionStorage,
     }
   )
 );

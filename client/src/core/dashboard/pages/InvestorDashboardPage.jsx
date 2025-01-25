@@ -21,7 +21,7 @@ export const InvestorDashboardPage = () => {
     <div className="bg-gray-50 min-h-screen">
       <Header />
 
-      <div className="container mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-4">
+      <div className="container mx-auto grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3  gap-6 p-4">
         {financial && <SavingsOverview />}
         <GoalsSection />
         <FinancialSection />

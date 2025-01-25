@@ -32,7 +32,7 @@ export const useNotificationStore = create(
     }),
     {
       name: "notifications-storage",
-      getStorage: () => localStorage,
+      getStorage: () => sessionStorage,
     }
   )
 );

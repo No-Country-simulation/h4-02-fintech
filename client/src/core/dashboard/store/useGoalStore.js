@@ -27,7 +27,7 @@ export const useGoalStore = create(
     }),
     {
       name: "goals-storage",
-      getStorage: () => localStorage,
+      getStorage: () => sessionStorage,
     }
   )
 );

@@ -124,7 +124,7 @@ export const InstrumentDetailsPage = () => {
   if (!type || !id) navigate("/dashboard/investment");
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="bg-gray-50">
       {/* Header */}
       <div className="bg-primary px-4 py-4 text-white">
         <div className="flex items-center gap-4 mb-2">
@@ -145,9 +145,9 @@ export const InstrumentDetailsPage = () => {
       </div>
 
       {/* Main Content */}
-      <div className="p-4">
+      <div className="flex flex-col container mx-auto p-4">
         {/* Bond Title and Favorite */}
-        <div className="flex justify-between items-center mb-4">
+        <div className="flex justify-between items-center mb-4 w-full">
           <h3 className="text-2xl font-bold">{id}</h3>
           <button className="btn btn-ghost btn-square">
             <Heart className="w-6 h-6" />
@@ -187,37 +187,41 @@ export const InstrumentDetailsPage = () => {
           </div>
         </div>
 
-        <PerformanceChart performanceData={instrument.performance} />
+        <div className="lg:flex w-full lg:space-x-4">
+          <div className="w-full lg:w-1/2">
+            <PerformanceChart performanceData={instrument.performance} />
+          </div>
 
-        {/* Comparative Table */}
-        <div className="mb-6">
-          <h3 className="text-blue-700 text-xl font-bold mb-4">
-            Tabla Comparativa
-          </h3>
-          <div className="overflow-x-auto">
-            <table className="table w-full">
-              <thead>
-                <tr>
-                  <th className="text-gray-500">Instrumento</th>
-                  <th className="text-gray-500">Rendimiento Anual %</th>
-                  <th className="text-gray-500">Nivel de Riesgo</th>
-                </tr>
-              </thead>
-              <tbody>
-                {instrument.compareData.map((item, index) => (
-                  <tr key={index} className="border-b">
-                    <td className="py-4">{item.instrument}</td>
-                    <td className="py-4">{item.yield}</td>
-                    <td className="py-4">{item.risk}</td>
+          {/* Comparative Table */}
+          <div className="mb-6 w-full lg:w-1/2">
+            <h3 className="text-blue-700 text-xl font-bold mb-4">
+              Tabla Comparativa
+            </h3>
+            <div className="overflow-x-auto">
+              <table className="table w-full">
+                <thead>
+                  <tr>
+                    <th className="text-gray-500">Instrumento</th>
+                    <th className="text-gray-500">Rendimiento Anual %</th>
+                    <th className="text-gray-500">Nivel de Riesgo</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {instrument.compareData.map((item, index) => (
+                    <tr key={index} className="border-b">
+                      <td className="py-4">{item.instrument}</td>
+                      <td className="py-4">{item.yield}</td>
+                      <td className="py-4">{item.risk}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
 
         {/* Action Buttons */}
-        <div className="flex gap-4">
+        <div className="flex gap-4 sm:max-w-sm">
           <button className="btn btn-primary flex-1 text-lg">Comprar</button>
           <button className="btn btn-primary flex-1 text-lg">Vender</button>
         </div>

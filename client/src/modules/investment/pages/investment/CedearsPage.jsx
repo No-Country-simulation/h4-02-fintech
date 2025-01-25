@@ -92,17 +92,18 @@ export const CedearsPage = () => {
       </div>
 
       {/* Lista de cedears */}
-      <div className="bg-white rounded-t-3xl min-h-screen">
+      <div className="bg-gray-50 min-h-screen pt-4">
         {filteredCedears.length > 0 ? (
           filteredCedears.map((cedear) => (
-            <div
-              key={cedear.id}
-              className="border-b p-4 hover:shadow-lg"
-              onClick={() =>
-                navigate(`/dashboard/investment/instrument/cedear/${cedear.id}`)
-              }
-            >
-              <div className="flex items-center justify-between">
+            <div key={cedear.id}>
+              <button
+                className="btn btn-ghost w-full flex items-center justify-between"
+                onClick={() =>
+                  navigate(
+                    `/dashboard/investment/instrument/cedear/${cedear.id}`
+                  )
+                }
+              >
                 <div className="flex items-center gap-3">
                   {cedear.logo ? (
                     <div className="w-8 h-8">
@@ -117,7 +118,7 @@ export const CedearsPage = () => {
                       <DocumentFilter className="w-5 h-5 text-blue-500" />
                     </div>
                   )}
-                  <div>
+                  <div className="flex flex-col items-start">
                     <h3 className="font-bold text-lg">{cedear.name}</h3>
                     <p className="text-gray-500">{cedear.description}</p>
                   </div>
@@ -143,7 +144,8 @@ export const CedearsPage = () => {
                     </span>
                   </div>
                 </div>
-              </div>
+              </button>
+              <div className="divider my-0 mx-4"></div>
             </div>
           ))
         ) : (

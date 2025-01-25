@@ -48,7 +48,7 @@ export const RegisterPage = () => {
       const user = response.user;
       const token = response.token;
       login(user);
-      localStorage.setItem("token", token);
+      sessionStorage.setItem("token", token);
     } catch (error) {
       const errorMessage = getErrorMessage(error);
       setErrorMessage(errorMessage);

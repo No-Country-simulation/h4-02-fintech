@@ -21,7 +21,7 @@ export const useAuthStore = create(
         useOnboardingStore.getState().updateFormData(onboardingData);
       },
       logout: () => {
-        localStorage.clear();
+        sessionStorage.clear();
         useOnboardingStore.getState().reset();
         useGoalStore.getState().reset();
         useNotificationStore.getState().reset();
@@ -30,7 +30,7 @@ export const useAuthStore = create(
     }),
     {
       name: "auth-store",
-      getStorage: () => localStorage,
+      getStorage: () => sessionStorage,
     }
   )
 );
