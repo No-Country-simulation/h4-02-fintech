@@ -54,14 +54,22 @@ public class ExchangeService {
         String url = null;
         final String forex = "https://api.twelvedata.com/forex_pairs";
         final String commodities = "https://api.twelvedata.com/commodities?source=docs";
-        if(coin.name().equalsIgnoreCase("forex")) {
+        if(coin.name().equalsIgnoreCase(Coin.FOREX.toString())) {
             url = forex;
-        }else if(coin.name().equalsIgnoreCase("commodities")) {
-            url = forex;
-        }else if(coin.name().equalsIgnoreCase("etfs")) {
+        }else if(coin.name().equalsIgnoreCase(Coin.COMMODITIES.toString())) {
+            url = commodities;
+        }else if(coin.name().equalsIgnoreCase(Coin.ETFS.toString())) {
            return listarEtfs();
+        }else if(coin.name().equalsIgnoreCase(Coin.BOND.toString())) {
+            return listBond();
         }
         return parcearDtoApi(url);
+    }
+
+    private List<CoinDtoRequest> listBond() {
+        List<String> listString = List.of("AAPL","GOOGL","MSFT","AMZN","TSLA","FB","NFLX","NVDA","BABA","V");
+        List<CoinDtoRequest> list = listString.stream().map(CoinDtoRequest::new).toList();
+        return list;
     }
 
 

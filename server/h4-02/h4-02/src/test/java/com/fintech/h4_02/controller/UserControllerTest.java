@@ -293,4 +293,23 @@ class UserControllerTest {
         );
     }
 
+    @Test
+    @Label("obtener lista de Fondos BOND")
+    void getAlleBond() throws JsonProcessingException {
+
+
+        HttpEntity<String> request = new HttpEntity<>( headers);
+        ResponseEntity<List<CoinDtoRequest>> result = testRestTemplate.exchange("/api/v1/exchange/all/BOND", HttpMethod.GET, request, new ParameterizedTypeReference<List<CoinDtoRequest>>() {
+        });
+        JsonUtil.toJsonPrint("commodities ", result);
+
+        assertAll(
+                () -> assertEquals(HttpStatus.OK, result.getStatusCode()),
+                () -> assertEquals(200, result.getStatusCode().value()),
+                () -> assertNotNull(!result.getBody().isEmpty())
+
+
+        );
+    }
+
 }
