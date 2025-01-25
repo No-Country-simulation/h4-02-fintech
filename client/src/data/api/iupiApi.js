@@ -7,7 +7,7 @@ const iupiApi = axios.create({
 });
 
 iupiApi.interceptors.request.use((config) => {
-  const token = localStorage.getItem("token");
+  const token = sessionStorage.getItem("token");
   config.headers = {
     ...config.headers,
     AUTHORIZATION: token ? `Bearer ${token}` : "",

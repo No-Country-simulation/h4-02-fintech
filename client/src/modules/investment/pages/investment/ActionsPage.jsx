@@ -87,17 +87,18 @@ export const ActionsPage = () => {
       </div>
 
       {/* Lista de acciones */}
-      <div className="bg-white rounded-t-3xl min-h-screen">
+      <div className="bg-gray-50 min-h-screen pt-4">
         {filteredActions.length > 0 ? (
           filteredActions.map((action) => (
-            <div
-              key={action.id}
-              className="border-b p-4 hover:shadow-lg"
-              onClick={() =>
-                navigate(`/dashboard/investment/instrument/action/${action.id}`)
-              }
-            >
-              <div className="flex items-center justify-between">
+            <div key={action.id}>
+              <button
+                className="btn btn-ghost w-full flex items-center justify-between"
+                onClick={() =>
+                  navigate(
+                    `/dashboard/investment/instrument/action/${action.id}`
+                  )
+                }
+              >
                 <div className="flex items-center gap-3">
                   {action.logo ? (
                     <div className="w-8 h-8">
@@ -112,7 +113,7 @@ export const ActionsPage = () => {
                       <Briefcase className="w-5 h-5 text-blue-500" />{" "}
                     </div>
                   )}
-                  <div>
+                  <div className="flex flex-col items-start">
                     <h3 className="font-bold text-lg">{action.name}</h3>
                     <p className="text-gray-500">{action.description}</p>
                   </div>
@@ -138,7 +139,8 @@ export const ActionsPage = () => {
                     </span>
                   </div>
                 </div>
-              </div>
+              </button>
+              <div className="divider my-0 mx-4"></div>
             </div>
           ))
         ) : (

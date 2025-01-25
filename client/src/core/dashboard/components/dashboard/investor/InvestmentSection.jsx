@@ -3,8 +3,8 @@ import { Link } from "react-router-dom";
 
 export const InvestmentSection = () => {
   return (
-    <div className="space-y-4 p-4 sm:border-2 sm:p-2 sm:rounded-xl">
-      <div className="space-y-4">
+    <div className="sm:border-2 sm:p-6 sm:rounded-xl sm:flex sm:flex-col sm:justify-center sm:items-center w-full">
+      
         <div className="flex items-center gap-2">
           <MoneyRecive size="24" className="text-primary" />
           <h3 className="text-xl font-medium text-primary">
@@ -12,7 +12,7 @@ export const InvestmentSection = () => {
           </h3>
         </div>
 
-        <div className="bg-base-200 rounded-xl p-6 shadow-sm space-y-4">
+        <div className="flex flex-col bg-base-200 rounded-xl p-6 shadow-sm space-y-4 w-full">
           <h4 className="text-lg font-semibold text-gray-800">
             Plazo Fijo en Dólares
           </h4>
@@ -43,6 +43,6 @@ export const InvestmentSection = () => {
           </div>
         </div>
       </div>
-    </div>
+    
   );
 };

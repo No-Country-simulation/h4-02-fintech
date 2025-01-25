@@ -26,7 +26,7 @@ export default function NotificationsModal() {
     setNotifications,
   } = useNotificationStore();
 
-  const onHandleNewNotification = useCallback(async () => {
+/*   const onHandleNewNotification = useCallback(async () => {
     try {
       if (!user) return;
       const resp = await getNotifications(user.id, 0, 2);
@@ -42,7 +42,7 @@ export default function NotificationsModal() {
 
       if (newNotifications.length > 0) {
         newNotifications.forEach((notification) => {
-          toast.info(`Nueva notificación: ${notification.message}`, {
+          toast(`Nueva notificación: ${notification.message}`, {
             expand: true,
           });
         });
@@ -62,16 +62,17 @@ export default function NotificationsModal() {
         onHandleNewNotification();
       }
     }, 2 * 60 * 1000);
-
     return () => clearInterval(interval);
   }, [
     onHandleNewNotification,
     user.notifyMilestoneAchieved,
     user.notifySavingsGoalMet,
   ]);
-
+ */
+  
   const onHandleNotifications = useCallback(async () => {
     try {
+      if (!sessionStorage.getItem("token")) return;
       if (!user) return;
       const resp = await getNotifications(user.id, 0, 2);
       if (Array.isArray(resp)) {
@@ -79,10 +80,6 @@ export default function NotificationsModal() {
         if (resp.length <= 0) {
           setIsFull(true);
         }
-      } else {
-        console.error(
-          "Las notificaciones adicionales no son un arreglo válido"
-        );
       }
     } catch (error) {
       const errorMessage = getErrorMessage(error);
@@ -94,6 +91,7 @@ export default function NotificationsModal() {
   }, [user, setNotifications]);
 
   useEffect(() => {
+    if (!sessionStorage.getItem("token")) return;
     onHandleNotifications();
   }, [onHandleNotifications]);
 

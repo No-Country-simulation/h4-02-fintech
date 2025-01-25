@@ -40,7 +40,7 @@ export const LoginPage = () => {
           }
 
           login({ ...userBackendResponse, provider: provider });
-          localStorage.setItem("token", token);
+          sessionStorage.setItem("token", token);
         } catch (error) {
           setErrorMessage(`Error al iniciar sesión con ${provider}`);
           console.error(error);
@@ -73,7 +73,7 @@ export const LoginPage = () => {
       const user = response.user;
       const token = response.token;
       login(user);
-      localStorage.setItem("token", token);
+      sessionStorage.setItem("token", token);
     } catch (error) {
       const errorMessage = getErrorMessage(error);
       setErrorMessage(errorMessage);
