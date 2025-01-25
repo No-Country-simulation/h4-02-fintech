@@ -370,11 +370,29 @@ export const FiltersPage = () => {
             <div key={instrument.id}>
               <button
                 className="btn btn-ghost w-full flex items-center justify-between"
-                onClick={() =>
+                onClick={() => {
+                  let typePath = "";
+                  switch (instrument.type) {
+                    case "Bono":
+                      typePath = "bonds";
+                      break;
+                    case "Accion":
+                      typePath = "actions";
+                      break;
+                    case "Cdear":
+                      typePath = "cedears";
+                      break;
+                    case "Fondo":
+                      typePath = "funds";
+                      break;
+                    default:
+                      typePath = "";
+                  }
+
                   navigate(
-                    `/dashboard/investment/instrument/bond/${instrument.id}`
-                  )
-                }
+                    `/dashboard/investment/instrument/${typePath}/${instrument.id}`
+                  );
+                }}
               >
                 <div className="flex items-center gap-3">
                   {instrument.logo ? (
