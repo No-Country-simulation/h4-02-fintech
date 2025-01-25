@@ -1,3 +1,13 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.btn {
+  @apply rounded-[4px];
+}
+
+/* Aplicando borde redondeado de 4px en inputs */
+.input {
+  @apply rounded-[4px];
+}
+
