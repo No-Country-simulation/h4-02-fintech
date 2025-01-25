@@ -1,5 +1,6 @@
-import { ArrowRight2, Setting4 } from "iconsax-react";
+import { ArrowRight2 } from "iconsax-react";
 import { Link } from "react-router-dom";
+import { FilterModal } from "../filters/FilterModal";
 
 export const Investment = () => {
   const menuItems = [
@@ -36,9 +37,7 @@ export const Investment = () => {
     <>
       {/* Header */}
       <div className="mb-4 text-start">
-        <button className="flex btn btn-ghost">
-          <Setting4 size={24} /> Filtros
-        </button>
+        <FilterModal />
       </div>
 
       {/* Menu Items */}
