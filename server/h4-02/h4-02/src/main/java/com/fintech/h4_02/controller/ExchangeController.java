@@ -63,7 +63,7 @@ public class ExchangeController {
                             mediaType = MediaType.APPLICATION_JSON_VALUE,
                             schema = @Schema(implementation = JsonNode.class),
                             examples = @ExampleObject(name = "JsonNode",
-                                    value = ""))
+                                    value = "{ \"meta\" : { \"symbol\" : \"AAPL\", \"interval\" : \"1min\", \"currency\" : \"USD\",\"exchange_timezone\" : \"America/New_York\", \"exchange\" : \"NASDAQ\",\"mic_code\" : \"XNGS\", \"type\" : \"Common Stock\"}, \"values\" : [ { \"datetime\" : \"2025-01-24 09:30:00\", \"open\" : \"224.97501\", \"high\" : \"225.63000\", \"low\" : \"224.77000\", \"close\" : \"225.080002\", \"volume\" : \"4979157\" } ]"))
             )
     })
     @GetMapping("/price/{coin}")
