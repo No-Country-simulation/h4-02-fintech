@@ -50,5 +50,5 @@ backend:
 
 rss_feed:
   urls: >
-    https://www.toptal.com/developers/feed2json/convert?url=https://eleconomista.com.ar/economia/feed/, 
-    https://www.toptal.com/developers/feed2json/convert?url=https://eleconomista.com.ar/finanzas/feed/
+    https://api.rss2json.com/v1/api.json?rss_url=https://eleconomista.com.ar/economia/feed/,
+    https://api.rss2json.com/v1/api.json?rss_url=https://eleconomista.com.ar/finanzas/feed/
