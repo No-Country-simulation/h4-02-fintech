@@ -1,22 +1,23 @@
 import {
+  Edit,
   Eye,
   EyeSlash,
   HambergerMenu,
-  Profile,
-  Edit,
-  MoneyRecive,
-  Profile2User,
   MessageQuestion,
+  MoneyRecive,
+  Paperclip,
+  Profile,
+  Profile2User,
 } from "iconsax-react";
-import { useAuthStore } from "../../../../auth/store/useAuthStore";
 import { useState } from "react";
-import { Drawer } from "../ui/Drawer";
-import NotificationsModal from "../../../../notifications/components/NotificationsModal";
-import { useFinancialStore } from "../../../store/useFinancialStore";
-import { formatCurrency } from "../../../../utils/formatCurrency";
+import { useAuthStore } from "../../../../auth/store/useAuthStore";
 import { useOnboardingStore } from "../../../../auth/store/useOnboardingStore";
+import NotificationsModal from "../../../../notifications/components/NotificationsModal";
+import { formatCurrency } from "../../../../utils/formatCurrency";
 import { validateComplete } from "../../../../validators/complete";
+import { useFinancialStore } from "../../../store/useFinancialStore";
 import OnboardingModal from "../../onboarding/OnboardingModal";
+import { Drawer } from "../ui/Drawer";
 
 export const Header = () => {
   const { user } = useAuthStore();
@@ -56,7 +57,12 @@ export const Header = () => {
     {
       icon: <Profile2User size="24" />,
       text: "Foro y comunidad",
-      link: "/",
+      link: "/forum",
+    },
+    {
+      icon: <Paperclip size="24" />,
+      text: "Noticias",
+      link: "/news",
     },
     {
       icon: <MessageQuestion size="24" />,

@@ -1,10 +1,12 @@
 import { Navigate, Route, Routes } from "react-router-dom";
+import { ForumPage } from "../../modules/community/pages/ForumPage";
+import { NewsPage } from "../../modules/community/pages/NewsPage";
+import { ForgotPasswordPage } from "../auth/pages/ForgotPasswordPage";
 import { LoginPage } from "../auth/pages/LoginPage";
 import { RegisterPage } from "../auth/pages/RegisterPage";
-import { DashboardRouter } from "./DashboardRouter";
-import { ForgotPasswordPage } from "../auth/pages/ForgotPasswordPage";
-import { useAuthStore } from "../auth/store/useAuthStore";
 import { ResetPasswordPage } from "../auth/pages/ResetPasswordPage";
+import { useAuthStore } from "../auth/store/useAuthStore";
+import { DashboardRouter } from "./DashboardRouter";
 
 export const AppRouter = () => {
   const { status } = useAuthStore();
@@ -25,6 +27,8 @@ export const AppRouter = () => {
       ) : (
         <>
           <Route path="/dashboard/*" element={<DashboardRouter />} />
+          <Route path="/forum" element={<ForumPage />} />
+          <Route path="/news" element={<NewsPage />} />
           <Route path="/*" element={<Navigate to="/dashboard" />} />
         </>
       )}
