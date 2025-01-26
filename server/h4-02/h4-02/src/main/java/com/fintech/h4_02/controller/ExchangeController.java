@@ -1,6 +1,7 @@
 package com.fintech.h4_02.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fintech.h4_02.dto.CoinDto;
 import com.fintech.h4_02.dto.coin.CoinDtoRequest;
 import com.fintech.h4_02.dto.wallet.WalletResponse;
@@ -40,13 +41,34 @@ public class ExchangeController {
                     content = @Content(
                             mediaType = MediaType.APPLICATION_JSON_VALUE,
                             schema = @Schema(implementation = WalletResponse.class),
-                            examples = @ExampleObject(name = "list JsonNode",
-                                    value = ""))
+                            examples = @ExampleObject(name = "list CoinDtoRequest",
+                                    value = "[ { \"symbol\" : \"C_1\" }, {\"symbol\" : \"CC1\" }, { \"symbol\" : \"CHE\" }, { \"symbol\" : \"CL1\" }]"))
             )
     })
     @GetMapping("/all/{coin}")
     public ResponseEntity<List<CoinDtoRequest>> getAllExcange(@PathVariable Coin coin) throws JsonProcessingException, JSONException {
         return ResponseEntity.status(HttpStatus.OK).body(exchangeService.listCoinAllForex(coin));
+
+    }
+
+
+    @Operation(
+            summary = "get price coin",
+            description = "get price of coin",
+            tags = {"ExchangeEntity"}
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "gel list of coin",
+                    content = @Content(
+                            mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = JsonNode.class),
+                            examples = @ExampleObject(name = "JsonNode",
+                                    value = ""))
+            )
+    })
+    @GetMapping("/price/{coin}")
+    public ResponseEntity<JsonNode> getPrice(@PathVariable String coin) throws JsonProcessingException, JSONException {
+        return ResponseEntity.status(HttpStatus.OK).body(exchangeService.conectionPrice(coin));
 
     }
 

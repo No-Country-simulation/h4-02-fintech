@@ -127,7 +127,7 @@ public class ExchangeService {
     }
 
 
-    private JsonNode conectionPrice(String coins) throws JsonProcessingException {
+    public JsonNode conectionPrice(String coins) throws JsonProcessingException {
 
         final String url =  "https://api.twelvedata.com/time_series?symbol="
                 .concat(coins).
