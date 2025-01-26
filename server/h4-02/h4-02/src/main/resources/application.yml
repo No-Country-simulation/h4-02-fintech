@@ -45,6 +45,10 @@ auth0:
 frontend:
   url: ${FRONTEND_URL}
 
-
 backend:
   url: ${BACKEND_URL}
+
+rss_feed:
+  urls: >
+    https://www.toptal.com/developers/feed2json/convert?url=https://eleconomista.com.ar/economia/feed/, 
+    https://www.toptal.com/developers/feed2json/convert?url=https://eleconomista.com.ar/finanzas/feed/
