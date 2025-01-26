@@ -330,4 +330,22 @@ class UserControllerTest {
         );
     }
 
+    @Test
+    @Label("obtener precio de un coin")
+    void getCoinDescription() throws JsonProcessingException {
+
+
+        HttpEntity<String> request = new HttpEntity<>( headers);
+        ResponseEntity<JsonNode> result = testRestTemplate.exchange("/api/v1/exchange/description/AAPL", HttpMethod.GET, request, JsonNode.class);
+        JsonUtil.toJsonPrint("commodities ", result);
+
+        assertAll(
+                () -> assertEquals(HttpStatus.OK, result.getStatusCode()),
+                () -> assertEquals(200, result.getStatusCode().value()),
+                () -> assertNotNull(!result.getBody().isEmpty())
+
+
+        );
+    }
+
 }

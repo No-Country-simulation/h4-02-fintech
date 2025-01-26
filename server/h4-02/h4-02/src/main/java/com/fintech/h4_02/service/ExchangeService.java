@@ -126,15 +126,7 @@ public class ExchangeService {
         }
     }
 
-
-    public JsonNode conectionPrice(String coins) throws JsonProcessingException {
-
-        final String url =  "https://api.twelvedata.com/time_series?symbol="
-                .concat(coins).
-                concat("&interval=1min&date=last&outputsize=1&apikey=")
-                .concat(apikey);
-
-
+    private JsonNode conectionApi(String url) throws JsonProcessingException {
         String jsonResponse = restTemplate.getForObject(url, String.class);
 
         JsonNode rootNode = mapper.readTree(jsonResponse);
@@ -142,4 +134,22 @@ public class ExchangeService {
         return rootNode;
     }
 
+    public JsonNode conectionPrice(String coin) throws JsonProcessingException {
+
+        final String url =  "https://api.twelvedata.com/time_series?symbol="
+                .concat(coin).
+                concat("&interval=1min&date=last&outputsize=1&apikey=")
+                .concat(apikey);
+
+        return conectionApi(url);
+    }
+
+    public JsonNode getDescription(String coin) throws JsonProcessingException {
+        final String url =  "https://api.twelvedata.com/profile?symbol="
+                .concat(coin).
+                concat("&apikey=")
+                .concat(apikey);
+
+        return conectionApi(url);
+    }
 }
