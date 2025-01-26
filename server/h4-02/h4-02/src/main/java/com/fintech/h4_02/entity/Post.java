@@ -18,7 +18,7 @@ public class Post {
     @ManyToOne(fetch = FetchType.LAZY)
     private UserEntity user;
 
-    @Column(name = "content")
+    @Column(name = "content", length = 800)
     private String content;
 
     @Column(name = "created_at")

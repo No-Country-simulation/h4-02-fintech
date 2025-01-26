@@ -7,9 +7,9 @@ public record CreatePostDto(
         @NotBlank
         @Size.List({
                 @Size(min = 5, message = "Content must be at least 5 characters long"),
-                @Size(max = 500, message = "Up to 500 characters are permitted")
+                @Size(max = 800, message = "Up to 500 characters are permitted")
         })
         String content
 ) {
- 
+
 }
