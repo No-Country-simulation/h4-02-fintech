@@ -1,19 +1,17 @@
 package com.fintech.h4_02.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fintech.h4_02.dto.CoinDto;
 import com.fintech.h4_02.dto.coin.CoinDtoRequest;
 import com.fintech.h4_02.enums.Coin;
-import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
-import com.fasterxml.jackson.core.type.TypeReference;
 
 import javax.xml.parsers.ParserConfigurationException;
 import java.util.ArrayList;
@@ -27,6 +25,8 @@ public class ExchangeService {
 
     @Autowired
     private ObjectMapper mapper;
+
+    private final String apikey ="2e2212a9163545fe83aee5773eb1639b";
 
     public List<CoinDto> listCoinAll(Coin coin) throws ParserConfigurationException {
 
@@ -95,7 +95,7 @@ public class ExchangeService {
 
 
     private List<CoinDtoRequest> listarEtfs() throws JSONException, JsonProcessingException {
-        final String etfs = "https://api.twelvedata.com/etfs/list?apikey=9c41e2e67bc44ce180fcced64b41ea11&source=docs";
+        final String etfs = "https://api.twelvedata.com/etfs/list?apikey=".concat(apikey).concat("&source=docs") ;
         List<CoinDtoRequest> listCoin = new ArrayList<>();
 
         try {
@@ -127,5 +127,19 @@ public class ExchangeService {
     }
 
 
+    private JsonNode conectionPrice(String coins) throws JsonProcessingException {
+
+        final String url =  "https://api.twelvedata.com/time_series?symbol="
+                .concat(coins).
+                concat("&interval=1min&date=last&outputsize=1&apikey=")
+                .concat(apikey);
+
+
+        String jsonResponse = restTemplate.getForObject(url, String.class);
+
+        JsonNode rootNode = mapper.readTree(jsonResponse);
+
+        return rootNode;
+    }
 
 }

@@ -41,35 +41,9 @@ public class ExchangeController {
                             mediaType = MediaType.APPLICATION_JSON_VALUE,
                             schema = @Schema(implementation = WalletResponse.class),
                             examples = @ExampleObject(name = "list JsonNode",
-                                    value = "[ {\n" +
-                                            "      \"symbol\" : \"A\",\n" +
-                                            "      \"instrument_name\" : \"Agilent Technologies, Inc.\",\n" +
-                                            "      \"exchange\" : \"NYSE\",\n" +
-                                            "      \"mic_code\" : \"XNYS\",\n" +
-                                            "      \"exchange_timezone\" : \"America/New_York\",\n" +
-                                            "      \"instrument_type\" : \"Common Stock\",\n" +
-                                            "      \"country\" : \"United States\",\n" +
-                                            "      \"currency\" : \"USD\"\n" +
-                                            "    }, {\n" +
-                                            "      \"symbol\" : \"A\",\n" +
-                                            "      \"instrument_name\" : \"Armor Minerals Inc\",\n" +
-                                            "      \"exchange\" : \"TSXV\",\n" +
-                                            "      \"mic_code\" : \"XTSX\",\n" +
-                                            "      \"exchange_timezone\" : \"America/Toronto\",\n" +
-                                            "      \"instrument_type\" : \"Common Stock\",\n" +
-                                            "      \"country\" : \"Canada\",\n" +
-                                            "      \"currency\" : \"CAD\"\n" +
-                                            "    }\n" +
-                                            "]"))
+                                    value = ""))
             )
     })
-    @GetMapping("/all-error/{coin}")
-    public ResponseEntity<List<CoinDto>> getAllExcangeRror(@PathVariable Coin coin) throws ParserConfigurationException {
-        return ResponseEntity.status(HttpStatus.OK).body(exchangeService.listCoinAll(coin));
-
-    }
-
-
     @GetMapping("/all/{coin}")
     public ResponseEntity<List<CoinDtoRequest>> getAllExcange(@PathVariable Coin coin) throws JsonProcessingException, JSONException {
         return ResponseEntity.status(HttpStatus.OK).body(exchangeService.listCoinAllForex(coin));

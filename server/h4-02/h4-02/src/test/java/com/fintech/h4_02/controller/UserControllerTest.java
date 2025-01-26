@@ -280,9 +280,8 @@ class UserControllerTest {
 
 
         HttpEntity<String> request = new HttpEntity<>( headers);
-        ResponseEntity<List<CoinDtoRequest>> result = testRestTemplate.exchange("/api/v1/exchange/all/ETFS", HttpMethod.GET, request, new ParameterizedTypeReference<List<CoinDtoRequest>>() {
-        });
-        JsonUtil.toJsonPrint("commodities ", result);
+        ResponseEntity<JsonNode> result = testRestTemplate.exchange("/api/v1/exchange/all/ETFS", HttpMethod.GET, request, JsonNode.class);
+        JsonUtil.toJsonPrint("ETFS ", result);
 
         assertAll(
                 () -> assertEquals(HttpStatus.OK, result.getStatusCode()),
