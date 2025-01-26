@@ -52,7 +52,10 @@ public class AuthService {
     private AuthResponseDto oauthLogin(LoginRequestDto dto, String pictureUrl) {
         UserEntity user = getUserByEmailOrThrow(dto.email());
 
-        user.setPictureUrl(pictureUrl);
+        // This is to prevent changing the avatar of the user when logging in with OAuth
+        if (user.getPictureUrl() == null || user.getPictureUrl().isEmpty()) {
+            user.setPictureUrl(pictureUrl);
+        }
 
         String token = jwtService.createToken(new SecurityUserDetails(user));
         return new AuthResponseDto(new UserResponseDto(user), token);

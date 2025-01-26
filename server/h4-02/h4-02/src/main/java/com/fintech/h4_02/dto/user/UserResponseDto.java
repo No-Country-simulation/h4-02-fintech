@@ -19,6 +19,8 @@ public record UserResponseDto(
 
         UserEntity.OAuthProvider oauthProvider,
 
+        Set<String> unlockedAvatars,
+
         String picture,
 
         String phone,
@@ -50,6 +52,7 @@ public record UserResponseDto(
                 user.getDni(),
                 user.getRoles(),
                 user.getProvider(),
+                user.getUnlockedAvatars(),
                 user.getPictureUrl(),
                 user.getPhone(),
                 user.getAddress(),

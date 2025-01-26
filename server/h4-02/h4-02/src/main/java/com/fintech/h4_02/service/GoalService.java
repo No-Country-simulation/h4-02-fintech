@@ -56,14 +56,18 @@ public class GoalService {
         goalContribution.setAmount(dto.amount());
         goal.addGoalContribution(goalContribution);
         goal.setProgress(goalContributionRepository.findTotalAmountByGoalId(goalId));
-        Goal savedGoal = goalRepository.save(goal);
 
         // If the contribution is positive, publish a progress event
         if (dto.amount().compareTo(BigDecimal.ZERO) > 0) {
-            eventPublisher.publishGoalProgressionEvent(savedGoal.getId());
+            eventPublisher.publishGoalProgressionEvent(goal.getId());
+        }
+        // If the goal is completed, increment the user's completed goals count
+        if (goal.isCompleted()) {
+            UserEntity user = goal.getUser();
+            user.incrementUserCompletedGoalCount();
         }
 
-        return savedGoal;
+        return goalRepository.save(goal);
     }
 
 }
