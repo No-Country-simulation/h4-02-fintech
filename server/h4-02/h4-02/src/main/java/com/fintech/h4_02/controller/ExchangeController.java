@@ -62,7 +62,7 @@ public class ExchangeController {
     })
     @GetMapping("/price")
     public ResponseEntity<JsonNode> getExchangePrice(@RequestParam String coin) throws JsonProcessingException {
-        return ResponseEntity.status(HttpStatus.OK).body(exchangeService.connectionPrice(coin));
+        return ResponseEntity.status(HttpStatus.OK).body(exchangeService.conectionPrice(coin));
     }
 
     @Operation(summary = "get description coin", description = "get description of coin")
