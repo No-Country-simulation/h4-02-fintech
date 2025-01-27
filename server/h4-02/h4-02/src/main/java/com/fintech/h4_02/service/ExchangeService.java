@@ -182,4 +182,11 @@ public class ExchangeService {
        final ExchangeEntity exchangeDb = exchangeRepository.save(exchange);
         return new ExchangeResponse(exchangeDb);
     }
+
+    public List<ExchangeResponse> GetByUser(Long id) {
+        UserEntity user = userRepository.findById(id).orElseThrow( ()-> new EntityNotFoundException("user not found"));
+        List<ExchangeEntity> list = exchangeRepository.findAllByUserId(user);
+        List<ExchangeResponse> listDto = list.stream().map(ExchangeResponse::new).toList();
+        return listDto;
+    }
 }
