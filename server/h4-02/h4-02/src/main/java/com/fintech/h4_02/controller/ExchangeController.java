@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fintech.h4_02.dto.coin.CoinDtoRequest;
 import com.fintech.h4_02.dto.exchange.ExchangeResponse;
 import com.fintech.h4_02.dto.exchange.ExchangeRrequest;
+import com.fintech.h4_02.dto.exchange.ExchangeSimple;
 import com.fintech.h4_02.dto.wallet.WalletResponse;
 import com.fintech.h4_02.enums.Coin;
 import com.fintech.h4_02.service.ExchangeService;
@@ -103,9 +104,9 @@ public class ExchangeController {
             @ApiResponse(responseCode = "201", description = "gel a coin",
                     content = @Content(
                             mediaType = MediaType.APPLICATION_JSON_VALUE,
-                            schema = @Schema(implementation = JsonNode.class),
+                            schema = @Schema(implementation = ExchangeResponse.class),
                             examples = @ExampleObject(name = "JsonNode",
-                                    value = "{ \"id\" : 452,\"coin\" : \"AAPL\",\"value\" : 5236.5,\"date\" : \"2025-01-26\",\"state\" : \"BY\",\"user\" : { \"id\" : 1,\"name\" : \"a r\", },\"cuantity\" : 5, \"total\" : 26182.5 }"))
+                                    value = "{ \"id\" : 452,\"coin\" : \"AAPL\",\"value\" : 5236.5,\"date\" : \"2025-01-26\",\"state\" : \"BY\",\"user\" : { \"id\" : 1,\"name\" : \"a r\", },\"quantity\" : 5, \"total\" : 26182.5 }"))
             )
     })
     @PostMapping
@@ -123,14 +124,35 @@ public class ExchangeController {
             @ApiResponse(responseCode = "202", description = "get all history for exchange by user",
                     content = @Content(
                             mediaType = MediaType.APPLICATION_JSON_VALUE,
-                            schema = @Schema(implementation = JsonNode.class),
+                            schema = @Schema(implementation = ExchangeResponse.class),
                             examples = @ExampleObject(name = "JsonNode",
-                                    value = "[{\"id\": 1,\"coin\": \"AAPL\",\"value\": 123.00,\"date\": \"2025-01-27\",\"state\": \"BY\",\"user\": {\"id\": 1,\"name\": \"Lionel\"},\"cuantity\": 5,\"total\": 615.00},{\"id\": 2,\"coin\": \"AAPL\",\"value\": 145.00,\"date\": \"2025-01-27\",\"state\": \"BY\",\"user\": {\"id\": 1,\"name\": \"Lionel\"},\"cuantity\": 10,\"total\": 1450.00}]"))
+                                    value = "[{\"id\": 1,\"coin\": \"AAPL\",\"value\": 123.00,\"date\": \"2025-01-27\",\"state\": \"BY\",\"user\": {\"id\": 1,\"name\": \"Lionel\"},\"quantity\": 5,\"total\": 615.00},{\"id\": 2,\"coin\": \"AAPL\",\"value\": 145.00,\"date\": \"2025-01-27\",\"state\": \"BY\",\"user\": {\"id\": 1,\"name\": \"Lionel\"},\"quantity\": 10,\"total\": 1450.00}]"))
             )
     })
     @GetMapping("/{id}")
-    public ResponseEntity<List<ExchangeResponse>> gerExchangeAllBuUserId(@PathVariable Long id){
+    public ResponseEntity<List<ExchangeResponse>> getExchangeAllByUserId(@PathVariable Long id){
         return ResponseEntity.status(HttpStatus.OK).body(exchangeService.GetByUser(id));
+
+    }
+
+
+    @Operation(
+            summary = "get history exchange by user",
+            description = "get history exchange",
+            tags = {"ExchangeEntity"}
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "202", description = "get all history for exchange by user",
+                    content = @Content(
+                            mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = JsonNode.class),
+                            examples = @ExampleObject(name = "JsonNode",
+                                    value = ""))
+            )
+    })
+    @GetMapping("/total/{id}")
+    public ResponseEntity<List<ExchangeSimple>> getTotalCoinByUser(@PathVariable Long id){
+        return ResponseEntity.status(HttpStatus.OK).body(exchangeService.getTotalCoinByUser(id));
 
     }
 }

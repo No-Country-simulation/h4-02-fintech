@@ -8,12 +8,14 @@ import com.fintech.h4_02.dto.coin.CoinDto;
 import com.fintech.h4_02.dto.exchange.ExchangeResponse;
 import com.fintech.h4_02.dto.exchange.ExchangeRrequest;
 import com.fintech.h4_02.dto.coin.CoinDtoRequest;
+import com.fintech.h4_02.dto.exchange.ExchangeSimple;
 import com.fintech.h4_02.entity.ExchangeEntity;
 import com.fintech.h4_02.entity.UserEntity;
 import com.fintech.h4_02.enums.Coin;
 import com.fintech.h4_02.enums.State;
 import com.fintech.h4_02.exception.EntityNotFoundException;
 import com.fintech.h4_02.repository.UserRepository;
+import jakarta.validation.constraints.NotNull;
 import org.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -169,24 +171,34 @@ public class ExchangeService {
 
         final UserEntity user = userRepository.findById(exchangeRrequest.userId()).orElseThrow(() -> new EntityNotFoundException("user not found"));
         final BigDecimal value = new BigDecimal(exchangeRrequest.value());
-        final BigDecimal total = value.multiply(BigDecimal.valueOf(exchangeRrequest.cuantity()));
+        final BigDecimal total = value.multiply(BigDecimal.valueOf(exchangeRrequest.quantity()));
         ExchangeEntity exchange = ExchangeEntity.builder()
                 .value(value)
                 .date(LocalDate.now())
                 .coin(exchangeRrequest.coin())
                 .user(user)
                 .state(State.BY)
-                .cuantity(exchangeRrequest.cuantity())
+                .quantity(exchangeRrequest.quantity())
                 .total(total)
                 .build();
        final ExchangeEntity exchangeDb = exchangeRepository.save(exchange);
         return new ExchangeResponse(exchangeDb);
     }
 
-    public List<ExchangeResponse> GetByUser(Long id) {
+    public List<ExchangeResponse> GetByUser(@NotNull Long id) {
         UserEntity user = userRepository.findById(id).orElseThrow( ()-> new EntityNotFoundException("user not found"));
         List<ExchangeEntity> list = exchangeRepository.findAllByUserId(user);
         List<ExchangeResponse> listDto = list.stream().map(ExchangeResponse::new).toList();
         return listDto;
+    }
+
+    public List<ExchangeSimple> getTotalCoinByUser(@NotNull Long id) {
+
+        final UserEntity user = userRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("user not found"));
+
+        List<ExchangeSimple> list = exchangeRepository.getTotalCoinByUser(user);
+
+                return list;
+
     }
 }
