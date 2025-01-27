@@ -1,6 +1,7 @@
 package com.fintech.h4_02.dto.exchange;
 
 import com.fintech.h4_02.dto.user.UserResponseDto;
+import com.fintech.h4_02.dto.user.UserResponseSimple;
 import com.fintech.h4_02.entity.ExchangeEntity;
 import com.fintech.h4_02.enums.State;
 
@@ -13,7 +14,7 @@ public record ExchangeResponse(
         BigDecimal value,
         String date,
         State state,
-        UserResponseDto user,
+        UserResponseSimple user,
         int cuantity,
         BigDecimal total
 
@@ -21,7 +22,7 @@ public record ExchangeResponse(
     public ExchangeResponse(ExchangeEntity exchangeDb) {
         this(exchangeDb.getId(),exchangeDb.getCoin(),exchangeDb.getValue(),
                 String.valueOf(exchangeDb.getDate()),exchangeDb.getState(),
-                new UserResponseDto(exchangeDb.getUser()), exchangeDb.getCuantity(),
+                new UserResponseSimple(exchangeDb.getUser()), exchangeDb.getCuantity(),
                 exchangeDb.getTotal());
     }
 }

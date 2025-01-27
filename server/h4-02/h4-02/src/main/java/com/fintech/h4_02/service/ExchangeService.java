@@ -182,4 +182,8 @@ public class ExchangeService {
        final ExchangeEntity exchangeDb = exchangeRepository.save(exchange);
         return new ExchangeResponse(exchangeDb);
     }
+
+    public Object GetByUser(Long id) {
+        return null;
+    }
 }
