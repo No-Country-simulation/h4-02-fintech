@@ -133,6 +133,10 @@ public class UserEntity {
     )
     private List<Post> posts;
 
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true
+    )
+    private List<ExchangeEntity> exchangeList;
+
     public UserEntity(CreateUserRequestDto user) {
         this.email = user.email();
         this.name = user.name();
