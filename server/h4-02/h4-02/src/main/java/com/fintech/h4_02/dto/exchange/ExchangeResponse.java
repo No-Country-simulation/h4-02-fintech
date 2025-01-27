@@ -13,10 +13,15 @@ public record ExchangeResponse(
         BigDecimal value,
         String date,
         State state,
-        UserResponseDto user
+        UserResponseDto user,
+        int cuantity,
+        BigDecimal total
 
 ) {
     public ExchangeResponse(ExchangeEntity exchangeDb) {
-        this(exchangeDb.getId(),exchangeDb.getCoin(),exchangeDb.getValue(), String.valueOf(exchangeDb.getDate()),exchangeDb.getState(),new UserResponseDto(exchangeDb.getUser()));
+        this(exchangeDb.getId(),exchangeDb.getCoin(),exchangeDb.getValue(),
+                String.valueOf(exchangeDb.getDate()),exchangeDb.getState(),
+                new UserResponseDto(exchangeDb.getUser()), exchangeDb.getCuantity(),
+                exchangeDb.getTotal());
     }
 }

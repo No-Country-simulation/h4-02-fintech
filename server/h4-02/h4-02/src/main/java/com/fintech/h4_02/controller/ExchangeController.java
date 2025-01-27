@@ -105,7 +105,7 @@ public class ExchangeController {
                             mediaType = MediaType.APPLICATION_JSON_VALUE,
                             schema = @Schema(implementation = JsonNode.class),
                             examples = @ExampleObject(name = "JsonNode",
-                                    value = "{\"id\" : 202,\"coin\" : \"AAPL\", \"value\" : 5236.5, \"date\" : \"2025-01-26\", \"state\" : \"BY\", \"user\" : {\"id\" : 1, \"email\" : \"123@123.COM\", \"name\" : \"a r\", \"dni\" : \"4444444\", \"roles\" : [ {\"id\" : 1, \"name\" : \"INVERSIONISTA\"} ]"))
+                                    value = "{ \"id\" : 452,\"coin\" : \"AAPL\",\"value\" : 5236.5,\"date\" : \"2025-01-26\",\"state\" : \"BY\",\"user\" : { \"id\" : 1,\"email\" : \"123@123.COM\",\"name\" : \"a r\", \"dni\" : \"4444444\",\"cuantity\" : 5, \"total\" : 26182.5 }"))
             )
     })
     @PostMapping

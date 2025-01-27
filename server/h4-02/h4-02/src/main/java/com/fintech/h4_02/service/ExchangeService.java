@@ -167,15 +167,19 @@ public class ExchangeService {
 
     public ExchangeResponse create(ExchangeRrequest exchangeRrequest) {
 
-        UserEntity user = userRepository.findById(exchangeRrequest.userId()).orElseThrow( ()-> new EntityNotFoundException("user not found"));
+        final UserEntity user = userRepository.findById(exchangeRrequest.userId()).orElseThrow(() -> new EntityNotFoundException("user not found"));
+        final BigDecimal value = new BigDecimal(exchangeRrequest.value());
+        final BigDecimal total = value.multiply(BigDecimal.valueOf(exchangeRrequest.cuantity()));
         ExchangeEntity exchange = ExchangeEntity.builder()
-                .value(new BigDecimal(exchangeRrequest.value()))
+                .value(value)
                 .date(LocalDate.now())
                 .coin(exchangeRrequest.coin())
                 .user(user)
                 .state(State.BY)
+                .cuantity(exchangeRrequest.cuantity())
+                .total(total)
                 .build();
-        ExchangeEntity exchangeDb = exchangeRepository.save(exchange);
+       final ExchangeEntity exchangeDb = exchangeRepository.save(exchange);
         return new ExchangeResponse(exchangeDb);
     }
 }

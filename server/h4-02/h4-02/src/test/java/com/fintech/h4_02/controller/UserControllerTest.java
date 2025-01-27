@@ -347,9 +347,10 @@ class UserControllerTest {
     @Label("comprar coin")
     void crateExchange() throws JsonProcessingException {
 
-        ExchangeRrequest exchange = new ExchangeRrequest(1L, 5236.5, "AAPL");
+        ExchangeRrequest exchange = new ExchangeRrequest(1L, 5236.5, "AAPL",5);
         String json = "{\"userId\":\"" + exchange.userId() + "\","
                 + "\"value\":\"" + exchange.value() + "\","
+                + "\"cuantity\":\"" + exchange.cuantity() + "\","
                 + "\"coin\":\"" + exchange.coin() + "\""
                 + "}";
 
