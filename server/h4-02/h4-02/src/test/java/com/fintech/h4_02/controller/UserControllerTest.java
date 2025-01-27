@@ -363,8 +363,8 @@ class UserControllerTest {
         JsonUtil.toJsonPrint("commodities ", result);
 
         assertAll(
-                () -> assertEquals(HttpStatus.OK, result.getStatusCode()),
-                () -> assertEquals(200, result.getStatusCode().value())
+                () -> assertEquals(HttpStatus.CREATED, result.getStatusCode()),
+                () -> assertEquals(201, result.getStatusCode().value())
                // () -> assertEquals(result.getBody().user().getId(),exchange.userId()),
                // () -> assertEquals(result.getBody().coin().toString(),exchange.coin().toString()),
               //  () -> assertEquals(result.getBody().value(),exchange.value()),
