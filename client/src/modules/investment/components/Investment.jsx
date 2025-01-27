@@ -6,9 +6,10 @@ export const Investment = () => {
   const menuItems = [
     {
       id: 1,
-      title: "Acciones",
-      description: "Partes en la que se divide el capital de una empresa.",
-      link: "/dashboard/investment/actions",
+      title: "FOREX",
+      description:
+        "Mercado de divisas en el que se intercambian monedas extranjeras.",
+      link: "/dashboard/investment/forex",
     },
     {
       id: 2,
@@ -19,17 +20,17 @@ export const Investment = () => {
     },
     {
       id: 3,
-      title: "CEDEARs",
+      title: "ETFs",
       description:
-        "Instrumento que representa acciones extranjeras en el mercado local.",
-      link: "/dashboard/investment/cedears",
+        "Fondos cotizados que agrupan activos como acciones, bonos, etc.",
+      link: "/dashboard/investment/etfs",
     },
     {
       id: 4,
-      title: "Fondos",
+      title: "COMMODITIES",
       description:
-        "Selección de activos con un objetivo financiero, administrados por profesionales.",
-      link: "/dashboard/investment/funds",
+        "Materias primas como petróleo, oro, o productos agrícolas que se comercian en el mercado.",
+      link: "/dashboard/investment/commodities",
     },
   ];
 

@@ -6,7 +6,7 @@ const useFilterStore = create(
     (set) => ({
       isModalOpen: false,
       selectedFilters: {
-        instrument: "Acciones",
+        instrument: "FOREX",
         riskLevel: "Conservador",
         term: "Corto plazo",
       },

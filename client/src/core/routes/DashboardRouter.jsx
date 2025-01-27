@@ -11,9 +11,9 @@ import { InvestmentLayout } from "../../modules/investment/pages/InvestmentLayou
 import { InvestmentPage } from "../../modules/investment/pages/InvestmentPage";
 import { RecommendationPage } from "../../modules/investment/pages/RecommendationPage";
 import { BondsPage } from "../../modules/investment/pages/investment/BondsPage";
-import { CedearsPage } from "../../modules/investment/pages/investment/CedearsPage";
-import { FundsPage } from "../../modules/investment/pages/investment/FundsPage";
-import { ActionsPage } from "../../modules/investment/pages/investment/ActionsPage";
+import { EtfsPage } from "../../modules/investment/pages/investment/EtfsPage";
+import { CommoditiesPage } from "../../modules/investment/pages/investment/CommoditiesPage";
+import { ForexPage } from "../../modules/investment/pages/investment/ForexPage";
 import { InstrumentDetailsPage } from "../../modules/investment/pages/instruments/InstrumentDetailsPage";
 import { FiltersPage } from "../../modules/investment/pages/investment/FiltersPage";
 
@@ -57,9 +57,9 @@ export const DashboardRouter = () => {
             <Route path="recommendation" element={<RecommendationPage />} />
           </Route>
           <Route path="/investment/bonds" element={<BondsPage />} />
-          <Route path="/investment/cedears" element={<CedearsPage />} />
-          <Route path="/investment/funds" element={<FundsPage />} />
-          <Route path="/investment/actions" element={<ActionsPage />} />
+          <Route path="/investment/forex" element={<ForexPage />} />
+          <Route path="/investment/etfs" element={<EtfsPage />} />
+          <Route path="/investment/commodities" element={<CommoditiesPage />} />
           <Route
             path="/investment/instrument/:type/:id"
             element={<InstrumentDetailsPage />}

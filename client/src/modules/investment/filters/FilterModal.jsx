@@ -33,7 +33,7 @@ export const FilterModal = () => {
               Filtrar por Instrumento
             </h3>
             <div className="flex flex-wrap gap-2 mb-6">
-              {["Acciones", "Bonos", "CDEARs", "Fondos"].map((instrument) => (
+              {["FOREX", "ETFS", "BOND", "COMMODITIES"].map((instrument) => (
                 <button
                   key={instrument}
                   className={`badge badge-neutral badge-lg cursor-pointer ${

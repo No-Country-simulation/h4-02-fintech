@@ -1,131 +1,210 @@
-import { ArrowLeft, ArrowRight, Heart } from "iconsax-react";
+import { ArrowLeft, ArrowRight } from "iconsax-react";
 import { useNavigate, useParams } from "react-router-dom";
 import { PerformanceChart } from "../../../../core/dashboard/components/dashboard/ui/PerformanceChart";
-
-const instrument = {
-  id: "AE38",
-  name: "AE38",
-  price: "ARS 827,30",
-  change: "ARS 2,5076",
-  changePercent: "0,38 %",
-  isPositive: true,
-  annualRendimentPercent: "7.5%",
-  performance: {
-    "1W": [
-      {
-        day: "Lunes",
-        value: Math.floor(Math.random() * (830 - 500 + 1)) + 500,
-      },
-      {
-        day: "Martes",
-        value: Math.floor(Math.random() * (830 - 500 + 1)) + 500,
-      },
-      {
-        day: "Miércoles",
-        value: Math.floor(Math.random() * (830 - 500 + 1)) + 500,
-      },
-      {
-        day: "Jueves",
-        value: Math.floor(Math.random() * (830 - 500 + 1)) + 500,
-      },
-      {
-        day: "Viernes",
-        value: Math.floor(Math.random() * (830 - 500 + 1)) + 500,
-      },
-      {
-        day: "Sábado",
-        value: Math.floor(Math.random() * (830 - 500 + 1)) + 500,
-      },
-      {
-        day: "Domingo",
-        value: Math.floor(Math.random() * (830 - 500 + 1)) + 500,
-      },
-    ],
-    "1M": [
-      {
-        day: "01-01",
-        value: Math.floor(Math.random() * (830 - 500 + 1)) + 500,
-      },
-      {
-        day: "02-01",
-        value: Math.floor(Math.random() * (830 - 500 + 1)) + 500,
-      },
-      {
-        day: "03-01",
-        value: Math.floor(Math.random() * (830 - 500 + 1)) + 500,
-      },
-      {
-        day: "04-01",
-        value: Math.floor(Math.random() * (830 - 500 + 1)) + 500,
-      },
-      {
-        day: "05-01",
-        value: Math.floor(Math.random() * (830 - 500 + 1)) + 500,
-      },
-      {
-        day: "06-01",
-        value: Math.floor(Math.random() * (830 - 500 + 1)) + 500,
-      },
-      {
-        day: "07-01",
-        value: Math.floor(Math.random() * (830 - 500 + 1)) + 500,
-      },
-      {
-        day: "08-01",
-        value: Math.floor(Math.random() * (830 - 500 + 1)) + 500,
-      },
-    ],
-    "1Y": [
-      {
-        day: "Enero",
-        value: Math.floor(Math.random() * (830 - 500 + 1)) + 500,
-      },
-      {
-        day: "Febrero",
-        value: Math.floor(Math.random() * (830 - 500 + 1)) + 500,
-      },
-      {
-        day: "Marzo",
-        value: Math.floor(Math.random() * (830 - 500 + 1)) + 500,
-      },
-      {
-        day: "Abril",
-        value: Math.floor(Math.random() * (830 - 500 + 1)) + 500,
-      },
-      { day: "Mayo", value: Math.floor(Math.random() * (830 - 500 + 1)) + 500 },
-      {
-        day: "Junio",
-        value: Math.floor(Math.random() * (830 - 500 + 1)) + 500,
-      },
-      {
-        day: "Julio",
-        value: Math.floor(Math.random() * (830 - 500 + 1)) + 500,
-      },
-    ],
-    "3Y": [
-      { day: "2025", value: Math.floor(Math.random() * (830 - 500 + 1)) + 500 },
-      { day: "2026", value: Math.floor(Math.random() * (830 - 500 + 1)) + 500 },
-      { day: "2027", value: Math.floor(Math.random() * (830 - 500 + 1)) + 500 },
-      { day: "2028", value: Math.floor(Math.random() * (830 - 500 + 1)) + 500 },
-    ],
-  },
-
-  compareData: [
-    { instrument: "AE38 USD 2038", yield: "7,5 %", risk: "Moderado" },
-    { instrument: "GD30 USD 2030", yield: "8,1 %", risk: "Moderado" },
-    { instrument: "AL30 USD 2030", yield: "7,3 %", risk: "Arriesgado" },
-    { instrument: "Fondo XYZ Global", yield: "6,8", risk: "Conservador" },
-  ],
-};
+import { useEffect, useState } from "react";
+import { getPrice } from "../../services/instrument";
+import CreateInvestmentModal from "../../components/CreateInvestmentModal";
 
 export const InstrumentDetailsPage = () => {
   const navigate = useNavigate();
   const { type, id } = useParams();
-  if (!type || !id) navigate("/dashboard/investment");
+
+  const [instrument, setInstrument] = useState(null);
+
+  useEffect(() => {
+    if (!type || !id) {
+      navigate("/dashboard/investment");
+    } else {
+      onHandleInstrumentDetails();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [type, id, navigate]);
+
+  const onHandleInstrumentDetails = async () => {
+    try {
+      const priceData = await getPrice(id.replace(/-/g, "/"));
+
+      if (priceData?.message?.includes("plan")) {
+        setInstrument({ error: "Detalles Premium" });
+      } else if (priceData?.message?.includes("missing or invalid")) {
+        setInstrument({ error: "No se encontraron datos" });
+      } else {
+        const graphHighPrice = priceData.values[0]?.open + 100;
+        const graphLowPrice = priceData.values[0]?.close - 100;
+        const highPrice = priceData.values[0]?.high;
+        const lowPrice = priceData.values[0]?.low;
+        const datetime = new Date(priceData.values[0]?.datetime);
+
+        const generatePerformanceData = (interval, count) => {
+          const spanishWeekdays = [
+            "lunes",
+            "martes",
+            "miércoles",
+            "jueves",
+            "viernes",
+            "sábado",
+            "domingo",
+          ];
+          const spanishMonths = [
+            "enero",
+            "febrero",
+            "marzo",
+            "abril",
+            "mayo",
+            "junio",
+            "julio",
+            "agosto",
+            "septiembre",
+            "octubre",
+            "noviembre",
+            "diciembre",
+          ];
+
+          return Array.from({ length: count }, (_, i) => {
+            const date = new Date(datetime);
+            if (interval === "days") date.setDate(datetime.getDate() - (i + 1));
+            if (interval === "months")
+              date.setMonth(datetime.getMonth() - (i + 1));
+            if (interval === "years")
+              date.setFullYear(datetime.getFullYear() - (i + 1));
+
+            const dayOfWeek = spanishWeekdays[date.getDay()];
+            const monthName = spanishMonths[date.getMonth()];
+
+            const randomValue =
+              Math.random() *
+                (Math.max(graphHighPrice, graphLowPrice) -
+                  Math.min(graphHighPrice, graphLowPrice)) +
+              Math.min(graphHighPrice, graphLowPrice);
+
+            return {
+              day:
+                interval === "days"
+                  ? dayOfWeek
+                  : interval === "months"
+                  ? monthName
+                  : date.getFullYear(),
+              value: Math.max(0, randomValue).toFixed(2), // Garantiza que no sea negativo
+            };
+          }).reverse();
+        };
+
+        const generatePerformanceFor1M = () => {
+          const dates = [];
+          for (let i = 1; i <= 4; i++) {
+            const date = new Date(datetime);
+            date.setDate(datetime.getDate() - i * 7);
+            dates.push({
+              day: date.toISOString().split("T")[0],
+              value: (
+                Math.random() *
+                  (Math.max(graphHighPrice, graphLowPrice) -
+                    Math.min(graphHighPrice, graphLowPrice)) +
+                Math.min(graphHighPrice, graphLowPrice)
+              ).toFixed(2),
+            });
+          }
+          return dates.reverse();
+        };
+
+        const transformedData = {
+          id: priceData.meta.symbol,
+          name: priceData.meta.symbol,
+          price: `$${lowPrice}`,
+          change: `$${(lowPrice - highPrice).toFixed(2)}`,
+          changePercent: `${(
+            ((lowPrice - highPrice) / highPrice) *
+            100
+          ).toFixed(2)}%`,
+          isPositive: lowPrice >= highPrice,
+          performance: {
+            "1W": [
+              ...generatePerformanceData("days", 7),
+              { day: "hoy", value: Number(lowPrice).toFixed(2) },
+            ],
+            "1M": [
+              ...generatePerformanceFor1M(),
+              {
+                day: new Date(datetime).toISOString().split("T")[0],
+                value: Number(lowPrice).toFixed(2),
+              },
+            ],
+            "1Y": [
+              ...generatePerformanceData("months", 6),
+              {
+                day: new Date(datetime).getFullYear(),
+                value: Number(lowPrice).toFixed(2),
+              },
+            ],
+            "3Y": [
+              ...generatePerformanceData("years", 3),
+              {
+                day: new Date(datetime).getFullYear(),
+                value: Number(lowPrice).toFixed(2),
+              },
+            ],
+          },
+          compareData: [
+            { instrument: "AE38 USD 2038", yield: "7,5 %", risk: "Moderado" },
+            { instrument: "GD30 USD 2030", yield: "8,1 %", risk: "Moderado" },
+            { instrument: "AL30 USD 2030", yield: "7,3 %", risk: "Arriesgado" },
+            {
+              instrument: "Fondo XYZ Global",
+              yield: "6,8 %",
+              risk: "Conservador",
+            },
+          ],
+        };
+
+        setInstrument(transformedData);
+      }
+    } catch (error) {
+      console.error("Error fetching instrument data:", error);
+    }
+  };
+
+  if (!instrument) {
+    return <></>;
+  }
+
+  if (instrument.error) {
+    return (
+      <div className="m-4 card card-bordered bg-base-200 shadow-xl">
+        <div className="card-body text-center">
+          <div className="flex justify-center mb-4">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              className="w-12 h-12 text-red-500"
+            >
+              <path
+                fill="currentColor"
+                d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm0-14c-.55 0-1 .45-1 1v4c0 .55.45 1 1 1s1-.45 1-1V7c0-.55-.45-1-1-1zm0 6c-.55 0-1 .45-1 1v4c0 .55.45 1 1 1s1-.45 1-1v-4c0-.55-.45-1-1-1z"
+              />
+            </svg>
+          </div>
+          <h3 className="text-xl font-semibold text-red-500">
+            Error: {instrument.error}
+          </h3>
+          <p className="text-gray-500 mt-2">
+            Parece que esta información no está disponible.
+          </p>
+          <div className="mt-4">
+            <button
+              onClick={() => navigate(-1)}
+              className="btn btn-primary text-white"
+            >
+              Regresar
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="bg-gray-50">
-      {/* Header */}
       <div className="bg-primary px-4 py-4 text-white">
         <div className="flex items-center gap-4 mb-2">
           <button
@@ -136,54 +215,37 @@ export const InstrumentDetailsPage = () => {
           </button>
           <h1 className="text-xl font-semibold">
             {type === "bond" && "Bonos"}
+            {type === "forex" && "Forex"}
+            {type === "etfs" && "ETFs"}
             {type === "fund" && "Fondos"}
-            {type === "cedear" && "Cdears"}
-            {type === "action" && "Acciones"}
           </h1>
         </div>
         <h2 className="text-2xl font-semibold">{id}</h2>
       </div>
 
-      {/* Main Content */}
       <div className="flex flex-col container mx-auto p-4">
-        {/* Bond Title and Favorite */}
         <div className="flex justify-between items-center mb-4 w-full">
-          <h3 className="text-2xl font-bold">{id}</h3>
-          <button className="btn btn-ghost btn-square">
-            <Heart className="w-6 h-6" />
-          </button>
+          <h3 className="text-2xl font-bold">{instrument.name}</h3>
         </div>
 
-        {/* Price and Change */}
         <div className="mb-6">
           <div className="text-primary text-4xl font-bold mb-2">
-            {instrument.price}
+            {instrument.price || "Detalles Premium"}
           </div>
           <div className="flex items-center gap-2 mb-2">
-            <span className="text-xl">{instrument.change}</span>
-            <div className="flex items-center text-green-500">
-              <div className="flex items-center justify-end gap-1">
-                {instrument.isPositive === true ? (
-                  <ArrowRight className="w-4 h-4 text-green-500" />
-                ) : instrument.isPositive === false ? (
-                  <ArrowRight className="w-4 h-4 text-red-500 rotate-90" />
-                ) : (
-                  <ArrowRight className="w-4 h-4 text-gray-400" />
-                )}
-                <span
-                  className={`${
-                    instrument.isPositive === true ? "text-green-500" : ""
-                  } ${instrument.isPositive === false ? "text-red-500" : ""} ${
-                    instrument.isPositive === null ? "text-gray-400" : ""
-                  }`}
-                >
-                  {instrument.changePercent}
-                </span>
-              </div>
+            <span className="text-xl">{instrument.change || "N/A"}</span>
+            <div
+              className={`flex items-center ${
+                instrument.isPositive ? "text-green-500" : "text-red-500"
+              }`}
+            >
+              <ArrowRight
+                className={`w-4 h-4 ${
+                  instrument.isPositive ? "" : "rotate-90"
+                }`}
+              />
+              <span>{instrument.changePercent || "N/A"}</span>
             </div>
-          </div>
-          <div className="text-xl">
-            Rendimiento Bruto Anual: {instrument.annualRendimentPercent}
           </div>
         </div>
 
@@ -191,40 +253,9 @@ export const InstrumentDetailsPage = () => {
           <div className="w-full lg:w-1/2">
             <PerformanceChart performanceData={instrument.performance} />
           </div>
-
-          {/* Comparative Table */}
-          <div className="mb-6 w-full lg:w-1/2">
-            <h3 className="text-blue-700 text-xl font-bold mb-4">
-              Tabla Comparativa
-            </h3>
-            <div className="overflow-x-auto">
-              <table className="table w-full">
-                <thead>
-                  <tr>
-                    <th className="text-gray-500">Instrumento</th>
-                    <th className="text-gray-500">Rendimiento Anual %</th>
-                    <th className="text-gray-500">Nivel de Riesgo</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {instrument.compareData.map((item, index) => (
-                    <tr key={index} className="border-b">
-                      <td className="py-4">{item.instrument}</td>
-                      <td className="py-4">{item.yield}</td>
-                      <td className="py-4">{item.risk}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
         </div>
 
-        {/* Action Buttons */}
-        <div className="flex gap-4 sm:max-w-sm">
-          <button className="btn btn-primary flex-1 text-lg">Comprar</button>
-          <button className="btn btn-primary flex-1 text-lg">Vender</button>
-        </div>
+        <CreateInvestmentModal instrument={instrument} />
       </div>
     </div>
   );
