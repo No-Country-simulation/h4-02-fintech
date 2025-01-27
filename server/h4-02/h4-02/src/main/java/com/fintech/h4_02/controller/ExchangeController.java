@@ -2,7 +2,8 @@ package com.fintech.h4_02.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fintech.h4_02.dto.CoinDto;
+import com.fintech.h4_02.dto.exchange.ExchangeResponse;
+import com.fintech.h4_02.dto.exchange.ExchangeRrequest;
 import com.fintech.h4_02.dto.coin.CoinDtoRequest;
 import com.fintech.h4_02.dto.wallet.WalletResponse;
 import com.fintech.h4_02.enums.Coin;
@@ -13,6 +14,7 @@ import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.json.JSONException;
 import org.springframework.http.HttpStatus;
@@ -21,7 +23,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import javax.xml.parsers.ParserConfigurationException;
 import java.util.List;
 
 @Controller
@@ -92,8 +93,23 @@ public class ExchangeController {
 
     }
 
-  /*  @PostMapping
-    public ResponseEntity crateExchange(@RequestBody ){
-        return ResponseEntity.status(HttpStatus.OK).body(exchangeService.create());
-    }*/
+
+    @Operation(
+            summary = "by  coin",
+            description = "by a coin",
+            tags = {"ExchangeEntity"}
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "gel a coin",
+                    content = @Content(
+                            mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = JsonNode.class),
+                            examples = @ExampleObject(name = "JsonNode",
+                                    value = "{\"id\" : 202,\"coin\" : \"AAPL\", \"value\" : 5236.5, \"date\" : \"2025-01-26\", \"state\" : \"BY\", \"user\" : {\"id\" : 1, \"email\" : \"123@123.COM\", \"name\" : \"a r\", \"dni\" : \"4444444\", \"roles\" : [ {\"id\" : 1, \"name\" : \"INVERSIONISTA\"} ]"))
+            )
+    })
+    @PostMapping
+    public ResponseEntity<ExchangeResponse> crateExchange(@RequestBody @Valid ExchangeRrequest ExchangeRrequest){
+        return ResponseEntity.status(HttpStatus.CREATED).body(exchangeService.create(ExchangeRrequest));
+    }
 }

@@ -2,22 +2,17 @@ package com.fintech.h4_02.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fintech.h4_02.dto.CoinDto;
 import com.fintech.h4_02.dto.auth.AuthResponseDto;
 import com.fintech.h4_02.dto.auth.LoginRequestDto;
 import com.fintech.h4_02.dto.coin.CoinDtoRequest;
-import com.fintech.h4_02.dto.onboarding.OnboardingRequest;
+import com.fintech.h4_02.dto.exchange.ExchangeResponse;
+import com.fintech.h4_02.dto.exchange.ExchangeRrequest;
 import com.fintech.h4_02.dto.user.CreateUserRequestDto;
-import com.fintech.h4_02.dto.user.UserResponseDto;
 import com.fintech.h4_02.dto.wallet.WalletRequest;
-import com.fintech.h4_02.dto.wallet.WalletResponse;
-import com.fintech.h4_02.entity.OnboardingEntity;
-import com.fintech.h4_02.entity.UserEntity;
+import com.fintech.h4_02.enums.State;
 import com.fintech.h4_02.util.JsonUtil;
 import jdk.jfr.Label;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -348,4 +343,34 @@ class UserControllerTest {
         );
     }
 
+
+    @Test
+    @Label("comprar coin")
+    void crateExchange() throws JsonProcessingException {
+
+        ExchangeRrequest exchange = new ExchangeRrequest(1L, 5236.5, "AAPL");
+        String json = "{\"userId\":\"" + exchange.userId() + "\","
+                + "\"value\":\"" + exchange.value() + "\","
+                + "\"coin\":\"" + exchange.coin() + "\""
+                + "}";
+
+
+        JsonUtil.toJsonPrint("json ", json);
+
+        HttpEntity<String> request = new HttpEntity<>(json, headers);
+
+        ResponseEntity<JsonNode> result = testRestTemplate.exchange("/api/v1/exchange", HttpMethod.POST, request, JsonNode.class);
+        JsonUtil.toJsonPrint("commodities ", result);
+
+        assertAll(
+                () -> assertEquals(HttpStatus.OK, result.getStatusCode()),
+                () -> assertEquals(200, result.getStatusCode().value())
+               // () -> assertEquals(result.getBody().user().getId(),exchange.userId()),
+               // () -> assertEquals(result.getBody().coin().toString(),exchange.coin().toString()),
+              //  () -> assertEquals(result.getBody().value(),exchange.value()),
+              //  () -> assertEquals(result.getBody().state(), State.BY)
+
+
+        );
+    }
 }
