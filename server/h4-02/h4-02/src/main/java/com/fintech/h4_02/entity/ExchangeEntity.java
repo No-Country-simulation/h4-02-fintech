@@ -11,6 +11,7 @@ import java.time.LocalDate;
 
 @Builder
 @Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity(name = "ExchangeEntity")
