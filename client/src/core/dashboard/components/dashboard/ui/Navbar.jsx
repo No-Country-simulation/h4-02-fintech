@@ -1,17 +1,18 @@
-import { PropTypes } from "prop-types";
-import { Link } from "react-router-dom";
 import {
   ArrowLeft2,
   Edit,
   HambergerMenu,
   MessageQuestion,
   MoneyRecive,
+  Paperclip,
   Profile,
   Profile2User,
 } from "iconsax-react";
-import { Drawer } from "./Drawer";
-import { validateComplete } from "../../../../validators/complete";
+import { PropTypes } from "prop-types";
+import { Link } from "react-router-dom";
 import { useOnboardingStore } from "../../../../auth/store/useOnboardingStore";
+import { validateComplete } from "../../../../validators/complete";
+import { Drawer } from "./Drawer";
 
 export const Navbar = ({ title }) => {
   const { formData } = useOnboardingStore();
@@ -38,7 +39,12 @@ export const Navbar = ({ title }) => {
     {
       icon: <Profile2User size="24" />,
       text: "Foro y comunidad",
-      link: "/",
+      link: "/forum",
+    },
+    {
+      icon: <Paperclip size="24" />,
+      text: "Noticias",
+      link: "/news",
     },
     {
       icon: <MessageQuestion size="24" />,

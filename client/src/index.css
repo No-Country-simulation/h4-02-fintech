@@ -2,12 +2,15 @@
 @tailwind components;
 @tailwind utilities;
 
-.btn {
-  @apply rounded-[4px];
+.post-editor-toolbar {
+  @apply rounded-none border-b-2 bg-white;
 }
 
-/* Aplicando borde redondeado de 4px en inputs */
-.input {
-  @apply rounded-[4px];
+.post-editor-toolbar button {
+  @apply hover:bg-base-300;
 }
 
+/* Ajusta la altura del área de edición */
+.mdxeditor {
+  @apply min-h-[150px] p-4;
+}
