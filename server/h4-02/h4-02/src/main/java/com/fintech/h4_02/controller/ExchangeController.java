@@ -2,9 +2,9 @@ package com.fintech.h4_02.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fintech.h4_02.dto.coin.CoinDtoRequest;
 import com.fintech.h4_02.dto.exchange.ExchangeResponse;
 import com.fintech.h4_02.dto.exchange.ExchangeRrequest;
-import com.fintech.h4_02.dto.coin.CoinDtoRequest;
 import com.fintech.h4_02.dto.wallet.WalletResponse;
 import com.fintech.h4_02.enums.Coin;
 import com.fintech.h4_02.service.ExchangeService;
@@ -113,6 +113,21 @@ public class ExchangeController {
         return ResponseEntity.status(HttpStatus.CREATED).body(exchangeService.create(ExchangeRrequest));
     }
 
+
+    @Operation(
+            summary = "get history exchange by user",
+            description = "get history exchange",
+            tags = {"ExchangeEntity"}
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "202", description = "get all history for exchange by user",
+                    content = @Content(
+                            mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = JsonNode.class),
+                            examples = @ExampleObject(name = "JsonNode",
+                                    value = "[{\"id\": 1,\"coin\": \"AAPL\",\"value\": 123.00,\"date\": \"2025-01-27\",\"state\": \"BY\",\"user\": {\"id\": 1,\"name\": \"Lionel\"},\"cuantity\": 5,\"total\": 615.00},{\"id\": 2,\"coin\": \"AAPL\",\"value\": 145.00,\"date\": \"2025-01-27\",\"state\": \"BY\",\"user\": {\"id\": 1,\"name\": \"Lionel\"},\"cuantity\": 10,\"total\": 1450.00}]"))
+            )
+    })
     @GetMapping("/{id}")
     public ResponseEntity<List<ExchangeResponse>> gerExchangeAllBuUserId(@PathVariable Long id){
         return ResponseEntity.status(HttpStatus.OK).body(exchangeService.GetByUser(id));
