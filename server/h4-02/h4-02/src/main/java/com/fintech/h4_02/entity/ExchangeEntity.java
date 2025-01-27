@@ -35,8 +35,8 @@ public class ExchangeEntity {
     private UserEntity user;
     @Enumerated(EnumType.STRING)
     private State state;
-    @Column(name = "quantity")
-    private int quantity;
+    @Column(name = "cuantity")
+    private int cuantity;
     @Column(name = "total")
     private BigDecimal total;
 

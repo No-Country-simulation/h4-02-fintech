@@ -348,7 +348,7 @@ class UserControllerTest {
         ExchangeRrequest exchange = new ExchangeRrequest(1L, 5236.5, "AAPL",5);
         String json = "{\"userId\":\"" + exchange.userId() + "\","
                 + "\"value\":\"" + exchange.value() + "\","
-                + "\"quantity\":\"" + exchange.quantity() + "\","
+                + "\"cuantity\":\"" + exchange.cuantity() + "\","
                 + "\"coin\":\"" + exchange.coin() + "\""
                 + "}";
 

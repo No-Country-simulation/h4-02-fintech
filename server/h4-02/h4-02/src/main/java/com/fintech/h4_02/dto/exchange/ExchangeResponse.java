@@ -22,7 +22,7 @@ public record ExchangeResponse(
     public ExchangeResponse(ExchangeEntity exchangeDb) {
         this(exchangeDb.getId(),exchangeDb.getCoin(),exchangeDb.getValue(),
                 String.valueOf(exchangeDb.getDate()),exchangeDb.getState(),
-                new UserResponseSimple(exchangeDb.getUser()), exchangeDb.getQuantity(),
+                new UserResponseSimple(exchangeDb.getUser()), exchangeDb.getCuantity(),
                 exchangeDb.getTotal());
     }
 }
