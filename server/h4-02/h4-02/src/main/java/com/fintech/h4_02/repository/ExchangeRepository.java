@@ -15,8 +15,8 @@ public interface ExchangeRepository extends JpaRepository<ExchangeEntity,Long> {
 
     @Query("SELECT e FROM ExchangeEntity e WHERE e.user =:user")
     List<ExchangeEntity> findAllByUserId(@Param("user") UserEntity user);
-/*
-    @Query("SELECT NEW com.fintech.h4_02.dto.exchange.ExchangeSimple(e.coin, " +
+
+  /*  @Query("SELECT NEW com.fintech.h4_02.dto.exchange.ExchangeSimple(e.coin, " +
             "SUM(CASE WHEN e.state = com.fintech.h4_02.enums.State.BY THEN e.quantity ELSE -e.quantity END)) " +
             "FROM ExchangeEntity e " +
             "WHERE e.user = :user " +
