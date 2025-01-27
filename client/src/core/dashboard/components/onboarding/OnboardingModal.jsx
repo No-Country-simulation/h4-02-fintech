@@ -34,8 +34,7 @@ export default function OnboardingModal() {
 
           <div className="mb-6 text-xl text-semibold">
             <p className="text-bold text-center text-black">
-              {`Para completar el onboarding, Solo ve al menú lateral y selecciona
-              la opción "Terminar o editar mi onboarding".`}
+              {`Para completar el onboarding, solo ve al menú lateral y selecciona la opción "Terminar o editar mi onboarding".`}
             </p>
             <p className="text-bold text-center text-black mt-2">
               {`¡Recuerda que al terminarlo, desbloquearás todas nuestras recomendaciones personalizadas!.`}
