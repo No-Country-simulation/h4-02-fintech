@@ -1,278 +1,19 @@
-import { ArrowLeft, ArrowRight, SearchNormal, Coin } from "iconsax-react";
+import { ArrowLeft,/*  ArrowRight, */ SearchNormal, Coin } from "iconsax-react";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import useFilterStore from "../../store/useFilterStore";
-
-const instruments = [
-  {
-    id: "AE38",
-    name: "AE38",
-    description: "Bono USD 2038",
-    value: "ARS 844.80",
-    change: "0,15 %",
-    isPositive: true,
-    logo: "",
-    term: "Largo",
-    risk: "Alto",
-    type: "Bono",
-  },
-  {
-    id: "AE38C",
-    name: "AE38C",
-    description: "Bono USD 2038",
-    value: "USD 0,715",
-    change: "0,37 %",
-    isPositive: true,
-    logo: "",
-    term: "Largo",
-    risk: "Alto",
-    type: "Bono",
-  },
-  {
-    id: "AP45",
-    name: "AP45",
-    description: "Bono USD 2045",
-    value: "USD 150.50",
-    change: "-0,25 %",
-    isPositive: false,
-    logo: "",
-    term: "Mediano",
-    risk: "Medio",
-    type: "Bono",
-  },
-  {
-    id: "XA28",
-    name: "XA28",
-    description: "Acción Tech Corp",
-    value: "USD 350.10",
-    change: "1,50 %",
-    isPositive: true,
-    logo: "",
-    term: "Largo",
-    risk: "Alto",
-    type: "Accion",
-  },
-  {
-    id: "YP12",
-    name: "YP12",
-    description: "Acción Finanza Global",
-    value: "USD 120.45",
-    change: "-0,90 %",
-    isPositive: false,
-    logo: "",
-    term: "Corto",
-    risk: "Alto",
-    type: "Accion",
-  },
-  {
-    id: "MD10",
-    name: "MD10",
-    description: "Fondo de Inversión Global",
-    value: "USD 1000.00",
-    change: "0,05 %",
-    isPositive: true,
-    logo: "",
-    term: "Mediano",
-    risk: "Alto",
-    type: "Fondo",
-  },
-  {
-    id: "DE30",
-    name: "DE30",
-    description: "CEDEAR Banco Nación",
-    value: "ARS 780.30",
-    change: "0,10 %",
-    isPositive: true,
-    logo: "",
-    term: "Corto",
-    risk: "Alto",
-    type: "Cdear",
-  },
-  {
-    id: "PG54",
-    name: "PG54",
-    description: "Fondo Crecimiento Acelerado",
-    value: "USD 450.75",
-    change: "-0,15 %",
-    isPositive: false,
-    logo: "",
-    term: "Largo",
-    risk: "Alto",
-    type: "Fondo",
-  },
-  {
-    id: "ZT28",
-    name: "ZT28",
-    description: "Acción Energía Argentina",
-    value: "ARS 95.20",
-    change: "0,90 %",
-    isPositive: true,
-    logo: "",
-    term: "Mediano",
-    risk: "Alto",
-    type: "Accion",
-  },
-  {
-    id: "GH41",
-    name: "GH41",
-    description: "Bono USD 2041",
-    value: "USD 220.80",
-    change: "0,25 %",
-    isPositive: true,
-    logo: "",
-    term: "Largo",
-    risk: "Alto",
-    type: "Bono",
-  },
-  {
-    id: "CX33",
-    name: "CX33",
-    description: "Bono USD 2033",
-    value: "ARS 620.40",
-    change: "0,05 %",
-    isPositive: true,
-    logo: "",
-    term: "Corto",
-    risk: "Alto",
-    type: "Accion",
-  },
-  {
-    id: "LD52",
-    name: "LD52",
-    description: "CEDEAR YPF",
-    value: "USD 500.10",
-    change: "-0,10 %",
-    isPositive: false,
-    logo: "",
-    term: "Corto",
-    risk: "Bajo",
-    type: "Accion",
-  },
-  {
-    id: "PL73",
-    name: "PL73",
-    description: "Bono USD 2033",
-    value: "USD 180.60",
-    change: "0,90 %",
-    isPositive: true,
-    logo: "",
-    term: "Largo",
-    risk: "Alto",
-    type: "Bono",
-  },
-  {
-    id: "FB11",
-    name: "FB11",
-    description: "Acción FinTech Argentina",
-    value: "USD 110.40",
-    change: "2,20 %",
-    isPositive: true,
-    logo: "",
-    term: "Mediano",
-    risk: "Moderado",
-    type: "Accion",
-  },
-  {
-    id: "EF55",
-    name: "EF55",
-    description: "Fondo Inversiones Sostenibles",
-    value: "USD 550.60",
-    change: "-0,60 %",
-    isPositive: false,
-    logo: "",
-    term: "Largo",
-    risk: "Alto",
-    type: "Fondo",
-  },
-  {
-    id: "MR19",
-    name: "MR19",
-    description: "Acción Mercado Libre",
-    value: "USD 840.25",
-    change: "1,10 %",
-    isPositive: true,
-    logo: "",
-    term: "Mediano",
-    risk: "Bajo",
-    type: "Accion",
-  },
-  {
-    id: "CX56",
-    name: "CX56",
-    description: "Fondo Diversificación Global",
-    value: "USD 320.45",
-    change: "-0,30 %",
-    isPositive: false,
-    logo: "",
-    term: "Corto",
-    risk: "Moderado",
-    type: "Fondo",
-  },
-  {
-    id: "AS28",
-    name: "AS28",
-    description: "Acción AgroGlobal",
-    value: "USD 200.90",
-    change: "3,10 %",
-    isPositive: true,
-    logo: "",
-    term: "Mediano",
-    risk: "Alto",
-    type: "Accion",
-  },
-  {
-    id: "AP36",
-    name: "AP36",
-    description: "Bono USD 2036",
-    value: "USD 180.70",
-    change: "0,75 %",
-    isPositive: true,
-    logo: "",
-    term: "Largo",
-    risk: "Medio",
-    type: "Bono",
-  },
-  {
-    id: "PA48",
-    name: "PA48",
-    description: "Acción Latinoamericana Global",
-    value: "USD 500.10",
-    change: "1,30 %",
-    isPositive: true,
-    logo: "",
-    term: "Mediano",
-    risk: "Alto",
-    type: "Accion",
-  },
-  {
-    id: "TA23",
-    name: "TA23",
-    description: "Fondo Inversión Multinacional",
-    value: "USD 1000.00",
-    change: "0,50 %",
-    isPositive: true,
-    logo: "",
-    term: "Largo",
-    risk: "Bajo",
-    type: "Fondo",
-  },
-  {
-    id: "XH50",
-    name: "XH50",
-    description: "CEDEAR Telecom Argentina",
-    value: "USD 160.00",
-    change: "0,80 %",
-    isPositive: true,
-    logo: "",
-    term: "Corto",
-    risk: "Alto",
-    type: "Cdear",
-  },
-];
+import { getByInstrument } from "../../services/instrument";
+import { getErrorMessage } from "../../../../core/validators/errorHandler";
+import { toast } from "sonner";
 
 export const FiltersPage = () => {
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState("");
+  const [instruments, setInstruments] = useState([]);
+
+  const filteredInstruments = instruments.filter((instrument) =>
+    instrument.symbol.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   // Usamos el store de Zustand para obtener los filtros seleccionados
   const { selectedFilters } = useFilterStore();
@@ -283,27 +24,28 @@ export const FiltersPage = () => {
   const term = selectedFilters?.term || ""; //"Corto plazo", "Mediano plazo", "Largo plazo"
 
   // Mapeo para hacer la correspondencia con los filtros
-  const termMapping = {
+  /* const termMapping = {
     "Corto plazo": "Corto", // Filtro -> Data
     "Mediano plazo": "Mediano",
     "Largo plazo": "Largo",
-  };
+  }; */
 
-  const riskMapping = {
+  /* const riskMapping = {
     Conservador: "Bajo", // Filtro -> Data
     Moderado: "Medio",
     Arriesgado: "Alto",
-  };
+  }; */
 
-  const typeMapping = {
+  /* const typeMapping = {
     Acciones: "Accion", // Filtro -> Data
     Bonos: "Bono",
     CEDEARs: "Cdear",
     Fondos: "Fondo",
-  };
+  }; */
 
   // Filtramos los instrumentos según los filtros seleccionados
-  const filteredInstruments = instruments.filter((instrument) => {
+  /* const filteredInstruments = instruments.filter((instrument) => {
+
     const matchesSearchTerm = instrument.name
       .toLowerCase()
       .includes(searchTerm.toLowerCase());
@@ -321,7 +63,24 @@ export const FiltersPage = () => {
       : true;
 
     return matchesSearchTerm && matchesType && matchesTerm && matchesRisk;
-  });
+  }); */
+
+  const getInstruments = async () => {
+    try {
+      const instruments = await getByInstrument(type);
+      const newInstruments = instruments;
+      setInstruments(newInstruments);
+    } catch (error) {
+      const errorMessage = getErrorMessage(error);
+      toast.error(errorMessage);
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    getInstruments();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <div className="min-h-screen bg-primary">
@@ -367,30 +126,30 @@ export const FiltersPage = () => {
       <div className="bg-gray-50 min-h-screen pt-4">
         {filteredInstruments.length > 0 ? (
           filteredInstruments.map((instrument) => (
-            <div key={instrument.id}>
+            <div key={instrument.symbol}>
               <button
                 className="btn btn-ghost w-full flex items-center justify-between"
                 onClick={() => {
                   let typePath = "";
-                  switch (instrument.type) {
-                    case "Bono":
+                  switch (type) {
+                    case "BOND":
                       typePath = "bonds";
                       break;
-                    case "Accion":
-                      typePath = "actions";
+                    case "FOREX":
+                      typePath = "FOREX";
                       break;
-                    case "Cdear":
-                      typePath = "cedears";
+                    case "ETFS":
+                      typePath = "etfs";
                       break;
-                    case "Fondo":
-                      typePath = "funds";
+                    case "COMMODITIES":
+                      typePath = "commodities";
                       break;
                     default:
                       typePath = "";
                   }
 
                   navigate(
-                    `/dashboard/investment/instrument/${typePath}/${instrument.id}`
+                    `/dashboard/investment/instrument/${typePath}/${instrument.symbol}`
                   );
                 }}
               >
@@ -409,11 +168,11 @@ export const FiltersPage = () => {
                     </div>
                   )}
                   <div className="flex flex-col items-start">
-                    <h3 className="font-bold text-lg">{instrument.name}</h3>
-                    <p className="text-gray-500">{instrument.description}</p>
+                    <h3 className="font-bold text-lg">{instrument.symbol}</h3>
+                    <p className="text-gray-500">{`${type} ${instrument.symbol}`}</p>
                   </div>
                 </div>
-                <div className="text-right">
+                {/* <div className="text-right">
                   <p className="font-semibold">{instrument.value}</p>
                   <div className="flex items-center justify-end gap-1">
                     {instrument.isPositive === true ? (
@@ -435,7 +194,7 @@ export const FiltersPage = () => {
                       {instrument.change}
                     </span>
                   </div>
-                </div>
+                </div> */}
               </button>
               <div className="divider my-0 mx-4"></div>
             </div>
