@@ -325,7 +325,7 @@ class UserControllerTest {
     }
 
     @Test
-    @Label("obtener precio de un coin")
+    @Label("obtener description de un coin")
     void getCoinDescription() throws JsonProcessingException {
 
 
