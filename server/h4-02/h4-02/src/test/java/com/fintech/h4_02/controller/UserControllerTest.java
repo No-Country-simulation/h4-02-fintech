@@ -255,8 +255,7 @@ class UserControllerTest {
 
 
         HttpEntity<String> request = new HttpEntity<>( headers);
-        ResponseEntity<List<CoinDtoRequest>> result = testRestTemplate.exchange("/api/v1/exchange/all/COMMODITIES", HttpMethod.GET, request, new ParameterizedTypeReference<List<CoinDtoRequest>>() {
-        });
+        ResponseEntity<JsonNode> result = testRestTemplate.exchange("/api/v1/exchange/all/COMMODITIES", HttpMethod.GET, request, JsonNode.class);
         JsonUtil.toJsonPrint("commodities ", result);
 
         assertAll(
@@ -326,13 +325,13 @@ class UserControllerTest {
     }
 
     @Test
-    @Label("obtener precio de un coin")
+    @Label("obtener description de un coin")
     void getCoinDescription() throws JsonProcessingException {
 
 
         HttpEntity<String> request = new HttpEntity<>( headers);
         ResponseEntity<JsonNode> result = testRestTemplate.exchange("/api/v1/exchange/description/AAPL", HttpMethod.GET, request, JsonNode.class);
-        JsonUtil.toJsonPrint("commodities ", result);
+        JsonUtil.toJsonPrint("description ", result);
 
         assertAll(
                 () -> assertEquals(HttpStatus.OK, result.getStatusCode()),
@@ -348,9 +347,10 @@ class UserControllerTest {
     @Label("comprar coin")
     void crateExchange() throws JsonProcessingException {
 
-        ExchangeRrequest exchange = new ExchangeRrequest(1L, 5236.5, "AAPL");
+        ExchangeRrequest exchange = new ExchangeRrequest(1L, 5236.5, "AAPL",5);
         String json = "{\"userId\":\"" + exchange.userId() + "\","
                 + "\"value\":\"" + exchange.value() + "\","
+                + "\"cuantity\":\"" + exchange.cuantity() + "\","
                 + "\"coin\":\"" + exchange.coin() + "\""
                 + "}";
 
@@ -363,12 +363,36 @@ class UserControllerTest {
         JsonUtil.toJsonPrint("commodities ", result);
 
         assertAll(
-                () -> assertEquals(HttpStatus.OK, result.getStatusCode()),
-                () -> assertEquals(200, result.getStatusCode().value())
+                () -> assertEquals(HttpStatus.CREATED, result.getStatusCode()),
+                () -> assertEquals(201, result.getStatusCode().value())
                // () -> assertEquals(result.getBody().user().getId(),exchange.userId()),
                // () -> assertEquals(result.getBody().coin().toString(),exchange.coin().toString()),
               //  () -> assertEquals(result.getBody().value(),exchange.value()),
               //  () -> assertEquals(result.getBody().state(), State.BY)
+
+
+        );
+    }
+
+
+
+    @Test
+    @Label("historial de exchange por ususario id")
+    void gerExchangeAllBuUserId() throws JsonProcessingException {
+
+
+        HttpEntity<String> request = new HttpEntity<>(headers);
+
+        ResponseEntity<JsonNode> result = testRestTemplate.exchange("/api/v1/exchange/1", HttpMethod.GET, request, JsonNode.class);
+        JsonUtil.toJsonPrint("commodities ", result);
+
+        assertAll(
+                () -> assertEquals(HttpStatus.OK, result.getStatusCode()),
+                () -> assertEquals(202, result.getStatusCode().value())
+                // () -> assertEquals(result.getBody().user().getId(),exchange.userId()),
+                // () -> assertEquals(result.getBody().coin().toString(),exchange.coin().toString()),
+                //  () -> assertEquals(result.getBody().value(),exchange.value()),
+                //  () -> assertEquals(result.getBody().state(), State.BY)
 
 
         );

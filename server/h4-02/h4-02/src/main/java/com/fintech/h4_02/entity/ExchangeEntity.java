@@ -11,6 +11,7 @@ import java.time.LocalDate;
 
 @Builder
 @Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity(name = "ExchangeEntity")
@@ -34,5 +35,9 @@ public class ExchangeEntity {
     private UserEntity user;
     @Enumerated(EnumType.STRING)
     private State state;
+    @Column(name = "cuantity")
+    private int cuantity;
+    @Column(name = "total")
+    private BigDecimal total;
 
 }

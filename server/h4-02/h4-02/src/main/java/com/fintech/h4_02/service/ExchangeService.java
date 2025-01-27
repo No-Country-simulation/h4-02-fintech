@@ -167,15 +167,26 @@ public class ExchangeService {
 
     public ExchangeResponse create(ExchangeRrequest exchangeRrequest) {
 
-        UserEntity user = userRepository.findById(exchangeRrequest.userId()).orElseThrow( ()-> new EntityNotFoundException("user not found"));
+        final UserEntity user = userRepository.findById(exchangeRrequest.userId()).orElseThrow(() -> new EntityNotFoundException("user not found"));
+        final BigDecimal value = new BigDecimal(exchangeRrequest.value());
+        final BigDecimal total = value.multiply(BigDecimal.valueOf(exchangeRrequest.cuantity()));
         ExchangeEntity exchange = ExchangeEntity.builder()
-                .value(new BigDecimal(exchangeRrequest.value()))
+                .value(value)
                 .date(LocalDate.now())
                 .coin(exchangeRrequest.coin())
                 .user(user)
                 .state(State.BY)
+                .cuantity(exchangeRrequest.cuantity())
+                .total(total)
                 .build();
-        ExchangeEntity exchangeDb = exchangeRepository.save(exchange);
+       final ExchangeEntity exchangeDb = exchangeRepository.save(exchange);
         return new ExchangeResponse(exchangeDb);
+    }
+
+    public List<ExchangeResponse> GetByUser(Long id) {
+        UserEntity user = userRepository.findById(id).orElseThrow( ()-> new EntityNotFoundException("user not found"));
+        List<ExchangeEntity> list = exchangeRepository.findAllByUserId(user);
+        List<ExchangeResponse> listDto = list.stream().map(ExchangeResponse::new).toList();
+        return listDto;
     }
 }
