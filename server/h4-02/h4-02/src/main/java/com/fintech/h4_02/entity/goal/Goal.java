@@ -72,4 +72,8 @@ public class Goal {
         this.progress = progressBigDecimal.doubleValue();
     }
 
+    public boolean isCompleted() {
+        return progress >= 100;
+    }
+
 }

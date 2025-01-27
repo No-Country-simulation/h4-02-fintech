@@ -9,10 +9,7 @@ import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 @Getter
 @Setter
@@ -89,6 +86,15 @@ public class UserEntity {
     @Enumerated(EnumType.STRING)
     private OAuthProvider provider;
 
+    @Column(name = "goals_completed")
+    @ColumnDefault("0")
+    private Integer goalsCompleted = 0;
+
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "unlocked_avatars", joinColumns = @JoinColumn(name = "user_id"))
+    @Column(name = "avatar")
+    private Set<String> unlockedAvatars = new HashSet<>();
+
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "user_roles",
@@ -117,7 +123,7 @@ public class UserEntity {
             cascade = CascadeType.ALL,
             orphanRemoval = true
     )
-    private List<Goal> goals;
+    private List<Goal> goals = new ArrayList<>();
 
     @OneToMany(
             mappedBy = "user",
@@ -126,6 +132,10 @@ public class UserEntity {
             orphanRemoval = true
     )
     private List<Post> posts;
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true
+    )
+    private List<ExchangeEntity> exchangeList;
 
     public UserEntity(CreateUserRequestDto user) {
         this.email = user.email();
@@ -155,6 +165,18 @@ public class UserEntity {
         return provider;
     }
 
+    public void incrementUserCompletedGoalCount() {
+        if (goalsCompleted == null) {
+            goalsCompleted = 0;
+        }
+        goalsCompleted++;
+        for (AvatarRule rule : AvatarRule.values()) {
+            if (goalsCompleted.equals(rule.goalsToComplete)) {
+                unlockedAvatars.add(rule.avatarUrl);
+            }
+        }
+    }
+
     public enum OAuthProvider {
         GOOGLE,
         APPLE,
@@ -169,6 +191,19 @@ public class UserEntity {
             throw new IllegalArgumentException("No enum constant for value: " + value);
         }
 
+    }
+
+    @RequiredArgsConstructor
+    @Getter
+    public enum AvatarRule {
+        ONE_GOAL_COMPLETED(1, "https://res.cloudinary.com/dzmzrbuta/image/upload/v1737650410/iupi-fintech/static/avatars/argentina_kd3tgq.png"),
+        FIVE_GOALS_COMPLETED(5, "https://res.cloudinary.com/dzmzrbuta/image/upload/v1737650410/iupi-fintech/static/avatars/xqc_eovnrj.jpg"),
+        TEN_GOALS_COMPLETED(10, "https://res.cloudinary.com/dzmzrbuta/image/upload/v1737650410/iupi-fintech/static/avatars/monkey_wgpb83.jpg"),
+        THIRTY_GOALS_COMPLETED(30, "https://res.cloudinary.com/dzmzrbuta/image/upload/v1737650410/iupi-fintech/static/avatars/cat_gw8gwe.jpg"),
+        FIFTY_GOALS_COMPLETED(50, "https://res.cloudinary.com/dzmzrbuta/image/upload/v1737650410/iupi-fintech/static/avatars/gigachad_rg4grx.png");
+
+        private final int goalsToComplete;
+        private final String avatarUrl;
     }
 
 }

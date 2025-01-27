@@ -1,4 +1,4 @@
-package com.fintech.h4_02.dto;
+package com.fintech.h4_02.dto.coin;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.JsonNode;

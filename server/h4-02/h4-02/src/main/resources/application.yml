@@ -45,6 +45,10 @@ auth0:
 frontend:
   url: ${FRONTEND_URL}
 
-
 backend:
   url: ${BACKEND_URL}
+
+rss_feed:
+  urls: >
+    https://api.rss2json.com/v1/api.json?rss_url=https://eleconomista.com.ar/economia/feed/,
+    https://api.rss2json.com/v1/api.json?rss_url=https://eleconomista.com.ar/finanzas/feed/
