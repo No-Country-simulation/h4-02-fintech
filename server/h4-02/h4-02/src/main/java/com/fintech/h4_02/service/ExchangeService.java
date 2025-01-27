@@ -183,7 +183,10 @@ public class ExchangeService {
         return new ExchangeResponse(exchangeDb);
     }
 
-    public Object GetByUser(Long id) {
-        return null;
+    public List<ExchangeResponse> GetByUser(Long id) {
+        UserEntity user = userRepository.findById(id).orElseThrow( ()-> new EntityNotFoundException("user not found"));
+        List<ExchangeEntity> list = exchangeRepository.findAllByUserId(user);
+        List<ExchangeResponse> listDto = list.stream().map(ExchangeResponse::new).toList();
+        return listDto;
     }
 }

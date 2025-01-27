@@ -114,7 +114,7 @@ public class ExchangeController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity gerExchangeAllBuUserId(@PathVariable Long id){
+    public ResponseEntity<List<ExchangeResponse>> gerExchangeAllBuUserId(@PathVariable Long id){
         return ResponseEntity.status(HttpStatus.OK).body(exchangeService.GetByUser(id));
 
     }
