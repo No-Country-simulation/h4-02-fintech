@@ -27,6 +27,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ExchangeService {
@@ -196,9 +197,11 @@ public class ExchangeService {
 
         final UserEntity user = userRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("user not found"));
 
-     //  List<ExchangeSimple> list = exchangeRepository.getTotalCoinByUser(user);
+       List<Object> list = exchangeRepository.getTotalCoinByUser(user);
+        List<ExchangeSimple> dtoList =list.stream().map(ExchangeSimple::fromObjectList)
+                        .collect(Collectors.toList());
 
-                return null;
+                return dtoList;
 
     }
 }

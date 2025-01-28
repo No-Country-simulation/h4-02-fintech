@@ -16,12 +16,14 @@ public interface ExchangeRepository extends JpaRepository<ExchangeEntity,Long> {
     @Query("SELECT e FROM ExchangeEntity e WHERE e.user =:user")
     List<ExchangeEntity> findAllByUserId(@Param("user") UserEntity user);
 
-  /*  @Query("SELECT NEW com.fintech.h4_02.dto.exchange.ExchangeSimple(e.coin, " +
-            "SUM(CASE WHEN e.state = com.fintech.h4_02.enums.State.BY THEN e.quantity ELSE -e.quantity END)) " +
+
+    @Query("SELECT e.coin, " +
+            "SUM(CASE WHEN e.state = 'BY' THEN e.quantity ELSE -e.quantity END) " +
             "FROM ExchangeEntity e " +
             "WHERE e.user = :user " +
-            "GROUP BY e.coin")
-    List<ExchangeSimple> getTotalCoinByUser(@Param("user") UserEntity user);*/
+            "GROUP BY e.coin, e.quantity")
+    List<Object> getTotalCoinByUser(@Param("user") UserEntity user);
+
 
 
 }
