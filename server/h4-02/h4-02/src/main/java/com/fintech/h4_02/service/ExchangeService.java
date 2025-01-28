@@ -9,6 +9,7 @@ import com.fintech.h4_02.dto.exchange.ExchangeResponse;
 import com.fintech.h4_02.dto.exchange.ExchangeRrequest;
 import com.fintech.h4_02.dto.coin.CoinDtoRequest;
 import com.fintech.h4_02.dto.exchange.ExchangeSimple;
+import com.fintech.h4_02.dto.exchange.GetCoinByDatesRequest;
 import com.fintech.h4_02.entity.ExchangeEntity;
 import com.fintech.h4_02.entity.UserEntity;
 import com.fintech.h4_02.enums.Coin;
@@ -241,4 +242,16 @@ public class ExchangeService {
     }
 
 
+    public JsonNode getCoinByDates(GetCoinByDatesRequest getCoinByDatesRequest) throws JsonProcessingException {
+        final String url = "https://api.twelvedata.com/time_series?end_date="
+                .concat(getCoinByDatesRequest.end().toString()).
+                concat("&start_date=")
+                .concat(getCoinByDatesRequest.start().toString())
+                .concat("&symbol=")
+                .concat(getCoinByDatesRequest.coin())
+                .concat("&interval=1day&apikey=")
+                .concat(apikey);
+
+        return conectionApi(url);
+    }
 }
