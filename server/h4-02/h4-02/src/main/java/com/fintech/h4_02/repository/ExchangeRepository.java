@@ -26,7 +26,7 @@ public interface ExchangeRepository extends JpaRepository<ExchangeEntity,Long> {
 
 
 
-    @Query("SELECT NEW com.fintech.h4_02.dto.coin.CoinPrice( e.coin, AVG(e.quantity) ) FROM ExchangeEntity e WHERE e.user =:user GROUP BY e.coin ORDER BY e.coin")
+    @Query("SELECT NEW com.fintech.h4_02.dto.coin.CoinPrice( e.coin, AVG(e.value) ) FROM ExchangeEntity e WHERE e.user =:user GROUP BY e.coin ORDER BY e.coin")
     List<CoinPrice> findPriceCoins(@Param("user") UserEntity user);
 
 }
