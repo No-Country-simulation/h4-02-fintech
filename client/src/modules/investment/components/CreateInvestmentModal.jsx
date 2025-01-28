@@ -1,17 +1,20 @@
 import { PropTypes } from "prop-types";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { toast } from "sonner";
-import { createExchage } from "../services/instrument";
+import { buyExchage, sellExchage } from "../services/instrument";
 import { getErrorMessage } from "../../../core/validators/errorHandler";
 import { useAuthStore } from "../../../core/auth/store/useAuthStore";
 import { investmentSchema } from "../../../core/validators/investment";
+import useOperationsStore from "../store/useOperation";
 
 export default function CreateInvestmentModal({ instrument }) {
   const { user } = useAuthStore();
   const [isOpen, setIsOpen] = useState(false);
   const [state, setState] = useState("BUY");
+  const { operations } = useOperationsStore(); // Obtener las operaciones almacenadas
+  const [availableQuantity, setAvailableQuantity] = useState(null); // Almacenar la cantidad disponible de la moneda
 
   const {
     register,
@@ -25,15 +28,55 @@ export default function CreateInvestmentModal({ instrument }) {
     },
   });
 
+  useEffect(() => {
+    // Verificar la cantidad disponible de la moneda cuando se abre el modal
+    if (state === "SELL") {
+      const userCoin = operations.find(
+        (operation) => operation.coin === instrument.id
+      );
+      setAvailableQuantity(userCoin ? userCoin.total : 0);
+    }
+  }, [state, operations, instrument.id]);
+
   const onSubmit = async (data) => {
     try {
-      await createExchage({
-        userId: user.id,
-        value: parseFloat(instrument.price.replace(/[^\d.-]/g, "")),
-        coin: instrument.id,
-        state: state,
-        quantity: parseInt(data.quantity, 10),
-      });
+      if (state === "SELL") {
+        // Verificar si la cantidad es válida antes de proceder
+        if (data.quantity > availableQuantity) {
+          toast.error(
+            `No tienes suficientes monedas para vender esta cantidad. Solo tienes ${availableQuantity} monedas.`
+          );
+          return;
+        }
+      }
+
+      if (state === "BUY") {
+        await buyExchage({
+          userId: user.id,
+          value: parseFloat(instrument.price.replace(/[^\d.-]/g, "")),
+          coin: instrument.id,
+          quantity: parseInt(data.quantity, 10),
+        });
+
+        // Actualizamos el estado de operaciones
+        useOperationsStore
+          .getState()
+          .updateOperation(instrument.id, data.quantity);
+      }
+
+      if (state === "SELL") {
+        await sellExchage({
+          userId: user.id,
+          value: parseFloat(instrument.price.replace(/[^\d.-]/g, "")),
+          coin: instrument.id,
+          quantity: parseInt(data.quantity, 10),
+        });
+
+        // Actualizamos el estado de operaciones
+        useOperationsStore
+          .getState()
+          .updateOperation(instrument.id, -data.quantity);
+      }
 
       toast(`${state === "BUY" ? "Comprado" : "Vendido"}`, {
         description: `Se ${state === "BUY" ? "compró" : "vendió"} ${
@@ -90,11 +133,16 @@ export default function CreateInvestmentModal({ instrument }) {
 
           <div className="mb-4">
             <h3 className="text-xl font-semibold">
-              Agregar {instrument?.name || ""}
+              {state === "BUY" ? "Comprar" : "Vender"} {instrument?.name || ""}
             </h3>
             <p className="text-gray-500 mt-2">
               Precio Actual: {instrument?.price || ""}
             </p>
+            {state === "SELL" && (
+              <p className="text-gray-500 mt-2">
+                Tienes {availableQuantity || 0} monedas disponibles.
+              </p>
+            )}
           </div>
 
           <form onSubmit={handleSubmit(onSubmit)}>
@@ -106,9 +154,17 @@ export default function CreateInvestmentModal({ instrument }) {
               <input
                 id="quantity"
                 type="number"
-                {...register("quantity")}
+                {...register("quantity", {
+                  validate: (value) => {
+                    if (state === "SELL" && value > availableQuantity) {
+                      return `No puedes vender más de ${availableQuantity} monedas.`;
+                    }
+                    return true;
+                  },
+                })}
                 placeholder="Cantidad"
                 className="input input-bordered w-full"
+                min={1}
               />
               {errors.quantity && (
                 <p className="text-red-500 text-sm mt-2">

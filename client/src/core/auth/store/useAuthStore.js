@@ -4,6 +4,7 @@ import { useOnboardingStore } from "./useOnboardingStore";
 import { validateAndTransformOnboardingData } from "../../validators/onboarding";
 import { useGoalStore } from "../../dashboard/store/useGoalStore";
 import { useNotificationStore } from "../../notifications/store/useNotificatiosStore";
+import useOperationsStore from "../../../modules/investment/store/useOperation";
 
 export const useAuthStore = create(
   persist(
@@ -25,6 +26,7 @@ export const useAuthStore = create(
         useOnboardingStore.getState().reset();
         useGoalStore.getState().reset();
         useNotificationStore.getState().reset();
+        useOperationsStore.getState().reset();
         set({ status: "not-authenticated", user: null });
       },
     }),

@@ -1,4 +1,4 @@
-import { ArrowLeft,/*  ArrowRight, */ SearchNormal, Coin } from "iconsax-react";
+import { ArrowLeft, /* ArrowRight, */ SearchNormal, Coin } from "iconsax-react";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import useFilterStore from "../../store/useFilterStore";
@@ -10,6 +10,7 @@ export const FiltersPage = () => {
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState("");
   const [instruments, setInstruments] = useState([]);
+  const [loading, setLoading] = useState(true); // Estado de carga
 
   const filteredInstruments = instruments.filter((instrument) =>
     instrument.symbol.toLowerCase().includes(searchTerm.toLowerCase())
@@ -18,68 +19,26 @@ export const FiltersPage = () => {
   // Usamos el store de Zustand para obtener los filtros seleccionados
   const { selectedFilters } = useFilterStore();
 
-  // Mapeo de filtros recibidos
-  const type = selectedFilters?.instrument || ""; //"Acciones", "Bonos", "CDEARs", "Fondos"
+  const type = selectedFilters?.instrument || ""; // "Acciones", "Bonos", "CDEARs", "Fondos"
   const risk = selectedFilters?.riskLevel || ""; // "Conservador", "Moderado", "Arriesgado"
-  const term = selectedFilters?.term || ""; //"Corto plazo", "Mediano plazo", "Largo plazo"
-
-  // Mapeo para hacer la correspondencia con los filtros
-  /* const termMapping = {
-    "Corto plazo": "Corto", // Filtro -> Data
-    "Mediano plazo": "Mediano",
-    "Largo plazo": "Largo",
-  }; */
-
-  /* const riskMapping = {
-    Conservador: "Bajo", // Filtro -> Data
-    Moderado: "Medio",
-    Arriesgado: "Alto",
-  }; */
-
-  /* const typeMapping = {
-    Acciones: "Accion", // Filtro -> Data
-    Bonos: "Bono",
-    CEDEARs: "Cdear",
-    Fondos: "Fondo",
-  }; */
-
-  // Filtramos los instrumentos según los filtros seleccionados
-  /* const filteredInstruments = instruments.filter((instrument) => {
-
-    const matchesSearchTerm = instrument.name
-      .toLowerCase()
-      .includes(searchTerm.toLowerCase());
-
-    const matchesType = type
-      ? instrument.type.toLowerCase() ===
-        (typeMapping[type] || "").toLowerCase()
-      : true;
-
-    const matchesTerm = term
-      ? instrument.term === (termMapping[term] || "")
-      : true;
-    const matchesRisk = risk
-      ? instrument.risk === (riskMapping[risk] || "")
-      : true;
-
-    return matchesSearchTerm && matchesType && matchesTerm && matchesRisk;
-  }); */
+  const term = selectedFilters?.term || ""; // "Corto plazo", "Mediano plazo", "Largo plazo"
 
   const getInstruments = async () => {
     try {
       const instruments = await getByInstrument(type);
-      const newInstruments = instruments;
-      setInstruments(newInstruments);
+      setInstruments(instruments);
     } catch (error) {
       const errorMessage = getErrorMessage(error);
       toast.error(errorMessage);
       console.error(error);
+    } finally {
+      setLoading(false); // Finaliza la carga
     }
   };
 
   useEffect(() => {
     getInstruments();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -103,7 +62,7 @@ export const FiltersPage = () => {
             placeholder="Buscar por nombre"
             className="input input-bordered w-full bg-white text-black pl-12"
             value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)} // Actualiza el término de búsqueda
+            onChange={(e) => setSearchTerm(e.target.value)}
           />
           <SearchNormal className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" />
         </div>
@@ -124,7 +83,20 @@ export const FiltersPage = () => {
 
       {/* Lista de instrumentos filtrados */}
       <div className="bg-gray-50 min-h-screen pt-4">
-        {filteredInstruments.length > 0 ? (
+        {loading ? (
+          // Skeleton loader
+          <div className="p-4">
+            {[...Array(5)].map((_, index) => (
+              <div key={index} className="animate-pulse flex items-center gap-3 mb-4">
+                <div className="w-8 h-8 bg-gray-200 rounded-full"></div>
+                <div className="flex flex-col w-full">
+                  <div className="h-4 bg-gray-200 rounded w-1/3 mb-2"></div>
+                  <div className="h-3 bg-gray-200 rounded w-2/3"></div>
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : filteredInstruments.length > 0 ? (
           filteredInstruments.map((instrument) => (
             <div key={instrument.symbol}>
               <button
@@ -172,29 +144,6 @@ export const FiltersPage = () => {
                     <p className="text-gray-500">{`${type} ${instrument.symbol}`}</p>
                   </div>
                 </div>
-                {/* <div className="text-right">
-                  <p className="font-semibold">{instrument.value}</p>
-                  <div className="flex items-center justify-end gap-1">
-                    {instrument.isPositive === true ? (
-                      <ArrowRight className="w-4 h-4 text-green-500" />
-                    ) : instrument.isPositive === false ? (
-                      <ArrowRight className="w-4 h-4 text-red-500 rotate-90" />
-                    ) : (
-                      <ArrowRight className="w-4 h-4 text-gray-400" />
-                    )}
-                    <span
-                      className={`${
-                        instrument.isPositive === true ? "text-green-500" : ""
-                      } ${
-                        instrument.isPositive === false ? "text-red-500" : ""
-                      } ${
-                        instrument.isPositive === null ? "text-gray-400" : ""
-                      }`}
-                    >
-                      {instrument.change}
-                    </span>
-                  </div>
-                </div> */}
               </button>
               <div className="divider my-0 mx-4"></div>
             </div>
