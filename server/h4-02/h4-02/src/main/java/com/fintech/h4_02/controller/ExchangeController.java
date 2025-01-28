@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fintech.h4_02.dto.coin.CoinDtoRequest;
 import com.fintech.h4_02.dto.exchange.ExchangeResponse;
 import com.fintech.h4_02.dto.exchange.ExchangeRrequest;
+import com.fintech.h4_02.dto.exchange.ExchangeSimple;
 import com.fintech.h4_02.dto.wallet.WalletResponse;
 import com.fintech.h4_02.enums.Coin;
 import com.fintech.h4_02.service.ExchangeService;
@@ -81,25 +82,86 @@ public class ExchangeController {
         return ResponseEntity.status(HttpStatus.OK).body(exchangeService.getDescription(coin));
     }
 
-    @Operation(summary = "by  coin", description = "by a coin")
+
+
+    @Operation(
+            summary = "buy  coin",
+            description = "by a coin",
+            tags = {"ExchangeEntity"}
+    )
+
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "gel a coin",
                     content = @Content(
                             mediaType = MediaType.APPLICATION_JSON_VALUE,
-                            schema = @Schema(implementation = JsonNode.class),
-                            examples = @ExampleObject(
-                                    name = "JsonNode",
-                                    value = "{ \"id\" : 452,\"coin\" : \"AAPL\",\"value\" : 5236.5,\"date\" : \"2025-01-26\",\"state\" : \"BY\",\"user\" : { \"id\" : 1,\"name\" : \"a r\", },\"cuantity\" : 5, \"total\" : 26182.5 }")
-                    ))
+                            schema = @Schema(implementation = ExchangeResponse.class),
+                            examples = @ExampleObject(name = "JsonNode",
+                                    value = "{ \"id\" : 452,\"coin\" : \"AAPL\",\"value\" : 5236.5,\"date\" : \"2025-01-26\",\"state\" : \"BY\",\"user\" : { \"id\" : 1,\"name\" : \"a r\", },\"quantity\" : 5, \"total\" : 26182.5 }")))                   
     })
     @PostMapping
     public ResponseEntity<ExchangeResponse> crateExchange(@RequestBody @Valid ExchangeRrequest ExchangeRrequest) {
         return ResponseEntity.status(HttpStatus.CREATED).body(exchangeService.create(ExchangeRrequest));
     }
 
+    @Operation(
+            summary = "sell  coin",
+            description = "sell a coin",
+            tags = {"ExchangeEntity"}
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "sell a coin",
+                    content = @Content(
+                            mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = ExchangeResponse.class),
+                            examples = @ExampleObject(name = "JsonNode",
+                                    value = ""))
+            )
+    })
+    @PostMapping("/sell")
+    public ResponseEntity<ExchangeResponse> sellExchange(@RequestBody @Valid ExchangeRrequest ExchangeRrequest){
+        return ResponseEntity.status(HttpStatus.CREATED).body(exchangeService.sell(ExchangeRrequest));
+    }
+
+
+    @Operation(
+            summary = "get history exchange by user",
+            description = "get history exchange",
+            tags = {"ExchangeEntity"}
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "202", description = "get all history for exchange by user",
+                    content = @Content(
+                            mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = ExchangeResponse.class),
+                            examples = @ExampleObject(name = "JsonNode",
+                                    value = "[{\"id\": 1,\"coin\": \"AAPL\",\"value\": 123.00,\"date\": \"2025-01-27\",\"state\": \"BY\",\"user\": {\"id\": 1,\"name\": \"Lionel\"},\"quantity\": 5,\"total\": 615.00},{\"id\": 2,\"coin\": \"AAPL\",\"value\": 145.00,\"date\": \"2025-01-27\",\"state\": \"BY\",\"user\": {\"id\": 1,\"name\": \"Lionel\"},\"quantity\": 10,\"total\": 1450.00}]"))
+            )
+    })
     @GetMapping("/{id}")
-    public ResponseEntity<List<ExchangeResponse>> gerExchangeAllBuUserId(@PathVariable Long id) {
+    public ResponseEntity<List<ExchangeResponse>> getExchangeAllByUserId(@PathVariable Long id){
         return ResponseEntity.status(HttpStatus.OK).body(exchangeService.GetByUser(id));
+    }
+
+
+
+    @Operation(
+            summary = "get history exchange by user",
+            description = "get history exchange",
+            tags = {"ExchangeEntity"}
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "get all history for exchange by user",
+                    content = @Content(
+                            mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = ExchangeSimple.class),
+                            examples = @ExampleObject(name = "List<ExchangeSimple>",
+                                    value = "[{\"coin\": \"A\",\"total\": 9},{\"coin\": \"AAPL\",\"total\": 77}]"))
+            )
+    })
+    @GetMapping("/total/{id}")
+    public ResponseEntity<List<ExchangeSimple>> getTotalCoinByUser(@PathVariable Long id){
+        return ResponseEntity.status(HttpStatus.OK).body(exchangeService.getTotalCoinByUser(id));
+
     }
 
 }

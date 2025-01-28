@@ -13,7 +13,7 @@ public record ExchangeRrequest(
         @NotBlank
         String coin,
         @NotNull
-        int cuantity
+        int quantity
         ) {
     public ExchangeRrequest(@NotNull
                             Long userId,
@@ -23,9 +23,9 @@ public record ExchangeRrequest(
                             @NotBlank
                             String coin,
                             @NotBlank
-                            int cuantity) {
+                            int quantity) {
 
-        this(userId, String.valueOf(value), coin,cuantity);
+        this(userId, String.valueOf(value), coin,quantity);
     }
 
 
