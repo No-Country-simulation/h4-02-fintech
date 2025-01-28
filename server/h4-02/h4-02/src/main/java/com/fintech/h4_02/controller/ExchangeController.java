@@ -96,7 +96,7 @@ public class ExchangeController {
 
 
     @Operation(
-            summary = "by  coin",
+            summary = "buy  coin",
             description = "by a coin",
             tags = {"ExchangeEntity"}
     )
@@ -112,6 +112,25 @@ public class ExchangeController {
     @PostMapping
     public ResponseEntity<ExchangeResponse> crateExchange(@RequestBody @Valid ExchangeRrequest ExchangeRrequest){
         return ResponseEntity.status(HttpStatus.CREATED).body(exchangeService.create(ExchangeRrequest));
+    }
+
+    @Operation(
+            summary = "sell  coin",
+            description = "sell a coin",
+            tags = {"ExchangeEntity"}
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "sell a coin",
+                    content = @Content(
+                            mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = ExchangeResponse.class),
+                            examples = @ExampleObject(name = "JsonNode",
+                                    value = ""))
+            )
+    })
+    @PostMapping("/sell")
+    public ResponseEntity<ExchangeResponse> sellExchange(@RequestBody @Valid ExchangeRrequest ExchangeRrequest){
+        return ResponseEntity.status(HttpStatus.CREATED).body(exchangeService.sell(ExchangeRrequest));
     }
 
 
@@ -145,9 +164,9 @@ public class ExchangeController {
             @ApiResponse(responseCode = "200", description = "get all history for exchange by user",
                     content = @Content(
                             mediaType = MediaType.APPLICATION_JSON_VALUE,
-                            schema = @Schema(implementation = JsonNode.class),
-                            examples = @ExampleObject(name = "JsonNode",
-                                    value = ""))
+                            schema = @Schema(implementation = ExchangeSimple.class),
+                            examples = @ExampleObject(name = "List<ExchangeSimple>",
+                                    value = "[{\"coin\": \"A\",\"total\": 9},{\"coin\": \"AAPL\",\"total\": 77}]"))
             )
     })
     @GetMapping("/total/{id}")

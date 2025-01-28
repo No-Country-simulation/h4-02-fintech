@@ -2,11 +2,15 @@ package com.fintech.h4_02.dto.exchange;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public record ExchangeSimple(
         String coin,
         Long total
 ) {
+
+
     public static ExchangeSimple fromObjectList(Object o) {
         if (o instanceof Object[] objArray) {
             // Si el objeto es un arreglo de objetos
