@@ -184,24 +184,37 @@ export const InstrumentDetailsPage = () => {
 
   if (instrument.error) {
     return (
-      <div className="m-4 card card-bordered bg-base-200 shadow-xl">
-        <div className="card-body text-center">
-          <div className="flex justify-center mb-4">
-            <Danger size={32} className="text-red-500" />
-          </div>
-          <h3 className="text-xl font-semibold text-red-500">
-            Error: {instrument.error}
-          </h3>
-          <p className="text-gray-500 mt-2">
-            Parece que esta información no está disponible.
-          </p>
-          <div className="mt-4">
+      <div className="bg-gray-50">
+        <div className="bg-primary px-4 py-4 text-white">
+          <div className="flex items-center gap-4 mb-2">
             <button
+              className="btn btn-ghost btn-square p-2"
               onClick={() => navigate(-1)}
-              className="btn btn-primary text-white"
             >
-              Regresar
+              <ArrowLeft className="w-6 h-6 text-white" />
             </button>
+          </div>
+        </div>
+
+        <div className="m-4 card card-bordered bg-base-200 shadow-xl">
+          <div className="card-body text-center">
+            <div className="flex justify-center mb-4">
+              <Danger size={32} className="text-red-500" />
+            </div>
+            <h3 className="text-xl font-semibold text-red-500">
+              Error: {instrument.error}
+            </h3>
+            <p className="text-gray-500 mt-2">
+              Parece que esta información no está disponible.
+            </p>
+            <div className="mt-4">
+              <button
+                onClick={() => navigate(-1)}
+                className="btn btn-primary text-white"
+              >
+                Regresar
+              </button>
+            </div>
           </div>
         </div>
       </div>
