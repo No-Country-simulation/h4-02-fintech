@@ -5,6 +5,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fintech.h4_02.dto.coin.CoinDto;
+import com.fintech.h4_02.dto.coin.CoinPrice;
 import com.fintech.h4_02.dto.exchange.ExchangeResponse;
 import com.fintech.h4_02.dto.exchange.ExchangeRrequest;
 import com.fintech.h4_02.dto.coin.CoinDtoRequest;
@@ -253,5 +254,9 @@ public class ExchangeService {
                 .concat(apikey);
 
         return conectionApi(url);
+    }
+
+    public List<CoinPrice> findPriceCoins(UserEntity user) {
+        return exchangeRepository.findPriceCoins(user);
     }
 }

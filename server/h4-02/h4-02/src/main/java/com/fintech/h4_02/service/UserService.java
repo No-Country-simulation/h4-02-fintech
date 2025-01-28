@@ -1,5 +1,7 @@
 package com.fintech.h4_02.service;
 
+import com.fintech.h4_02.dto.coin.CoinPrice;
+import com.fintech.h4_02.dto.exchange.ExchangeSimple;
 import com.fintech.h4_02.dto.goal.GoalResponseDto;
 import com.fintech.h4_02.dto.user.UpdateUserProfileDto;
 import com.fintech.h4_02.dto.user.UserRadiographyFinancial;
@@ -11,6 +13,7 @@ import com.fintech.h4_02.repository.UserRepository;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,6 +26,8 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
+    @Autowired
+    private ExchangeService exchangeService;
 
     public UserEntity getUserByEmail(String email) {
         return userRepository
@@ -70,11 +75,19 @@ public class UserService {
        Optional<BigDecimal>  ingresos = userRepository.findIngresosByUser(user);
         Optional<BigDecimal> egresos = userRepository.findEgresosByUser(user);
 
+        List<ExchangeSimple> coins = exchangeService.getTotalCoinByUser(user.getId());
+
+        List<CoinPrice> priceBuycoins = exchangeService.findPriceCoins(user);
+        List<CoinPrice> priceSellcoins =null;
+        String machinelearning = "Recomendaciones del perfil";
+        BigDecimal total = null;
+
         UserRadiographyFinancial radiography =  UserRadiographyFinancial.builder()
                 .user(new UserResponseDto(user))
                 .goal(goalDto)
                 .ingresos(ingresos.get())
                 .egresos(egresos.get())
+                .coins(coins)
                 .build();
 
         return radiography;
