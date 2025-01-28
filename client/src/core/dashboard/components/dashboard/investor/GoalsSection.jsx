@@ -84,7 +84,7 @@ export const GoalsSection = () => {
               <li className="w-full">
                 <details>
                   <summary className="flex">
-                    <div className="w-full space-y-2">
+                    <div className="w-11/12 space-y-1 px-4">
                       <div className="flex items-center">
                         <Progress
                           progress={goal.progress}
@@ -176,8 +176,8 @@ export const GoalsSection = () => {
           </div>
         ))}
 
-      <div className="sm:border-2 sm:p-2 sm:rounded-xl">
-        <div className="hidden sm:block">
+      <div className="sm:border-2 sm:p-2 sm:rounded-xl sm:flex sm:flex-col sm:justify-center">
+        <div className="hidden sm:flex sm:flex-col">
           <div className="flex items-center gap-2">
             <Flag size="24" className="text-primary" />
             <h3 className="text-xl font-medium text-primary mb-2">Objetivos</h3>
