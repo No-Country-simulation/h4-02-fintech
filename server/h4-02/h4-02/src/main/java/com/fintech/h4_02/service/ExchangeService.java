@@ -234,6 +234,9 @@ public class ExchangeService {
         List<ExchangeSimple> dtoList =list.stream().map(ExchangeSimple::fromObjectList).toList();
 
         Optional<ExchangeSimple> exchangeSimple = dtoList.stream().filter(d -> d.coin().equals(coin)).findFirst();
+
+        if(exchangeSimple.isEmpty()) throw new RuntimeException("no tienes ".concat(coin.toString()).concat("en tu cuenta"));
+
         if (exchangeSimple.get().total() < quantity) throw new RuntimeException("no tienes suficiente cantidad de".concat(coin.toString()));
     }
 
