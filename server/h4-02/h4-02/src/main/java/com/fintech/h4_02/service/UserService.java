@@ -88,6 +88,10 @@ public class UserService {
                 .ingresos(ingresos.get())
                 .egresos(egresos.get())
                 .coins(coins)
+                .priceBuycoins(priceBuycoins)
+                .priceSellcoins(priceSellcoins)
+                .machinelearning(machinelearning)
+                .total(total)
                 .build();
 
         return radiography;
