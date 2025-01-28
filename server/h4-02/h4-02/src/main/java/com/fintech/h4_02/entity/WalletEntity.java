@@ -11,17 +11,16 @@ import java.time.LocalDate;
 
 @Builder
 @Getter
+@Setter
 @Entity(name = "WalletEntity")
 @Table(name = "waller_entity")
 @EqualsAndHashCode(of = "id")
 @AllArgsConstructor
 @NoArgsConstructor
 public class WalletEntity {
-
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
-
 
     @ManyToOne
     @JoinColumn(name = "user_entity_id", referencedColumnName = "id")
@@ -30,6 +29,7 @@ public class WalletEntity {
 
     @Column(name = "description")
     private String description;
+
     @Column(name = "value")
     private BigDecimal value;
 
