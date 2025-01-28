@@ -1,6 +1,7 @@
 package com.fintech.h4_02.controller;
 
 import com.fintech.h4_02.dto.user.UpdateUserProfileDto;
+import com.fintech.h4_02.dto.user.UserRadiographyFinancial;
 import com.fintech.h4_02.dto.user.UserResponseDto;
 import com.fintech.h4_02.entity.UserEntity;
 import com.fintech.h4_02.service.UserService;
@@ -97,6 +98,26 @@ public class UserController {
     public ResponseEntity<UpdateUserProfileDto> updateUserProfile(@PathVariable Long id, @RequestBody @Valid UpdateUserProfileDto dto) {
         UserEntity userEntity = userService.updateUserProfile(id, dto);
         return ResponseEntity.status(HttpStatus.OK).body(new UpdateUserProfileDto(userEntity));
+    }
+
+
+    @Operation(summary = "radiography financial", description = "Get a radiography-financial by user by id")
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Get radiography-financial ",
+                    content = @Content(
+                            mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = UserRadiographyFinancial.class),
+                            examples = @ExampleObject(
+                                    name = "Get radiography financial by user",
+                                    value = "")
+                    )
+            )
+    })
+    @GetMapping("/radiography-financial/{id}")
+    public ResponseEntity<UserRadiographyFinancial> getUseFinancialXRay(@PathVariable Long id) {
+        return ResponseEntity.status(HttpStatus.OK).body( userService.getUseFinancialXRay(id));
     }
 
 }
