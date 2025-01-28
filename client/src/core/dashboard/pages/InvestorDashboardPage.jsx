@@ -8,6 +8,7 @@ import { SavingsOverview } from "../components/dashboard/investor/SavingsOvervie
 import { useOnboardingStore } from "../../auth/store/useOnboardingStore";
 import { useFinancialStore } from "../store/useFinancialStore";
 import dashboardDesktopImage from "../../../assets/images/dashboard-desktop.svg";
+import Footer from "../components/dashboard/ui/Footer";
 
 export const InvestorDashboardPage = () => {
   const { isFirstSet } = useOnboardingStore();
@@ -28,9 +29,14 @@ export const InvestorDashboardPage = () => {
         <InvestmentSection />
         {/* <OperationsSection /> */}
         <div className="hidden sm:flex">
-          <img src={dashboardDesktopImage} alt="dashboard image" className="w-full" />
+          <img
+            src={dashboardDesktopImage}
+            alt="dashboard image"
+            className="w-full"
+          />
         </div>
       </div>
+      <Footer />
     </div>
   );
 };
