@@ -114,7 +114,7 @@ public class ExchangeController {
                             mediaType = MediaType.APPLICATION_JSON_VALUE,
                             schema = @Schema(implementation = ExchangeResponse.class),
                             examples = @ExampleObject(name = "JsonNode",
-                                    value = ""))
+                                    value = "{\"id\": 402,\"coin\": \"A\",\"value\": 145,\"date\": \"2025-01-27\",\"state\": \"SELL\",\"user\": {\"id\": 1,\"name\": \"Lionel\"},\"quantity\": 1,\"total\": 145}"))
             )
     })
     @PostMapping("/sell")
