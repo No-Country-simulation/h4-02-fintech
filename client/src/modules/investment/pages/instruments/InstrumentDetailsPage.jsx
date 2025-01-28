@@ -33,10 +33,10 @@ export const InstrumentDetailsPage = () => {
       ) {
         setInstrument({ error: "No se encontraron datos" });
       } else {
-        const graphHighPrice = priceData.values[0]?.open + 100;
-        const graphLowPrice = priceData.values[0]?.close - 100;
-        const highPrice = priceData.values[0]?.high;
-        const lowPrice = priceData.values[0]?.low;
+        const graphHighPrice = priceData.values[0]?.high + 50;
+        const graphLowPrice = priceData.values[0]?.low - 50;
+        const highPrice = priceData.values[0]?.open;
+        const lowPrice = priceData.values[0]?.close;
         const datetime = new Date(priceData.values[0]?.datetime);
 
         const generatePerformanceData = (interval, count) => {
