@@ -52,3 +52,7 @@ rss_feed:
   urls: >
     https://api.rss2json.com/v1/api.json?rss_url=https://eleconomista.com.ar/economia/feed/,
     https://api.rss2json.com/v1/api.json?rss_url=https://eleconomista.com.ar/finanzas/feed/
+
+ml:
+  recommended-assets:
+    url: https://fast-api-fintech-production.up.railway.app/recommend-assets/
