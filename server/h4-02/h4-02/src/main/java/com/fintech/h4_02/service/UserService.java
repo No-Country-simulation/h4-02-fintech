@@ -10,6 +10,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class UserService {
@@ -25,6 +27,10 @@ public class UserService {
         return userRepository
                 .findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("User not found with ID: " + id));
+    }
+
+    public List<UserEntity> getAllUsers() {
+        return userRepository.findAll();
     }
 
     @Transactional
