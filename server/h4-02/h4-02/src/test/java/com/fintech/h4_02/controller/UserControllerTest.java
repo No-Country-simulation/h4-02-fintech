@@ -5,11 +5,9 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fintech.h4_02.dto.auth.AuthResponseDto;
 import com.fintech.h4_02.dto.auth.LoginRequestDto;
 import com.fintech.h4_02.dto.coin.CoinDtoRequest;
-import com.fintech.h4_02.dto.exchange.ExchangeResponse;
 import com.fintech.h4_02.dto.exchange.ExchangeRrequest;
 import com.fintech.h4_02.dto.user.CreateUserRequestDto;
 import com.fintech.h4_02.dto.wallet.WalletRequest;
-import com.fintech.h4_02.enums.State;
 import com.fintech.h4_02.util.JsonUtil;
 import jdk.jfr.Label;
 import org.junit.jupiter.api.BeforeEach;
@@ -350,7 +348,7 @@ class UserControllerTest {
         ExchangeRrequest exchange = new ExchangeRrequest(1L, 5236.5, "AAPL",5);
         String json = "{\"userId\":\"" + exchange.userId() + "\","
                 + "\"value\":\"" + exchange.value() + "\","
-                + "\"cuantity\":\"" + exchange.cuantity() + "\","
+                + "\"quantity\":\"" + exchange.quantity() + "\","
                 + "\"coin\":\"" + exchange.coin() + "\""
                 + "}";
 
