@@ -12,8 +12,9 @@ import { toast } from "sonner";
 export const EtfsPage = () => {
   const navigate = useNavigate();
   const [etfs, setEtfs] = useState([]);
-
+  const [isLoading, setIsLoading] = useState(true); // Estado de carga
   const [searchTerm, setSearchTerm] = useState("");
+
   const filteredEtfs = etfs.filter((etf) =>
     etf.symbol.toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -21,12 +22,13 @@ export const EtfsPage = () => {
   const getEtfs = async () => {
     try {
       const etfs = await getByInstrument("ETFS");
-
       setEtfs(etfs);
     } catch (error) {
       const errorMessage = getErrorMessage(error);
       toast.error(errorMessage);
       console.error(error);
+    } finally {
+      setIsLoading(false); // Finaliza la carga
     }
   };
 
@@ -47,7 +49,7 @@ export const EtfsPage = () => {
           </button>
           <h1 className="text-lg font-semibold">Mercado Argentino</h1>
         </div>
-        <h2 className="text-base font-semibold mb-4">Bonos</h2>
+        <h2 className="text-base font-semibold mb-4">ETFs</h2>
 
         {/* Barra de búsqueda */}
         <div className="relative mb-4">
@@ -62,17 +64,28 @@ export const EtfsPage = () => {
         </div>
       </div>
 
-      {/* Lista de bonos */}
+      {/* Lista de ETFs o Skeleton */}
       <div className="bg-gray-50 min-h-screen pt-4">
-        {filteredEtfs.length > 0 ? (
+        {isLoading ? (
+          // Skeleton de carga
+          <div className="p-4 space-y-4">
+            {[...Array(5)].map((_, index) => (
+              <div key={index} className="flex items-center gap-3 animate-pulse">
+                <div className="w-8 h-8 bg-gray-300 rounded-full"></div>
+                <div className="flex-1 space-y-2">
+                  <div className="h-4 bg-gray-300 rounded w-1/3"></div>
+                  <div className="h-3 bg-gray-300 rounded w-2/3"></div>
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : filteredEtfs.length > 0 ? (
           filteredEtfs.map((etf) => (
             <div key={etf.symbol}>
               <button
                 className="btn btn-ghost w-full flex items-center justify-between"
                 onClick={() =>
-                  navigate(
-                    `/dashboard/investment/instrument/etfs/${etf.symbol}`
-                  )
+                  navigate(`/dashboard/investment/instrument/etfs/${etf.symbol}`)
                 }
               >
                 <div className="flex items-center gap-3">
@@ -94,27 +107,6 @@ export const EtfsPage = () => {
                     <p className="text-gray-500">{`ETF ${etf.symbol}`}</p>
                   </div>
                 </div>
-                {/* <div className="text-right">
-                  <p className="font-semibold">{bond.value}</p>
-                  <div className="flex items-center justify-end gap-1">
-                    {bond.isPositive === true ? (
-                      <ArrowRight className="w-4 h-4 text-green-500" />
-                    ) : bond.isPositive === false ? (
-                      <ArrowRight className="w-4 h-4 text-red-500 rotate-90" />
-                    ) : (
-                      <ArrowRight className="w-4 h-4 text-gray-400" />
-                    )}
-                    <span
-                      className={`${
-                        bond.isPositive === true ? "text-green-500" : ""
-                      } ${bond.isPositive === false ? "text-red-500" : ""} ${
-                        bond.isPositive === null ? "text-gray-400" : ""
-                      }`}
-                    >
-                      {bond.change}
-                    </span>
-                  </div>
-                </div> */}
               </button>
               <div className="divider my-0 mx-4"></div>
             </div>

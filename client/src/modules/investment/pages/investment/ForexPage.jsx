@@ -12,8 +12,9 @@ import { toast } from "sonner";
 export const ForexPage = () => {
   const navigate = useNavigate();
   const [forex, setForex] = useState([]);
-
+  const [loading, setLoading] = useState(true); // Estado de carga
   const [searchTerm, setSearchTerm] = useState("");
+
   const filteredForex = forex.filter((forex) =>
     forex.symbol.toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -26,6 +27,8 @@ export const ForexPage = () => {
       const errorMessage = getErrorMessage(error);
       toast.error(errorMessage);
       console.error(error);
+    } finally {
+      setLoading(false); // Finaliza la carga
     }
   };
 
@@ -61,9 +64,25 @@ export const ForexPage = () => {
         </div>
       </div>
 
-      {/* Lista de bonos */}
+      {/* Lista de Forex */}
       <div className="bg-gray-50 min-h-screen pt-4">
-        {filteredForex.length > 0 ? (
+        {loading ? (
+          // Skeleton loader
+          <div className="p-4">
+            {[...Array(5)].map((_, index) => (
+              <div
+                key={index}
+                className="animate-pulse flex items-center gap-3 mb-4"
+              >
+                <div className="w-8 h-8 bg-gray-200 rounded-full"></div>
+                <div className="flex flex-col w-full">
+                  <div className="h-4 bg-gray-200 rounded w-1/3 mb-2"></div>
+                  <div className="h-3 bg-gray-200 rounded w-2/3"></div>
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : filteredForex.length > 0 ? (
           filteredForex.map((forex_item) => (
             <div key={forex_item.symbol}>
               <button
@@ -96,27 +115,6 @@ export const ForexPage = () => {
                     <p className="text-gray-500">{`FOREX ${forex_item.symbol}`}</p>
                   </div>
                 </div>
-                {/* <div className="text-right">
-                  <p className="font-semibold">{bond.value}</p>
-                  <div className="flex items-center justify-end gap-1">
-                    {bond.isPositive === true ? (
-                      <ArrowRight className="w-4 h-4 text-green-500" />
-                    ) : bond.isPositive === false ? (
-                      <ArrowRight className="w-4 h-4 text-red-500 rotate-90" />
-                    ) : (
-                      <ArrowRight className="w-4 h-4 text-gray-400" />
-                    )}
-                    <span
-                      className={`${
-                        bond.isPositive === true ? "text-green-500" : ""
-                      } ${bond.isPositive === false ? "text-red-500" : ""} ${
-                        bond.isPositive === null ? "text-gray-400" : ""
-                      }`}
-                    >
-                      {bond.change}
-                    </span>
-                  </div>
-                </div> */}
               </button>
               <div className="divider my-0 mx-4"></div>
             </div>

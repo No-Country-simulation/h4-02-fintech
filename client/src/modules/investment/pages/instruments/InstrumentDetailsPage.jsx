@@ -1,4 +1,4 @@
-import { ArrowLeft, ArrowRight } from "iconsax-react";
+import { ArrowLeft, ArrowRight, Danger } from "iconsax-react";
 import { useNavigate, useParams } from "react-router-dom";
 import { PerformanceChart } from "../../../../core/dashboard/components/dashboard/ui/PerformanceChart";
 import { useEffect, useState } from "react";
@@ -10,6 +10,7 @@ export const InstrumentDetailsPage = () => {
   const { type, id } = useParams();
 
   const [instrument, setInstrument] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (!type || !id) {
@@ -26,7 +27,10 @@ export const InstrumentDetailsPage = () => {
 
       if (priceData?.message?.includes("plan")) {
         setInstrument({ error: "Detalles Premium" });
-      } else if (priceData?.message?.includes("missing or invalid")) {
+      } else if (
+        priceData?.message?.includes("missing or invalid") ||
+        priceData?.message?.includes("No data")
+      ) {
         setInstrument({ error: "No se encontraron datos" });
       } else {
         const graphHighPrice = priceData.values[0]?.open + 100;
@@ -160,11 +164,22 @@ export const InstrumentDetailsPage = () => {
       }
     } catch (error) {
       console.error("Error fetching instrument data:", error);
+    } finally {
+      setLoading(false); // Finaliza la carga
     }
   };
 
-  if (!instrument) {
-    return <></>;
+  if (loading) {
+    return (
+      <div className="p-4">
+        <div className="animate-pulse">
+          <div className="h-8 bg-gray-200 rounded w-3/4 mb-4"></div>
+          <div className="h-6 bg-gray-200 rounded w-1/2 mb-4"></div>
+          <div className="h-72 bg-gray-200 rounded mb-4"></div>
+          <div className="h-10 bg-gray-200 rounded w-full mb-4"></div>
+        </div>
+      </div>
+    );
   }
 
   if (instrument.error) {
@@ -172,17 +187,7 @@ export const InstrumentDetailsPage = () => {
       <div className="m-4 card card-bordered bg-base-200 shadow-xl">
         <div className="card-body text-center">
           <div className="flex justify-center mb-4">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              className="w-12 h-12 text-red-500"
-            >
-              <path
-                fill="currentColor"
-                d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm0-14c-.55 0-1 .45-1 1v4c0 .55.45 1 1 1s1-.45 1-1V7c0-.55-.45-1-1-1zm0 6c-.55 0-1 .45-1 1v4c0 .55.45 1 1 1s1-.45 1-1v-4c0-.55-.45-1-1-1z"
-              />
-            </svg>
+            <Danger size={32} className="text-red-500" />
           </div>
           <h3 className="text-xl font-semibold text-red-500">
             Error: {instrument.error}

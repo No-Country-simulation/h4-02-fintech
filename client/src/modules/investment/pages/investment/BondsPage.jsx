@@ -12,8 +12,9 @@ import { toast } from "sonner";
 export const BondsPage = () => {
   const navigate = useNavigate();
   const [bonds, setBonds] = useState([]);
-
+  const [isLoading, setIsLoading] = useState(true); // Estado de carga
   const [searchTerm, setSearchTerm] = useState("");
+
   const filteredBonds = bonds.filter((bond) =>
     bond.symbol.toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -21,12 +22,13 @@ export const BondsPage = () => {
   const getBonds = async () => {
     try {
       const bonds = await getByInstrument("BOND");
-
       setBonds(bonds);
     } catch (error) {
       const errorMessage = getErrorMessage(error);
       toast.error(errorMessage);
       console.error(error);
+    } finally {
+      setIsLoading(false); // Finaliza la carga
     }
   };
 
@@ -56,15 +58,28 @@ export const BondsPage = () => {
             placeholder="Buscar por nombre"
             className="input input-bordered w-full bg-white text-black pl-12"
             value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)} // Actualiza el término de búsqueda
+            onChange={(e) => setSearchTerm(e.target.value)}
           />
           <SearchNormal className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" />
         </div>
       </div>
 
-      {/* Lista de bonos */}
+      {/* Lista de bonos o Skeleton */}
       <div className="bg-gray-50 min-h-screen pt-4">
-        {filteredBonds.length > 0 ? (
+        {isLoading ? (
+          // Skeleton de carga
+          <div className="p-4 space-y-4">
+            {[...Array(5)].map((_, index) => (
+              <div key={index} className="flex items-center gap-3 animate-pulse">
+                <div className="w-8 h-8 bg-gray-300 rounded-full"></div>
+                <div className="flex-1 space-y-2">
+                  <div className="h-4 bg-gray-300 rounded w-1/3"></div>
+                  <div className="h-3 bg-gray-300 rounded w-2/3"></div>
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : filteredBonds.length > 0 ? (
           filteredBonds.map((bond) => (
             <div key={bond.symbol}>
               <button
@@ -94,27 +109,6 @@ export const BondsPage = () => {
                     <p className="text-gray-500">{`Bono ${bond.symbol}`}</p>
                   </div>
                 </div>
-                {/* <div className="text-right">
-                  <p className="font-semibold">{bond.value}</p>
-                  <div className="flex items-center justify-end gap-1">
-                    {bond.isPositive === true ? (
-                      <ArrowRight className="w-4 h-4 text-green-500" />
-                    ) : bond.isPositive === false ? (
-                      <ArrowRight className="w-4 h-4 text-red-500 rotate-90" />
-                    ) : (
-                      <ArrowRight className="w-4 h-4 text-gray-400" />
-                    )}
-                    <span
-                      className={`${
-                        bond.isPositive === true ? "text-green-500" : ""
-                      } ${bond.isPositive === false ? "text-red-500" : ""} ${
-                        bond.isPositive === null ? "text-gray-400" : ""
-                      }`}
-                    >
-                      {bond.change}
-                    </span>
-                  </div>
-                </div> */}
               </button>
               <div className="divider my-0 mx-4"></div>
             </div>
