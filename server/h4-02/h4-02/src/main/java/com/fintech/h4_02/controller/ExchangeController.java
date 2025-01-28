@@ -6,6 +6,7 @@ import com.fintech.h4_02.dto.coin.CoinDtoRequest;
 import com.fintech.h4_02.dto.exchange.ExchangeResponse;
 import com.fintech.h4_02.dto.exchange.ExchangeRrequest;
 import com.fintech.h4_02.dto.exchange.ExchangeSimple;
+import com.fintech.h4_02.dto.exchange.GetCoinByDatesRequest;
 import com.fintech.h4_02.dto.wallet.WalletResponse;
 import com.fintech.h4_02.enums.Coin;
 import com.fintech.h4_02.service.ExchangeService;
@@ -114,7 +115,7 @@ public class ExchangeController {
                             mediaType = MediaType.APPLICATION_JSON_VALUE,
                             schema = @Schema(implementation = ExchangeResponse.class),
                             examples = @ExampleObject(name = "JsonNode",
-                                    value = ""))
+                                    value = "{\"id\": 402,\"coin\": \"A\",\"value\": 145,\"date\": \"2025-01-27\",\"state\": \"SELL\",\"user\": {\"id\": 1,\"name\": \"Lionel\"},\"quantity\": 1,\"total\": 145}"))
             )
     })
     @PostMapping("/sell")
@@ -161,6 +162,27 @@ public class ExchangeController {
     @GetMapping("/total/{id}")
     public ResponseEntity<List<ExchangeSimple>> getTotalCoinByUser(@PathVariable Long id){
         return ResponseEntity.status(HttpStatus.OK).body(exchangeService.getTotalCoinByUser(id));
+
+    }
+
+
+    @Operation(
+            summary = "get history by dates",
+            description = "get history exchange by date start and end",
+            tags = {"ExchangeEntity"}
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "get all history by coin for dates",
+                    content = @Content(
+                            mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = JsonNode.class),
+                            examples = @ExampleObject(name = "JsonNode",
+                                    value = "{\"meta\": {\"symbol\": \"A\",\"interval\": \"1day\",\"currency\": \"USD\",\"exchange_timezone\": \"America/New_York\",\"exchange\": \"NYSE\",\"mic_code\": \"XNYS\",\"type\": \"Common Stock\"},\"values\": [{\"datetime\": \"2023-06-05\",\"open\": \"118.58000\",\"high\": \"119.76000\",\"low\": \"117.089996\",\"close\": \"118.35000\",\"volume\": \"1991212\"},{\"datetime\": \"2023-06-02\",\"open\": \"117.77000\",\"high\": \"118.41000\",\"low\": \"116.019997\",\"close\": \"118.22000\",\"volume\": \"3259233\"},{\"datetime\": \"2023-06-01\",\"open\": \"116.97000\",\"high\": \"117.63500\",\"low\": \"115\",\"close\": \"116.26000\",\"volume\": \"3963485\"} ] } }"))
+            )
+    })
+    @GetMapping("/history-by-dates")
+    public ResponseEntity<JsonNode> getCoinByDates(@RequestBody @Valid GetCoinByDatesRequest getCoinByDatesRequest) throws JsonProcessingException {
+        return ResponseEntity.status(HttpStatus.OK).body(exchangeService.getCoinByDates(getCoinByDatesRequest));
 
     }
 
