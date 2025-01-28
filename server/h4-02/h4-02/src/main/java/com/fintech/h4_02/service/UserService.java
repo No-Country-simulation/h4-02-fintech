@@ -1,5 +1,6 @@
 package com.fintech.h4_02.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fintech.h4_02.dto.coin.CoinPrice;
 import com.fintech.h4_02.dto.exchange.ExchangeSimple;
 import com.fintech.h4_02.dto.goal.GoalResponseDto;
@@ -13,6 +14,7 @@ import com.fintech.h4_02.repository.UserRepository;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
+import org.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -61,7 +63,7 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public UserRadiographyFinancial getUseFinancialXRay(Long id) {
+    public UserRadiographyFinancial getUseFinancialXRay(Long id) throws JSONException, JsonProcessingException {
 
 
 
@@ -78,7 +80,7 @@ public class UserService {
         List<ExchangeSimple> coins = exchangeService.getTotalCoinByUser(user.getId());
 
         List<CoinPrice> priceBuycoins = exchangeService.findPriceCoins(user);
-        List<CoinPrice> priceSellcoins =null;
+        List<CoinPrice> priceSellcoins =exchangeService.findPriceSellCoins(coins);
         String machinelearning = "Recomendaciones del perfil";
         BigDecimal total = null;
 

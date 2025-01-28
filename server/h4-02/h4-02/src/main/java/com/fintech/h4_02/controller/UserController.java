@@ -1,5 +1,6 @@
 package com.fintech.h4_02.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fintech.h4_02.dto.user.UpdateUserProfileDto;
 import com.fintech.h4_02.dto.user.UserRadiographyFinancial;
 import com.fintech.h4_02.dto.user.UserResponseDto;
@@ -14,6 +15,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.json.JSONException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -116,7 +118,7 @@ public class UserController {
             )
     })
     @GetMapping("/radiography-financial/{id}")
-    public ResponseEntity<UserRadiographyFinancial> getUseFinancialXRay(@PathVariable Long id) {
+    public ResponseEntity<UserRadiographyFinancial> getUseFinancialXRay(@PathVariable Long id) throws JSONException, JsonProcessingException {
         return ResponseEntity.status(HttpStatus.OK).body( userService.getUseFinancialXRay(id));
     }
 

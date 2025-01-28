@@ -19,7 +19,9 @@ import com.fintech.h4_02.exception.EntityNotFoundException;
 import com.fintech.h4_02.repository.UserRepository;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
@@ -258,5 +260,27 @@ public class ExchangeService {
 
     public List<CoinPrice> findPriceCoins(UserEntity user) {
         return exchangeRepository.findPriceCoins(user);
+    }
+
+    public List<CoinPrice> findPriceSellCoins(List<ExchangeSimple> coins) throws JsonProcessingException, JSONException {
+        List<CoinPrice> list = new ArrayList<>();
+        for(ExchangeSimple e : coins){
+            JsonNode  response  = conectionPrice(e.coin());
+            String value = getCloseValueFromApiResponse(String.valueOf(response));
+            list.add(new CoinPrice(e.coin(), Double.valueOf(value)));
+
+        }
+        return list;
+    }
+
+
+    private String getCloseValueFromApiResponse(String jsonResponse) throws JSONException {
+        JSONObject jsonObject = new JSONObject(jsonResponse);
+        JSONArray valuesArray = jsonObject.getJSONArray("values");
+        if (valuesArray.length() > 0) {
+            JSONObject firstValueObject = valuesArray.getJSONObject(0);
+            return firstValueObject.getString("close");
+        }
+        return null;
     }
 }
