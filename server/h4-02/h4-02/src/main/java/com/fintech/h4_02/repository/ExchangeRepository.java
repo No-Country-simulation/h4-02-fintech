@@ -21,7 +21,7 @@ public interface ExchangeRepository extends JpaRepository<ExchangeEntity,Long> {
             "SUM(CASE WHEN e.state = 'BY' THEN e.quantity ELSE -e.quantity END) " +
             "FROM ExchangeEntity e " +
             "WHERE e.user = :user " +
-            "GROUP BY e.coin, e.quantity")
+            "GROUP BY e.coin")
     List<Object> getTotalCoinByUser(@Param("user") UserEntity user);
 
 
