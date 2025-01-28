@@ -1,6 +1,6 @@
 package com.fintech.h4_02.service;
 
-import com.fintech.h4_02.dto.goal.CreateGoalDto;
+import com.fintech.h4_02.dto.goal.CreateOrUpdateGoalDto;
 import com.fintech.h4_02.dto.goal.GoalContributionDto;
 import com.fintech.h4_02.entity.UserEntity;
 import com.fintech.h4_02.entity.goal.Goal;
@@ -30,13 +30,18 @@ public class GoalService {
                 .orElseThrow(() -> new EntityNotFoundException("Goal with id " + goalId + " not found"));
     }
 
+    public List<Goal> getGoalHistory(Long userId) {
+        UserEntity userEntity = userService.getUserById(userId);
+        return goalRepository.findAllByUserWithFullProgress(userEntity);
+    }
+
     public List<Goal> getGoals(Long userId) {
         UserEntity user = userService.getUserById(userId);
         return user.getGoals();
     }
 
     @Transactional
-    public Goal createGoal(Long userId, CreateGoalDto dto) {
+    public Goal createGoal(Long userId, CreateOrUpdateGoalDto dto) {
         UserEntity user = userService.getUserById(userId);
 
         Goal goal = new Goal(dto.goalName());
@@ -44,6 +49,19 @@ public class GoalService {
         goal.setDesiredAmount(dto.desiredAmount());
         goal.setDeadline(dto.deadline());
         user.addGoal(goal);
+
+        return goalRepository.save(goal);
+    }
+
+    @Transactional
+    public Goal updateGoal(Long goalId, CreateOrUpdateGoalDto dto) {
+        Goal goal = goalRepository.findById(goalId)
+                .orElseThrow(() -> new EntityNotFoundException("Goal with id: " + goalId + " not found"));
+
+        goal.setName(dto.goalName());
+        goal.setDeadline(dto.deadline());
+        goal.setCategory(dto.category());
+        goal.setDesiredAmount(dto.desiredAmount());
 
         return goalRepository.save(goal);
     }
