@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.List;
 
 @Service
@@ -28,7 +29,7 @@ public class ForumService {
         UserEntity user = userService.getUserById(userId);
         Post post = new Post();
         post.setContent(dto.content());
-        post.setCreatedAt(LocalDateTime.now());
+        post.setCreatedAt(LocalDateTime.now(ZoneOffset.UTC));
         user.addPost(post);
         return postRepository.save(post);
     }
