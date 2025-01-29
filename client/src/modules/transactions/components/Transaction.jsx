@@ -14,11 +14,13 @@ export const Transaction = () => {
             <div>
               <p className="text-sm opacity-70">Balance Total</p>
               <p className="text-xl font-bold">
-                {formatCurrency(
-                  financial.balance.values[currencyType],
-                  currencyType,
-                  2
-                )}
+                {financial.balance.values[currencyType] == 0
+                  ? "0,00"
+                  : formatCurrency(
+                      financial.balance.values[currencyType],
+                      currencyType,
+                      2
+                    )}
               </p>
             </div>
             <div className="divider divider-horizontal divider-primary"></div>
@@ -26,11 +28,13 @@ export const Transaction = () => {
               <p className="text-sm opacity-70">Gastos Total</p>
               <p className="text-xl font-bold">
                 -{" "}
-                {formatCurrency(
-                  financial.fixedExpenses.values[currencyType],
-                  currencyType,
-                  2
-                )}
+                {financial.fixedExpenses.values[currencyType] == 0
+                  ? "0,00"
+                  : formatCurrency(
+                      financial.fixedExpenses.values[currencyType],
+                      currencyType,
+                      2
+                    )}
               </p>
             </div>
           </div>

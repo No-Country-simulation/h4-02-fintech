@@ -3,25 +3,26 @@ import { useEffect, useState } from "react";
 import { getRecommendations } from "../../services/recommendation";
 import { getErrorMessage } from "../../../../core/validators/errorHandler";
 import { toast } from "sonner";
-import { useAuthStore } from "../../../../core/auth/store/useAuthStore";
+import { useOnboardingStore } from "../../../../core/auth/store/useOnboardingStore";
 
 export const CardsRecommendation = () => {
   const [recommendations, setRecommendations] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const { user } = useAuthStore();
+  const { formData } = useOnboardingStore();
 
   const onHandleRecommendations = async () => {
     try {
       const newRecommendations = await getRecommendations();
 
       const mappedRecommendations = newRecommendations.map((symbol) => ({
-        type: user.onboarding.riskPreference.toLowerCase(),
+        type: formData.riskPreference.toLowerCase(),
         title: symbol,
         details: [
           {
             label: "Riesgo:",
             value:
-              user.onboarding.riskPreference.toLowerCase() === "conservador"
+              formData.riskPreference.toLowerCase().toLowerCase() ===
+              "conservador"
                 ? "Bajo"
                 : "Medio",
           },
