@@ -124,7 +124,7 @@ export const Header = () => {
                       financial.balance.values[currencyType],
                       currencyType,
                       2
-                    ).replace(/\d/g, "x") || "0"}
+                    ).replace(/\d/g, "x") || "0,00"}
               </h1>
               <select
                 className="select select-sm bg-transparent border-0 mx-2 my-2"

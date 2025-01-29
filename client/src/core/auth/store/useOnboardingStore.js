@@ -54,6 +54,7 @@ export const useOnboardingStore = create(
     }),
     {
       name: "onboarding-storage",
+      getStorage: () => sessionStorage,
     }
   )
 );
