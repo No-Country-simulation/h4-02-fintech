@@ -40,7 +40,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler({BadRequestException.class, IllegalStateException.class})
-    public ResponseEntity<ErrorResponse> handleBadRequestException(BadRequestException ex, WebRequest request) {
+    public ResponseEntity<ErrorResponse> handleBadRequestException(RuntimeException ex, WebRequest request) {
         ErrorResponse error = ErrorResponse.builder()
                 .message(ex.getMessage())
                 .statusCode(HttpStatus.BAD_REQUEST.value())
@@ -60,7 +60,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler({BadCredentialsException.class})
-    public ResponseEntity<ErrorResponse> handleTokenExceptions(RuntimeException ex, WebRequest request) {
+    public ResponseEntity<ErrorResponse> handleTokenExceptions(java.lang.RuntimeException ex, WebRequest request) {
         ErrorResponse error = ErrorResponse.builder()
                 .message(ex.getMessage())
                 .statusCode(HttpStatus.UNAUTHORIZED.value())
