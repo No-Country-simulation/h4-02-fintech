@@ -38,7 +38,7 @@ export const FiltersPage = () => {
 
   useEffect(() => {
     getInstruments();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -87,7 +87,10 @@ export const FiltersPage = () => {
           // Skeleton loader
           <div className="p-4">
             {[...Array(5)].map((_, index) => (
-              <div key={index} className="animate-pulse flex items-center gap-3 mb-4">
+              <div
+                key={index}
+                className="animate-pulse flex items-center gap-3 mb-4"
+              >
                 <div className="w-8 h-8 bg-gray-200 rounded-full"></div>
                 <div className="flex flex-col w-full">
                   <div className="h-4 bg-gray-200 rounded w-1/3 mb-2"></div>
@@ -121,7 +124,9 @@ export const FiltersPage = () => {
                   }
 
                   navigate(
-                    `/dashboard/investment/instrument/${typePath}/${instrument.symbol}`
+                    `/dashboard/investment/instrument/${typePath}/${instrument.symbol
+                      .replace(/\//g, "-")
+                      .replace(/ /g, "-")}`
                   );
                 }}
               >

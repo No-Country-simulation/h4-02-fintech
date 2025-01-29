@@ -89,10 +89,9 @@ export const ForexPage = () => {
                 className="btn btn-ghost w-full flex items-center justify-between"
                 onClick={() =>
                   navigate(
-                    `/dashboard/investment/instrument/forex/${forex_item.symbol.replace(
-                      /\//g,
-                      "-"
-                    )}`
+                    `/dashboard/investment/instrument/forex/${forex_item.symbol
+                      .replace(/\//g, "-")
+                      .replace(/ /g, "-")}`
                   )
                 }
               >

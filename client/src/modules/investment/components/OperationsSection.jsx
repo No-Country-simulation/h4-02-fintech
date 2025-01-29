@@ -65,10 +65,7 @@ export const OperationsSection = () => {
             <h4 className="text-lg font-semibold mb-2">Monedas</h4>
             {operationsTotal.length === 0 ? (
               <div className="bg-base-200 rounded-xl p-6 text-center">
-                <p className="mb-2">
-                  No tienes monedas registradas.
-                </p>
-                
+                <p className="mb-2">No tienes monedas registradas.</p>
               </div>
             ) : (
               <div className="overflow-x-auto">
@@ -110,6 +107,7 @@ export const OperationsSection = () => {
                       <th className="p-3 text-left">Cantidad</th>
                       <th className="p-3 text-left">Total</th>
                       <th className="p-3 text-left">Fecha</th>
+                      <th className="p-3 text-left">Estado</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -120,6 +118,9 @@ export const OperationsSection = () => {
                         <td className="p-3">{operation.quantity}</td>
                         <td className="p-3">{operation.total}</td>
                         <td className="p-3">{operation.date}</td>
+                        <td className="p-3">
+                          {operation.state === "BY" ? "Comprado" : "Vendido"}
+                        </td>
                       </tr>
                     ))}
                   </tbody>

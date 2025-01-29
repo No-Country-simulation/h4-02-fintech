@@ -13,7 +13,7 @@ export default function CreateInvestmentModal({ instrument }) {
   const { user } = useAuthStore();
   const [isOpen, setIsOpen] = useState(false);
   const [state, setState] = useState("BUY");
-  const { operations } = useOperationsStore(); // Obtener las operaciones almacenadas
+  const { operations, updateOperation } = useOperationsStore(); // Obtener las operaciones almacenadas
   const [availableQuantity, setAvailableQuantity] = useState(null); // Almacenar la cantidad disponible de la moneda
 
   const {
@@ -59,9 +59,7 @@ export default function CreateInvestmentModal({ instrument }) {
         });
 
         // Actualizamos el estado de operaciones
-        useOperationsStore
-          .getState()
-          .updateOperation(instrument.id, data.quantity);
+        updateOperation(instrument.id, parseInt(data.quantity, 10));
       }
 
       if (state === "SELL") {
@@ -73,9 +71,7 @@ export default function CreateInvestmentModal({ instrument }) {
         });
 
         // Actualizamos el estado de operaciones
-        useOperationsStore
-          .getState()
-          .updateOperation(instrument.id, -data.quantity);
+        updateOperation(instrument.id, -parseInt(data.quantity, 10));
       }
 
       toast(`${state === "BUY" ? "Comprado" : "Vendido"}`, {
@@ -101,10 +97,12 @@ export default function CreateInvestmentModal({ instrument }) {
   };
 
   const onSell = () => {
+    const userCoin = operations.find((op) => op.coin === instrument.id);
+    setAvailableQuantity(userCoin ? userCoin.total : 0);
     setState("SELL");
     setIsOpen(true);
   };
-
+  
   return (
     <div>
       <div className="flex gap-4 sm:max-w-sm">
