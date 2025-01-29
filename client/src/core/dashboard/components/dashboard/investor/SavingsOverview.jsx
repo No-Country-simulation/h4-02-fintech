@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { DollarCircle, ShoppingBag } from "iconsax-react";
 import { formatCurrency } from "../../../../utils/formatCurrency";
 import { useFinancialStore } from "../../../store/useFinancialStore";
@@ -14,10 +14,11 @@ export const SavingsOverview = () => {
 
   const { financial, currencyType, updateFinancialData } = useFinancialStore();
 
-  const onHandleFinances = async () => {
+  const onHandleFinances = useCallback(async () => {
     try {
+      if (!user?.id) return;
       const finances = await getFinancial(user.id);
-      updateFinancialData(finances);
+      await updateFinancialData(finances);
     } catch (error) {
       const errorMessage = getErrorMessage(error);
       toast.error("Error cargando las finanzas personales", {
@@ -25,14 +26,15 @@ export const SavingsOverview = () => {
       });
       console.error("Error cargando las finanzas personales", error);
     }
-  };
+  }, [user?.id, updateFinancialData]);
 
   useEffect(() => {
+    if (!sessionStorage.getItem("token")) return;
     onHandleFinances();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [onHandleFinances]);
 
   useEffect(() => {
+    if (!financial?.savings?.percentage) return;
     const interval = setInterval(() => {
       setProgressValue((prev) => {
         if (prev >= Number(financial.savings.percentage)) {
