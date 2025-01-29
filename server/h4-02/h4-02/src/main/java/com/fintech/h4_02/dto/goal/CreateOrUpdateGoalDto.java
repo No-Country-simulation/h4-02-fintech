@@ -7,7 +7,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-public record CreateGoalDto(
+public record CreateOrUpdateGoalDto(
         @NotBlank
         String goalName,
 

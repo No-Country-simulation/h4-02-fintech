@@ -1,6 +1,6 @@
 package com.fintech.h4_02.controller;
 
-import com.fintech.h4_02.dto.goal.CreateGoalDto;
+import com.fintech.h4_02.dto.goal.CreateOrUpdateGoalDto;
 import com.fintech.h4_02.dto.goal.GoalContributionDto;
 import com.fintech.h4_02.dto.goal.GoalResponseDto;
 import com.fintech.h4_02.entity.goal.Goal;
@@ -49,6 +49,27 @@ public class GoalController {
     }
 
     @Operation(
+            summary = "Get already completed goals of a user",
+            description = "Retrieves a list of completed goals associated with the given user ID."
+    )
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Goal history retrieved successfully.",
+                    content = @Content(
+                            mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = GoalResponseDto.class)
+                    )
+            ),
+    })
+    @GetMapping("/history")
+    private ResponseEntity<List<GoalResponseDto>> getGoalsHistory(@PathVariable Long userId) {
+        List<Goal> goals = goalService.getGoalHistory(userId);
+        List<GoalResponseDto> goalListResponse = goals.stream().map(GoalResponseDto::new).toList();
+        return ResponseEntity.ok(goalListResponse);
+    }
+
+    @Operation(
             summary = "Create a new goal",
             description = "Creates a new goal for the specified user."
     )
@@ -65,10 +86,34 @@ public class GoalController {
     @PostMapping
     public ResponseEntity<GoalResponseDto> createGoal(
             @PathVariable Long userId,
-            @RequestBody @Valid CreateGoalDto dto
+            @RequestBody @Valid CreateOrUpdateGoalDto dto
     ) {
         Goal goal = goalService.createGoal(userId, dto);
         return ResponseEntity.status(HttpStatus.CREATED).body(new GoalResponseDto(goal));
+    }
+
+    @Operation(
+            summary = "Update a goal",
+            description = "Updates a goal with the request body fields."
+    )
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Goal updated successfully.",
+                    content = @Content(
+                            mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = GoalResponseDto.class)
+                    )
+            ),
+    })
+    @PutMapping("/{goalId}")
+    public ResponseEntity<GoalResponseDto> updateGoal(
+            @PathVariable String userId,
+            @PathVariable Long goalId,
+            @RequestBody CreateOrUpdateGoalDto dto
+    ) {
+        Goal updatedGoal = goalService.updateGoal(goalId, dto);
+        return ResponseEntity.ok(new GoalResponseDto(updatedGoal));
     }
 
     @Operation(

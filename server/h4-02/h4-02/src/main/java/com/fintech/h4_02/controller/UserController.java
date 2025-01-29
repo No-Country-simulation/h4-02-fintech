@@ -13,6 +13,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.json.JSONException;
@@ -21,6 +22,8 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Controller
 @RequestMapping("api/v1/user")
@@ -83,6 +86,27 @@ public class UserController {
     public ResponseEntity<UserResponseDto> getUserById(@PathVariable Long id) {
         UserEntity userEntity = userService.getUserById(id);
         return ResponseEntity.status(HttpStatus.OK).body(new UserResponseDto(userEntity));
+    }
+
+    @Operation(
+            summary = "Get all users",
+            description = "Get all users registered in the system. This endpoint can only be called with an ADMIN account"
+    )
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Users fetched successfully.",
+                    content = @Content(
+                            mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = UserResponseDto.class)
+                    )
+            )
+    })
+    @GetMapping
+    @RolesAllowed({"ADMIN"})
+    public ResponseEntity<List<UserResponseDto>> getAllUsers() {
+        List<UserEntity> users = userService.getAllUsers();
+        return ResponseEntity.ok(users.stream().map(UserResponseDto::new).toList());
     }
 
     @Operation(summary = "Update user profile", description = "Update the user profile for additional info and notifications config")
