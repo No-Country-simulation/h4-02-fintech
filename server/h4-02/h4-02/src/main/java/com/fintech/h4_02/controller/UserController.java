@@ -113,7 +113,7 @@ public class UserController {
                             schema = @Schema(implementation = UserRadiographyFinancial.class),
                             examples = @ExampleObject(
                                     name = "Get radiography financial by user",
-                                    value = "")
+                                    value = "{\"user\": {\"id\": 1,\"email\": \"lionel@gmail\",\"name\": \"Lionel\",\"dni\": \"258698741\",\"roles\": [],\"oauthProvider\": \"SYSTEM\",\"unlockedAvatars\": [],\"picture\": null,\"phone\": null,\"address\": null,\"notifyMilestoneAchieved\": false,\"notifySavingsGoalMet\": false,\"notifyInvestmentOpportunities\": false,\"notifyInvestmentExpirations\": false,\"dailyNotifications\": false,\"weeklyNotifications\": false,\"monthlyNotifications\": false,\"onboarding\": null},\"goal\": [],\"ingresos\": 450.00,\"egresos\": 90.00,\"coins\": [{\"coin\": \"A\",\"total\": 5},{\"coin\": \"AAPL\",\"total\": 77}],\"priceBuycoins\": [{\"Name\": \"A\",\"price\": 145},{\"Name\": \"AAPL\",\"price\": 142.5555555555555429236846975982189178466796875}],\"priceSellcoins\": [{\"Name\": \"A\",\"price\": 151.955000000000012505552149377763271331787109375},{\"Name\": \"AAPL\",\"price\": 232.69999999999998863131622783839702606201171875}],\"machinelearning\": \"Recomendaciones del perfil\",\"total\": 360.00}")
                     )
             )
     })

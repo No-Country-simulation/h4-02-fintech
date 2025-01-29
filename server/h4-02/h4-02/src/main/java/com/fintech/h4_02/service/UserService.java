@@ -82,7 +82,13 @@ public class UserService {
         List<CoinPrice> priceBuycoins = exchangeService.findPriceCoins(user);
         List<CoinPrice> priceSellcoins =exchangeService.findPriceSellCoins(coins);
         String machinelearning = "Recomendaciones del perfil";
-        BigDecimal total = null;
+
+        BigDecimal total = BigDecimal.valueOf(0);
+      if(!ingresos.isEmpty() && !egresos.isEmpty() && priceBuycoins != null && priceSellcoins != null ) {
+          total = SacarTotalCoins(priceBuycoins,priceSellcoins,coins);
+          total = (ingresos.get().subtract(egresos.get())).add(total);
+
+      }
 
         UserRadiographyFinancial radiography =  UserRadiographyFinancial.builder()
                 .user(new UserResponseDto(user))
@@ -98,4 +104,18 @@ public class UserService {
 
         return radiography;
     }
+
+    private BigDecimal SacarTotalCoins(List<CoinPrice> priceBuycoins, List<CoinPrice> priceSellcoins, List<ExchangeSimple> coins) {
+        BigDecimal total = new BigDecimal(0);
+
+        for(ExchangeSimple e : coins){
+           Optional<CoinPrice> priceSell =  priceSellcoins.stream().filter(coin -> coin.Name().equals(e.coin())).findFirst();
+            BigDecimal sell = priceSell.get().price();
+            Optional<CoinPrice> priceBuy =  priceBuycoins.stream().filter(coin -> coin.Name().equals(e.coin())).findFirst();
+            BigDecimal buy = priceBuy.get().price();
+            total.add( buy.subtract(sell).multiply(new BigDecimal(e.total())) );
+        }
+        return total;
+    }
+
 }
