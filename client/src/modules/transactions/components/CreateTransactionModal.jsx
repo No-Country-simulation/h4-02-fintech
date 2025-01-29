@@ -17,11 +17,14 @@ import { getErrorMessage } from "../../../core/validators/errorHandler";
 import { toast } from "sonner";
 import { createTransaction } from "../services/transactions";
 import { useAuthStore } from "../../../core/auth/store/useAuthStore";
+import { getFinancial } from "../../../core/dashboard/services/financial";
+import { useFinancialStore } from "../../../core/dashboard/store/useFinancialStore";
 
 export default function CreateTransactionModal() {
   const [isOpen, setIsOpen] = useState(false);
   const [state, setState] = useState("OUT");
   const { user } = useAuthStore();
+  const { updateFinancialData } = useFinancialStore();
 
   const {
     register,
@@ -43,7 +46,10 @@ export default function CreateTransactionModal() {
         user: user.id,
         date: new Date(data.date).toISOString().split("T")[0],
       });
-      
+
+      const finances = await getFinancial(user.id);
+      updateFinancialData(finances);
+
       toast("Transacción exitosa", {
         description: "Transacción creada con éxito",
       });
