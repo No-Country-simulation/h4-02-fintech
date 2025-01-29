@@ -1,6 +1,4 @@
 export const formatCurrency = (value, currencyType = "ARS", digits = 0) => {
-  if (!value) return "";
-
   const options = {
     style: "currency",
     currency: currencyType === "USD" ? "USD" : "ARS",

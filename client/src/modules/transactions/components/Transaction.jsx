@@ -1,7 +1,10 @@
+import { useFinancialStore } from "../../../core/dashboard/store/useFinancialStore";
 import { formatCurrency } from "../../../core/utils/formatCurrency";
 import CreateTransactionModal from "./CreateTransactionModal";
 
 export const Transaction = () => {
+  const { financial, currencyType } = useFinancialStore();
+
   return (
     <div className="max-w-xl mx-auto p-4 bg-gray-50">
       {/* Balance Card */}
@@ -10,12 +13,25 @@ export const Transaction = () => {
           <div className="flex justify-between mb-2">
             <div>
               <p className="text-sm opacity-70">Balance Total</p>
-              <p className="text-xl font-bold">{formatCurrency(5123.0)}</p>
+              <p className="text-xl font-bold">
+                {formatCurrency(
+                  financial.balance.values[currencyType],
+                  currencyType,
+                  2
+                )}
+              </p>
             </div>
             <div className="divider divider-horizontal divider-primary"></div>
             <div className="text-right">
               <p className="text-sm opacity-70">Gastos Total</p>
-              <p className="text-xl font-bold">-{formatCurrency(1240.4)}</p>
+              <p className="text-xl font-bold">
+                -{" "}
+                {formatCurrency(
+                  financial.fixedExpenses.values[currencyType],
+                  currencyType,
+                  2
+                )}
+              </p>
             </div>
           </div>
 
@@ -26,8 +42,14 @@ export const Transaction = () => {
               max="100"
             ></progress>
             <div className="absolute inset-0 flex items-center justify-between text-sm text-white font-bold px-2">
-              <span>30%</span>
-              <span>{formatCurrency(10000.0)}</span>
+              <span>{financial.savings.percentage}%</span>
+              <span>
+                {formatCurrency(
+                  financial.savings.values[currencyType],
+                  currencyType,
+                  2
+                )}
+              </span>
             </div>
           </div>
           <div className="flex items-center gap-2 mt-2">
@@ -38,7 +60,7 @@ export const Transaction = () => {
               disabled
             />
             <p className="text-sm opacity-70">
-              El 30% de tus gastos se ve bien.
+              El {financial.savings.percentage}% de tus gastos se ve bien.
             </p>
           </div>
         </div>

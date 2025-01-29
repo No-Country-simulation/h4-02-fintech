@@ -3,11 +3,34 @@ import { DollarCircle, ShoppingBag } from "iconsax-react";
 import { formatCurrency } from "../../../../utils/formatCurrency";
 import { useFinancialStore } from "../../../store/useFinancialStore";
 import { Link } from "react-router-dom";
+import { getFinancial } from "../../../services/financial";
+import { useAuthStore } from "../../../../auth/store/useAuthStore";
+import { getErrorMessage } from "../../../../validators/errorHandler";
+import { toast } from "sonner";
 
 export const SavingsOverview = () => {
   const [progressValue, setProgressValue] = useState(0);
+  const { user } = useAuthStore();
 
-  const { financial, currencyType } = useFinancialStore();
+  const { financial, currencyType, updateFinancialData } = useFinancialStore();
+
+  const onHandleFinances = async () => {
+    try {
+      const finances = await getFinancial(user.id);
+      updateFinancialData(finances);
+    } catch (error) {
+      const errorMessage = getErrorMessage(error);
+      toast.error("Error cargando las finanzas personales", {
+        description: errorMessage,
+      });
+      console.error("Error cargando las finanzas personales", error);
+    }
+  };
+
+  useEffect(() => {
+    onHandleFinances();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -35,7 +58,6 @@ export const SavingsOverview = () => {
             "--value": progressValue,
             "--size": "5rem",
             "--thickness": "0.4rem",
-
           }}
           role="progressbar"
         >

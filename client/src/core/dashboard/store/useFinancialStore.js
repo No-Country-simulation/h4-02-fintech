@@ -7,29 +7,29 @@ export const useFinancialStore = create(
       financial: {
         income: {
           values: {
-            USD: 7000,
-            ARG: 10000000,
+            USD: 0,
+            ARG: 0,
           },
-          percentage: 50,
+          percentage: 0,
         },
         savings: {
           values: {
-            USD: 1400,
-            ARG: 2500000,
+            USD: 0,
+            ARG: 0,
           },
-          percentage: 30,
+          percentage: 0,
         },
         fixedExpenses: {
           values: {
-            USD: 2000,
-            ARG: 2500000,
+            USD: 0,
+            ARG: 0,
           },
-          percentage: 20,
+          percentage: 0,
         },
         balance: {
           values: {
-            USD: 62500,
-            ARG: 10000000,
+            USD: 0,
+            ARG: 0,
           },
         },
       },
@@ -46,6 +46,39 @@ export const useFinancialStore = create(
           financial: {
             ...state.financial,
             ...newFinancialData,
+          },
+        })),
+
+      reset: () =>
+        set(() => ({
+          financial: {
+            income: {
+              values: {
+                USD: 0,
+                ARG: 0,
+              },
+              percentage: 0,
+            },
+            savings: {
+              values: {
+                USD: 0,
+                ARG: 0,
+              },
+              percentage: 0,
+            },
+            fixedExpenses: {
+              values: {
+                USD: 0,
+                ARG: 0,
+              },
+              percentage: 0,
+            },
+            balance: {
+              values: {
+                USD: 0,
+                ARG: 0,
+              },
+            },
           },
         })),
     }),
