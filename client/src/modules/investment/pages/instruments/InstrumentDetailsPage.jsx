@@ -23,7 +23,9 @@ export const InstrumentDetailsPage = () => {
 
   const onHandleInstrumentDetails = async () => {
     try {
-      const priceData = await getPrice(id.replace(/-/g, "/"));
+      const priceData = await getPrice(
+        id.replace(/-/g, "/")
+      );
 
       if (priceData?.message?.includes("plan")) {
         setInstrument({ error: "Detalles Premium" });

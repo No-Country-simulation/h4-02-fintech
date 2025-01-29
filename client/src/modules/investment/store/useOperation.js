@@ -11,17 +11,29 @@ const useOperationsStore = create(
 
       updateOperation: (coinId, quantity) =>
         set((state) => {
-          const updatedOperations = state.operations
-            .map((op) => {
-              if (op.coin === coinId) {
-                const updatedTotal = op.total + quantity;
-                return { ...op, total: updatedTotal };
-              }
-              return op;
-            })
-            .filter((op) => op.total > 0);
+          const existingOperation = state.operations.find(
+            (op) => op.coin === coinId
+          );
 
-          return { operations: updatedOperations };
+          if (existingOperation) {
+            const updatedTotal = existingOperation.total + quantity;
+
+            const updatedOperations = state.operations.map((op) =>
+              op.coin === coinId ? { ...op, total: updatedTotal } : op
+            );
+
+            return {
+              operations: updatedOperations.filter((op) => op.total > 0),
+            };
+          }
+
+          // Si no existe la operación, agregarla
+          return {
+            operations: [
+              ...state.operations,
+              { coin: coinId, total: quantity },
+            ],
+          };
         }),
     }),
     {
