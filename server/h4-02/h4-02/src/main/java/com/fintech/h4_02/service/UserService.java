@@ -111,7 +111,7 @@ public class UserService {
     private BigDecimal calculateProfitInUsd(UserEntity user) throws JSONException, JsonProcessingException {
         List<ExchangeSimple> coins = exchangeService.getTotalCoinByUser(user.getId());
         List<CoinPrice> priceBuyCoins = exchangeService.findPriceCoins(user);
-        List<CoinPrice> priceSellCoins = exchangeService.findPriceSellCoins(coins);
+        List<CoinPrice> priceSellCoins = exchangeService.findPriceSellCoins(user, coins);
         BigDecimal total = BigDecimal.valueOf(0);
         if (priceBuyCoins != null && priceSellCoins != null) {
             total = calculateProfitCoins(coins, priceBuyCoins, priceSellCoins);

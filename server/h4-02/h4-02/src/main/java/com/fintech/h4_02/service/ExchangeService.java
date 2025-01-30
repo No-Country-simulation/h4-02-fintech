@@ -194,24 +194,34 @@ public class ExchangeService {
         return exchangeRepository.findPriceCoins(user);
     }
 
-    public List<CoinPrice> findPriceSellCoins(List<ExchangeSimple> coins) throws JsonProcessingException, JSONException {
+    public List<CoinPrice> findPriceSellCoins(UserEntity user, List<ExchangeSimple> coins) throws JsonProcessingException, JSONException {
         List<CoinPrice> list = new ArrayList<>();
         for (ExchangeSimple e : coins) {
             JsonNode response = connectionPrice(e.coin());
-            String value = getCloseValueFromApiResponse(String.valueOf(response));
-            list.add(new CoinPrice(e.coin(), Double.valueOf(value)));
+            Optional<BigDecimal> value = getCloseValueFromApiResponse(String.valueOf(response));
+            if (value.isEmpty()) {
+                List<CoinPrice> priceBuyCoins = findPriceCoins(user);
+                Optional<CoinPrice> priceBuy = priceBuyCoins.stream().filter(coin -> coin.Name().equals(e.coin())).findFirst();
+                list.add(new CoinPrice(e.coin(), priceBuy.get().price()));
+            } else {
+                list.add(new CoinPrice(e.coin(), value.get()));
+            }
         }
         return list;
     }
 
-    private String getCloseValueFromApiResponse(String jsonResponse) throws JSONException {
+    private Optional<BigDecimal> getCloseValueFromApiResponse(String jsonResponse) throws JSONException {
         JSONObject jsonObject = new JSONObject(jsonResponse);
+        if (!jsonObject.has("values")) {
+            return Optional.empty();
+        }
         JSONArray valuesArray = jsonObject.getJSONArray("values");
         if (valuesArray.length() > 0) {
             JSONObject firstValueObject = valuesArray.getJSONObject(0);
-            return firstValueObject.getString("close");
+            String priceString = firstValueObject.getString("close");
+            return Optional.of(new BigDecimal(priceString));
         }
-        return null;
+        return Optional.empty();
     }
 
     private JsonNode connectionApi(String url) throws JsonProcessingException {
