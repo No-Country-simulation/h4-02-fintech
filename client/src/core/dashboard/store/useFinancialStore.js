@@ -35,7 +35,8 @@ export const useFinancialStore = create(
       },
 
       currencyType: "ARG",
-
+      hasLoaded: false,
+      setHasLoaded: (hasLoaded) => set({ hasLoaded }),
       toggleCurrencyType: () =>
         set((state) => ({
           currencyType: state.currencyType === "USD" ? "ARG" : "USD",
@@ -47,6 +48,7 @@ export const useFinancialStore = create(
             ...state.financial,
             ...newFinancialData,
           },
+          hasLoaded: true,
         })),
 
       reset: () =>
@@ -80,6 +82,7 @@ export const useFinancialStore = create(
               },
             },
           },
+          hasLoaded: false,
         })),
     }),
     {

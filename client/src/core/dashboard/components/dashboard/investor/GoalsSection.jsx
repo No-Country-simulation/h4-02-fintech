@@ -21,16 +21,13 @@ import CreateContributionModal from "./CreateContributionModal";
 
 export const GoalsSection = () => {
   const { user } = useAuthStore();
-  const { goals, setGoals } = useGoalStore();
+  const { goals, setGoals, hasLoaded } = useGoalStore();
 
   const onHandleGoals = useCallback(async () => {
     try {
-      if (!sessionStorage.getItem("token")) return;
-      if (!user) return;
-      const rep = await getGoals(user.id);
-      if (rep) {
-        setGoals(rep);
-      }
+      if (!user?.id || hasLoaded) return;
+      const newGoals = await getGoals(user.id);
+      await setGoals(newGoals);
     } catch (error) {
       const errorMessage = getErrorMessage(error);
       toast.error("Problemas al cargar los objetivos", {
@@ -38,7 +35,7 @@ export const GoalsSection = () => {
       });
       console.error("Error al cargar los objetivos", error);
     }
-  }, [user, setGoals]);
+  }, [user.id, hasLoaded, setGoals]);
 
   useEffect(() => {
     if (!sessionStorage.getItem("token")) return;
@@ -61,6 +58,40 @@ export const GoalsSection = () => {
         return <Airplane size="24" className="text-primary" />;
     }
   };
+
+  if (!hasLoaded) {
+    return (
+      <div className="space-y-4">
+        {[...Array(1)].map((_, index) => (
+          <div
+            key={index}
+            className="space-y-3 sm:border-2 sm:p-2 sm:rounded-xl"
+          >
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-1">
+                <div className="w-6 h-6 rounded-full bg-gray-300"></div>
+                <div className="w-32 h-6 bg-gray-300 rounded-md"></div>
+              </div>
+            </div>
+            <ul className="menu menu-horizontal bg-transparent rounded-box w-full">
+              <li className="w-full">
+                <details className="relative">
+                  <summary className="flex">
+                    <div className="w-11/12 space-y-1 px-4">
+                      <div className="flex items-center space-x-2">
+                        <div className="w-full h-4 bg-gray-300 rounded-md"></div>
+                      </div>
+                    </div>
+                    <div className="w-20 h-6 bg-gray-300 rounded-md"></div>
+                  </summary>
+                </details>
+              </li>
+            </ul>
+          </div>
+        ))}
+      </div>
+    );
+  }
 
   return (
     <>
