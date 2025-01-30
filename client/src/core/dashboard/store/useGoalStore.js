@@ -5,7 +5,10 @@ export const useGoalStore = create(
   persist(
     (set) => ({
       goals: [],
-      setGoals: (goals) => set({ goals }),
+      hasLoaded: false,
+
+      setGoals: (goals) => set({ goals, hasLoaded: true }),
+
       addGoal: (goal) =>
         set((state) => ({
           goals: [
@@ -13,6 +16,7 @@ export const useGoalStore = create(
             { ...goal, progress: 0, message: "¡Vas por buen camino!" },
           ],
         })),
+
       addContribution: (updatedGoal) =>
         set((state) => {
           const updatedGoals = state.goals.map((goal) =>
@@ -20,9 +24,11 @@ export const useGoalStore = create(
           );
           return { goals: updatedGoals };
         }),
+
       reset: () =>
         set(() => ({
           goals: [],
+          hasLoaded: false,
         })),
     }),
     {

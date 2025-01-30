@@ -11,12 +11,12 @@ import { toast } from "sonner";
 export const SavingsOverview = () => {
   const [progressValue, setProgressValue] = useState(0);
   const { user } = useAuthStore();
-
-  const { financial, currencyType, updateFinancialData } = useFinancialStore();
+  const { financial, hasLoaded, updateFinancialData, currencyType } =
+    useFinancialStore();
 
   const onHandleFinances = useCallback(async () => {
     try {
-      if (!user?.id) return;
+      if (!user?.id || hasLoaded) return;
       const finances = await getFinancial(user.id);
       await updateFinancialData(finances);
     } catch (error) {
@@ -26,7 +26,7 @@ export const SavingsOverview = () => {
       });
       console.error("Error cargando las finanzas personales", error);
     }
-  }, [user?.id, updateFinancialData]);
+  }, [user?.id, hasLoaded, updateFinancialData]);
 
   useEffect(() => {
     if (!sessionStorage.getItem("token")) return;
@@ -88,15 +88,19 @@ export const SavingsOverview = () => {
           <div className="flex-1">
             <div className="flex flex-col">
               <span className="text-base font-semibold">Ingresos</span>
-              <span className="font-bold text-lg text-secondary">
-                {financial.income.values[currencyType] == 0
-                  ? "0,00"
-                  : formatCurrency(
-                      financial.income.values[currencyType],
-                      currencyType,
-                      2
-                    )}
-              </span>
+              {hasLoaded ? (
+                <span className="font-bold text-lg text-secondary">
+                  {financial.income.values[currencyType] == 0
+                    ? "0,00"
+                    : formatCurrency(
+                        financial.income.values[currencyType],
+                        currencyType,
+                        2
+                      )}
+                </span>
+              ) : (
+                <span className="loading loading-dots loading-md text-secondary"></span>
+              )}
             </div>
           </div>
         </div>
@@ -108,16 +112,20 @@ export const SavingsOverview = () => {
           <div className="flex-1">
             <div className="flex flex-col">
               <span className="text-base font-semibold">Gastos</span>
-              <span className="font-bold text-lg text-secondary">
-                -
-                {financial.fixedExpenses.values[currencyType] == 0
-                  ? "0,00"
-                  : formatCurrency(
-                      financial.fixedExpenses.values[currencyType],
-                      currencyType,
-                      2
-                    )}
-              </span>
+              {hasLoaded ? (
+                <span className="font-bold text-lg text-secondary">
+                  -
+                  {financial.fixedExpenses.values[currencyType] == 0
+                    ? "0,00"
+                    : formatCurrency(
+                        financial.fixedExpenses.values[currencyType],
+                        currencyType,
+                        2
+                      )}
+                </span>
+              ) : (
+                <span className="loading loading-dots loading-md text-secondary"></span>
+              )}
             </div>
           </div>
         </div>
