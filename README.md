@@ -21,7 +21,7 @@ La documentación para el cliente y un video a modo de presentación se encuentr
 
 [Google drive](https://drive.google.com/drive/folders/1HFAL2TtVbyFZHMYeTxPR0Yk78lqQnoiK)
 
-[Vídeo de presentación]()
+[Vídeo de presentación](https://www.youtube.com/watch?v=h5FeWcmCuYY&ab_channel=LionelStaricoff)
 
 ## 🖥️ Documentación de la API
 
