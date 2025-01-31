@@ -14,7 +14,7 @@ export const Transaction = () => {
             <div>
               <p className="text-sm opacity-70">Balance Total</p>
               {hasLoaded ? (
-                <p className="text-xl font-bold">
+                <p className="text-md font-bold">
                   {financial.balance.values[currencyType] == 0
                     ? "0,00"
                     : formatCurrency(
@@ -31,7 +31,7 @@ export const Transaction = () => {
             <div className="text-right">
               <p className="text-sm opacity-70">Gastos Total</p>
               {hasLoaded ? (
-                <p className="text-xl font-bold">
+                <p className="text-md font-bold">
                   -{" "}
                   {financial.fixedExpenses.values[currencyType] == 0
                     ? "0,00"
@@ -53,7 +53,7 @@ export const Transaction = () => {
               value={hasLoaded ? financial.savings.percentage : 0}
               max="100"
             ></progress>
-            <div className="absolute inset-0 flex items-center justify-between text-sm text-white font-bold px-2">
+            <div className="absolute inset-0 flex items-center justify-between text-xs text-white font-bold px-2">
               {hasLoaded ? (
                 <>
                   <span>{financial.savings.percentage}%</span>

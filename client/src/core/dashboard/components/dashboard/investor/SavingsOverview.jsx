@@ -89,7 +89,7 @@ export const SavingsOverview = () => {
             <div className="flex flex-col">
               <span className="text-base font-semibold">Ingresos</span>
               {hasLoaded ? (
-                <span className="font-bold text-lg text-secondary">
+                <span className="font-bold text-sm text-secondary">
                   {financial.income.values[currencyType] == 0
                     ? "0,00"
                     : formatCurrency(
@@ -113,7 +113,7 @@ export const SavingsOverview = () => {
             <div className="flex flex-col">
               <span className="text-base font-semibold">Gastos</span>
               {hasLoaded ? (
-                <span className="font-bold text-lg text-secondary">
+                <span className="font-bold text-sm text-secondary">
                   -
                   {financial.fixedExpenses.values[currencyType] == 0
                     ? "0,00"

@@ -27,6 +27,10 @@ export const FinancialXModal = () => {
     },
   ];
 
+  const hasData = data.some(
+    (item) => item.values.ARG > 0 || item.values.USD > 0
+  );
+
   return (
     <div>
       <button
@@ -51,11 +55,13 @@ export const FinancialXModal = () => {
             ✕
           </button>
 
-          <div className="space-y-6 mb-6 mt-3">
-            <PieChartWithPaddingAngle data={data} />
-          </div>
+          {hasData && (
+            <div className="space-y-6 mb-6 mt-3">
+              <PieChartWithPaddingAngle data={data} />
+            </div>
+          )}
 
-          <ul className="menu bg-transparent w-full space-y-4">
+          <ul className="menu bg-transparent w-full space-y-4 mt-4">
             {data.map((item, index) => (
               <li key={index}>
                 <details className="border-2 rounded-[8px] p-2">
@@ -64,10 +70,18 @@ export const FinancialXModal = () => {
                   </summary>
                   <ul>
                     <li>
-                      <a> {formatCurrency(item.values.ARG, "ARG", 2)}</a>
+                      <a>
+                        {item.values.ARG == 0
+                          ? "$ 0,00"
+                          : formatCurrency(item.values.ARG, "ARG", 2)}
+                      </a>
                     </li>
                     <li>
-                      <a> {formatCurrency(item.values.USD, "USD", 2)}</a>
+                      <a>
+                        {item.values.USD == 0
+                          ? "US$ 0,00"
+                          : formatCurrency(item.values.USD, "USD", 2)}
+                      </a>
                     </li>
                   </ul>
                 </details>
