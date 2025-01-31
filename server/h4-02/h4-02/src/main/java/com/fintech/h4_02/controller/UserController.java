@@ -2,7 +2,7 @@ package com.fintech.h4_02.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fintech.h4_02.dto.user.UpdateUserProfileDto;
-import com.fintech.h4_02.dto.user.UserRadiographyFinancial;
+import com.fintech.h4_02.dto.user.UserFinancialRadiography;
 import com.fintech.h4_02.dto.user.UserResponseDto;
 import com.fintech.h4_02.entity.UserEntity;
 import com.fintech.h4_02.service.UserService;
@@ -126,7 +126,6 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(new UpdateUserProfileDto(userEntity));
     }
 
-
     @Operation(summary = "radiography financial", description = "Get a radiography-financial by user by id")
     @ApiResponses({
             @ApiResponse(
@@ -134,16 +133,15 @@ public class UserController {
                     description = "Get radiography-financial ",
                     content = @Content(
                             mediaType = MediaType.APPLICATION_JSON_VALUE,
-                            schema = @Schema(implementation = UserRadiographyFinancial.class),
-                            examples = @ExampleObject(
-                                    name = "Get radiography financial by user",
-                                    value = "{\"user\": {\"id\": 1,\"email\": \"lionel@gmail\",\"name\": \"Lionel\",\"dni\": \"258698741\",\"roles\": [],\"oauthProvider\": \"SYSTEM\",\"unlockedAvatars\": [],\"picture\": null,\"phone\": null,\"address\": null,\"notifyMilestoneAchieved\": false,\"notifySavingsGoalMet\": false,\"notifyInvestmentOpportunities\": false,\"notifyInvestmentExpirations\": false,\"dailyNotifications\": false,\"weeklyNotifications\": false,\"monthlyNotifications\": false,\"onboarding\": null},\"goal\": [],\"ingresos\": 450.00,\"egresos\": 90.00,\"coins\": [{\"coin\": \"A\",\"total\": 5},{\"coin\": \"AAPL\",\"total\": 77}],\"priceBuycoins\": [{\"Name\": \"A\",\"price\": 145},{\"Name\": \"AAPL\",\"price\": 142.5555555555555429236846975982189178466796875}],\"priceSellcoins\": [{\"Name\": \"A\",\"price\": 151.955000000000012505552149377763271331787109375},{\"Name\": \"AAPL\",\"price\": 232.69999999999998863131622783839702606201171875}],\"machinelearning\": \"Recomendaciones del perfil\",\"total\": 360.00}")
+                            schema = @Schema(implementation = UserFinancialRadiography.class)
                     )
             )
     })
-    @GetMapping("/radiography-financial/{id}")
-    public ResponseEntity<UserRadiographyFinancial> getUseFinancialXRay(@PathVariable Long id) throws JSONException, JsonProcessingException {
-        return ResponseEntity.status(HttpStatus.OK).body( userService.getUseFinancialXRay(id));
+    @GetMapping("/{userId}/financial-radiography")
+    public ResponseEntity<UserFinancialRadiography> getUseFinancialXRay(
+            @PathVariable Long userId
+    ) throws JSONException, JsonProcessingException {
+        return ResponseEntity.status(HttpStatus.OK).body(userService.calculateUserFinancialXRay(userId));
     }
 
 }

@@ -16,10 +16,10 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
 
     Optional<UserEntity> findByResetPasswordToken(String resetPasswordToken);
 
-
-    @Query("SELECT SUM(w.value) FROM WalletEntity w WHERE w.user =:user AND w.state = 'IN' ")
+    @Query("SELECT SUM(w.value) FROM WalletEntity w WHERE w.user =:user AND w.state = 'IN'")
     Optional<BigDecimal> findIngresosByUser(@Param("user") UserEntity user);
 
-    @Query("SELECT SUM(w.value) FROM WalletEntity w WHERE w.user =:user AND w.state = 'OUT' ")
+    @Query("SELECT SUM(w.value) FROM WalletEntity w WHERE w.user =:user AND w.state = 'OUT'")
     Optional<BigDecimal> findEgresosByUser(@Param("user") UserEntity user);
+
 }

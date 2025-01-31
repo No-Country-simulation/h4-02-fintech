@@ -20,4 +20,14 @@ public interface GoalContributionRepository extends JpaRepository<GoalContributi
     @Query("SELECT COALESCE(SUM(gc.amount), 0) FROM GoalContribution gc WHERE gc.goal.id = :goalId")
     BigDecimal findTotalAmountByGoalId(@Param("goalId") Long goalId);
 
+    /**
+     * Calculates the total sum of all {@link GoalContribution} amounts associated with
+     * goals belonging to a specific user.
+     *
+     * @param userId The ID of the user whose goal contributions are to be aggregated
+     * @return The sum of all contributions (as {@link BigDecimal}) for the user's goals.
+     * Returns {@link BigDecimal#ZERO} if no contributions exist.
+     */
+    @Query("SELECT COALESCE(SUM(gc.amount), 0) FROM GoalContribution gc WHERE gc.goal.user.id = :userId")
+    BigDecimal sumTotalContributionsByUserId(@Param("userId") Long userId);
 }

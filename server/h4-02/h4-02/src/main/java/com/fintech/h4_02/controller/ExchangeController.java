@@ -64,7 +64,7 @@ public class ExchangeController {
     })
     @GetMapping("/price")
     public ResponseEntity<JsonNode> getExchangePrice(@RequestParam String coin) throws JsonProcessingException {
-        return ResponseEntity.status(HttpStatus.OK).body(exchangeService.conectionPrice(coin));
+        return ResponseEntity.status(HttpStatus.OK).body(exchangeService.connectionPrice(coin));
     }
 
     @Operation(summary = "get description coin", description = "get description of coin")
@@ -80,10 +80,8 @@ public class ExchangeController {
     })
     @GetMapping("/description/{coin}")
     public ResponseEntity<JsonNode> getCoinDescription(@PathVariable String coin) throws JsonProcessingException {
-        return ResponseEntity.status(HttpStatus.OK).body(exchangeService.getDescription(coin));
+        return ResponseEntity.status(HttpStatus.OK).body(exchangeService.getCoinDescription(coin));
     }
-
-
 
     @Operation(
             summary = "buy  coin",
@@ -97,7 +95,7 @@ public class ExchangeController {
                             mediaType = MediaType.APPLICATION_JSON_VALUE,
                             schema = @Schema(implementation = ExchangeResponse.class),
                             examples = @ExampleObject(name = "JsonNode",
-                                    value = "{ \"id\" : 452,\"coin\" : \"AAPL\",\"value\" : 5236.5,\"date\" : \"2025-01-26\",\"state\" : \"BY\",\"user\" : { \"id\" : 1,\"name\" : \"a r\", },\"quantity\" : 5, \"total\" : 26182.5 }")))                   
+                                    value = "{ \"id\" : 452,\"coin\" : \"AAPL\",\"value\" : 5236.5,\"date\" : \"2025-01-26\",\"state\" : \"BY\",\"user\" : { \"id\" : 1,\"name\" : \"a r\", },\"quantity\" : 5, \"total\" : 26182.5 }")))
     })
     @PostMapping
     public ResponseEntity<ExchangeResponse> crateExchange(@RequestBody @Valid ExchangeRrequest ExchangeRrequest) {
@@ -119,10 +117,9 @@ public class ExchangeController {
             )
     })
     @PostMapping("/sell")
-    public ResponseEntity<ExchangeResponse> sellExchange(@RequestBody @Valid ExchangeRrequest ExchangeRrequest){
+    public ResponseEntity<ExchangeResponse> sellExchange(@RequestBody @Valid ExchangeRrequest ExchangeRrequest) {
         return ResponseEntity.status(HttpStatus.CREATED).body(exchangeService.sell(ExchangeRrequest));
     }
-
 
     @Operation(
             summary = "get history exchange by user",
@@ -139,11 +136,9 @@ public class ExchangeController {
             )
     })
     @GetMapping("/{id}")
-    public ResponseEntity<List<ExchangeResponse>> getExchangeAllByUserId(@PathVariable Long id){
-        return ResponseEntity.status(HttpStatus.OK).body(exchangeService.GetByUser(id));
+    public ResponseEntity<List<ExchangeResponse>> getExchangeAllByUserId(@PathVariable Long id) {
+        return ResponseEntity.status(HttpStatus.OK).body(exchangeService.getByUser(id));
     }
-
-
 
     @Operation(
             summary = "get history exchange by user",
@@ -160,11 +155,10 @@ public class ExchangeController {
             )
     })
     @GetMapping("/total/{id}")
-    public ResponseEntity<List<ExchangeSimple>> getTotalCoinByUser(@PathVariable Long id){
+    public ResponseEntity<List<ExchangeSimple>> getTotalCoinByUser(@PathVariable Long id) {
         return ResponseEntity.status(HttpStatus.OK).body(exchangeService.getTotalCoinByUser(id));
 
     }
-
 
     @Operation(
             summary = "get history by dates",
@@ -183,7 +177,6 @@ public class ExchangeController {
     @GetMapping("/history-by-dates")
     public ResponseEntity<JsonNode> getCoinByDates(@RequestBody @Valid GetCoinByDatesRequest getCoinByDatesRequest) throws JsonProcessingException {
         return ResponseEntity.status(HttpStatus.OK).body(exchangeService.getCoinByDates(getCoinByDatesRequest));
-
     }
 
 }
