@@ -1,15 +1,40 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { DollarCircle, ShoppingBag } from "iconsax-react";
 import { formatCurrency } from "../../../../utils/formatCurrency";
 import { useFinancialStore } from "../../../store/useFinancialStore";
 import { Link } from "react-router-dom";
+import { getFinancial } from "../../../services/financial";
+import { useAuthStore } from "../../../../auth/store/useAuthStore";
+import { getErrorMessage } from "../../../../validators/errorHandler";
+import { toast } from "sonner";
 
 export const SavingsOverview = () => {
   const [progressValue, setProgressValue] = useState(0);
+  const { user } = useAuthStore();
+  const { financial, hasLoaded, updateFinancialData, currencyType } =
+    useFinancialStore();
 
-  const { financial, currencyType } = useFinancialStore();
+  const onHandleFinances = useCallback(async () => {
+    try {
+      if (!user?.id || hasLoaded) return;
+      const finances = await getFinancial(user.id);
+      await updateFinancialData(finances);
+    } catch (error) {
+      const errorMessage = getErrorMessage(error);
+      toast.error("Error cargando las finanzas personales", {
+        description: errorMessage,
+      });
+      console.error("Error cargando las finanzas personales", error);
+    }
+  }, [user?.id, hasLoaded, updateFinancialData]);
 
   useEffect(() => {
+    if (!sessionStorage.getItem("token")) return;
+    onHandleFinances();
+  }, [onHandleFinances]);
+
+  useEffect(() => {
+    if (!financial?.savings?.percentage) return;
     const interval = setInterval(() => {
       setProgressValue((prev) => {
         if (prev >= Number(financial.savings.percentage)) {
@@ -35,7 +60,6 @@ export const SavingsOverview = () => {
             "--value": progressValue,
             "--size": "5rem",
             "--thickness": "0.4rem",
-
           }}
           role="progressbar"
         >
@@ -64,13 +88,19 @@ export const SavingsOverview = () => {
           <div className="flex-1">
             <div className="flex flex-col">
               <span className="text-base font-semibold">Ingresos</span>
-              <span className="font-bold text-lg text-secondary">
-                {formatCurrency(
-                  financial.income.values[currencyType],
-                  currencyType,
-                  2
-                )}
-              </span>
+              {hasLoaded ? (
+                <span className="font-bold text-lg text-secondary">
+                  {financial.income.values[currencyType] == 0
+                    ? "0,00"
+                    : formatCurrency(
+                        financial.income.values[currencyType],
+                        currencyType,
+                        2
+                      )}
+                </span>
+              ) : (
+                <span className="loading loading-dots loading-md text-secondary"></span>
+              )}
             </div>
           </div>
         </div>
@@ -82,14 +112,20 @@ export const SavingsOverview = () => {
           <div className="flex-1">
             <div className="flex flex-col">
               <span className="text-base font-semibold">Gastos</span>
-              <span className="font-bold text-lg text-secondary">
-                -
-                {formatCurrency(
-                  financial.fixedExpenses.values[currencyType],
-                  currencyType,
-                  2
-                )}
-              </span>
+              {hasLoaded ? (
+                <span className="font-bold text-lg text-secondary">
+                  -
+                  {financial.fixedExpenses.values[currencyType] == 0
+                    ? "0,00"
+                    : formatCurrency(
+                        financial.fixedExpenses.values[currencyType],
+                        currencyType,
+                        2
+                      )}
+                </span>
+              ) : (
+                <span className="loading loading-dots loading-md text-secondary"></span>
+              )}
             </div>
           </div>
         </div>

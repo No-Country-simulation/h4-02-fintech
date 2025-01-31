@@ -34,7 +34,11 @@ export const InvestmentLayout = () => {
 
           {/* Pestaña "Recomendaciones" con lógica de modal */}
           <NavLink
-            to={formDataComplete ? "/dashboard/investment/recommendation" : ""}
+            to={
+              formDataComplete
+                ? "/dashboard/investment/recommendation"
+                : "/dashboard/investment/recommendation"
+            }
             role="tab"
             onClick={handleRecommendationClick}
             className={({ isActive }) => `tab ${isActive ? "tab-active" : ""}`}

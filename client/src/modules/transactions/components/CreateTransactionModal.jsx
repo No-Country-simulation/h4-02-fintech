@@ -17,11 +17,14 @@ import { getErrorMessage } from "../../../core/validators/errorHandler";
 import { toast } from "sonner";
 import { createTransaction } from "../services/transactions";
 import { useAuthStore } from "../../../core/auth/store/useAuthStore";
+import { useFinancialStore } from "../../../core/dashboard/store/useFinancialStore";
+import { getFinancial } from "../../../core/dashboard/services/financial";
 
 export default function CreateTransactionModal() {
   const [isOpen, setIsOpen] = useState(false);
   const [state, setState] = useState("OUT");
   const { user } = useAuthStore();
+  const { updateFinancialData, setHasLoaded } = useFinancialStore();
 
   const {
     register,
@@ -43,12 +46,16 @@ export default function CreateTransactionModal() {
         user: user.id,
         date: new Date(data.date).toISOString().split("T")[0],
       });
-      
+
       toast("Transacción exitosa", {
         description: "Transacción creada con éxito",
       });
+
       setIsOpen(false);
       reset();
+      await setHasLoaded(false);
+      const updatedFinancialData = await getFinancial(user.id);
+      await updateFinancialData(updatedFinancialData);
     } catch (error) {
       const errorMessage = getErrorMessage(error);
       toast.error(errorMessage);
@@ -212,6 +219,7 @@ export default function CreateTransactionModal() {
                 placeholder="Monto de la transacción"
                 className="input input-bordered w-full"
               />
+              <p className="text-gray-500">Expresado en Pesos Argentinos</p>
               {errors.amount && (
                 <p className="text-red-500 text-sm mt-2">
                   {errors.amount.message}

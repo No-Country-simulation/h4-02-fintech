@@ -33,7 +33,7 @@ export const FinancialXModal = () => {
         className="btn btn-primary w-full"
         onClick={() => setIsOpen(true)}
       >
-        Actualizar mi Radiografía
+        Mi radiografía
       </button>
 
       <dialog
@@ -60,14 +60,14 @@ export const FinancialXModal = () => {
               <li key={index}>
                 <details className="border-2 rounded-[8px] p-2">
                   <summary className="text-primary font-bold">
-                    <Wallet size="24" className="text-secondary"/> {item.name}
+                    <Wallet size="24" className="text-secondary" /> {item.name}
                   </summary>
                   <ul>
                     <li>
-                      <a> {formatCurrency(item.values.ARG, "ARG")}</a>
+                      <a> {formatCurrency(item.values.ARG, "ARG", 2)}</a>
                     </li>
                     <li>
-                      <a> {formatCurrency(item.values.USD, "USD")}</a>
+                      <a> {formatCurrency(item.values.USD, "USD", 2)}</a>
                     </li>
                   </ul>
                 </details>

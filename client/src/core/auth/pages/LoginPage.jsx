@@ -100,7 +100,7 @@ export const LoginPage = () => {
           </div>
         </div>
 
-        <div className="card w-full shadow-none sm:shadow-xl bg-none sm:bg-[#DCFFF8] sm:w-1/2 rounded-none sm:rounded-[4px]">
+        <div className="card w-full shadow-none sm:shadow-xl bg-none sm:bg-[#DDE9E6] sm:w-1/2 rounded-none sm:rounded-[4px]">
           <div className="flex justify-center sm:hidden">
             <img
               src={iupiDesktopImage}
