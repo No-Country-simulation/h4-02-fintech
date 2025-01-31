@@ -113,7 +113,7 @@ export const Header = () => {
           <p className="text-gray-400 text-sm">Balance</p>
           <div className="flex items-center justify-between">
             <div className="flex flex-col sm:flex-row items-start">
-              <h1 className="text-3xl font-bold">
+              <h1 className="text-2xl font-bold">
                 {showBalance
                   ? formatCurrency(
                       financial.balance.values[currencyType],

@@ -229,7 +229,7 @@ export const ProfileInvestor = () => {
             </label>
             <input
               type="tel"
-              placeholder="+54XXXXXXXXXX"
+              placeholder="+XXXXXXXXXXXX"
               {...register("phone")}
               className="input input-bordered w-full"
             />

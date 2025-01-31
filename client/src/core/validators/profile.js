@@ -16,8 +16,8 @@ export const profileValidationSchema = yup.object().shape({
     .string()
     .required("El teléfono es obligatorio.")
     .matches(
-      /^\+549?(\d{10})$/,
-      "El teléfono debe tener el formato +549XXXXXXXXXX o +54XXXXXXXXXX."
+      /^\+?[0-9]{7,15}$/,
+      "El teléfono debe contener entre 7 y 15 dígitos y puede incluir un prefijo opcional con '+'."
     ),
   email: yup
     .string()
