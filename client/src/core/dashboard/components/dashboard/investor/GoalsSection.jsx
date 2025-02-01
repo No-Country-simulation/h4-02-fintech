@@ -15,10 +15,10 @@ import {
   User,
   Folder,
   Flag,
-  Edit,
 } from "iconsax-react";
 import { getErrorMessage } from "../../../../validators/errorHandler";
-import CreateContributionModal from "./CreateContributionModal";
+import EditGoalModal from "./EditGoalModal";
+import { calculateRemainingTime } from "../../../../utils/calculateRemainingTime";
 
 export const GoalsSection = () => {
   const { user } = useAuthStore();
@@ -102,7 +102,7 @@ export const GoalsSection = () => {
         .map((goal, index) => (
           <div
             key={index}
-            className="space-y-3 bg-base-100 shadow-md p-2 sm:border-2 sm:p-2 rounded-xl sm:bg-transparent sm:shadow-none"
+            className="flex flex-col justify-center space-y-3 bg-base-100 shadow-md p-2 sm:border-2 sm:p-2 rounded-xl sm:bg-transparent sm:shadow-none"
           >
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-1">
@@ -112,16 +112,14 @@ export const GoalsSection = () => {
                 </h3>
               </div>
               <div>
-                <button className="btn btn-ghost btn-square">
-                  <Edit size={24} className="text-primary" />
-                </button>
+                {goal.progress < 100 && <EditGoalModal goalId={goal.id} />}
               </div>
             </div>
             <ul className="menu menu-horizontal bg-transparent rounded-box w-full">
               <li className="w-full">
-                <details>
+                <details className="relative">
                   <summary className="flex">
-                    <div className="w-11/12 space-y-1 px-4">
+                    <div className="w-full space-y-1">
                       <div className="flex items-center">
                         <Progress
                           progress={goal.progress}
@@ -129,9 +127,6 @@ export const GoalsSection = () => {
                         />
                       </div>
                     </div>
-                    {goal.progress < 100 && (
-                      <CreateContributionModal goal={goal} />
-                    )}
                   </summary>
                   <ul className="z-20">
                     <li>
@@ -148,12 +143,11 @@ export const GoalsSection = () => {
                           </li>
                           <li>
                             <a>
-                              Tiempo restante:{" "}
-                              {Math.ceil(
-                                (new Date(goal.deadline) - new Date()) /
-                                  (1000 * 60 * 60 * 24 * 30)
-                              )}{" "}
-                              meses
+                              {goal.progress < 100
+                                ? `Tiempo restante: ${calculateRemainingTime(
+                                    goal.deadline
+                                  )}`
+                                : "¡Objetivo alcanzado!"}
                             </a>
                           </li>
                         </ul>

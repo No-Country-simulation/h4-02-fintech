@@ -17,6 +17,14 @@ export const useGoalStore = create(
           ],
         })),
 
+      updateGoal: async (goalId, updatedGoal) => {
+        set((state) => ({
+          goals: state.goals.map((goal) =>
+            goal.id === goalId ? { ...goal, ...updatedGoal } : goal
+          ),
+        }));
+      },
+
       addContribution: (updatedGoal) =>
         set((state) => {
           const updatedGoals = state.goals.map((goal) =>

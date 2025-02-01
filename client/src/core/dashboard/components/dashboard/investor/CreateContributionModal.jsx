@@ -1,4 +1,3 @@
-import { Add } from "iconsax-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -67,11 +66,17 @@ export default function CreateContributionModal({ goal }) {
   const formattedAmount = watchAmount
     ? `$ ${watchAmount.replace(".", ",")}`
     : "";
+  const deadlineDate = new Date(goal.deadline);
+  const today = new Date();
+  const isExpired = deadlineDate < today;
 
   return (
-    <div>
-      <button className="btn btn-square btn-ghost" onClick={() => setIsOpen(true)}>
-        <Add size="24" />
+    <>
+      <button
+        className="btn btn-secondary text-white m-0"
+        onClick={() => setIsOpen(true)}
+      >
+        Ingresar Contribución
       </button>
 
       <dialog
@@ -89,26 +94,43 @@ export default function CreateContributionModal({ goal }) {
             ✕
           </button>
 
-          <div className="mb-4">
-            <div className="my-2">
-              <h2 className="text-xl font-semibold mb-2 text-black">
-                Agregar contribución para {`"${goal.goalName}"`}{" "}
-              </h2>
-            </div>
+          <div className="mb-4 mt-4">
+            <h2 className="text-xl font-semibold mb-2 text-black">
+              Agregar contribución para {`"${goal.goalName}"`}
+            </h2>
             <p className="text-md">
               Monto deseado:{" "}
               <span className="badge badge-primary">
                 ${goal.desiredAmount.toLocaleString("es-AR")}
               </span>
             </p>
+
             <p className="text-md mt-2">Contribuciones actuales:</p>
             <div className="flex flex-wrap gap-2 mt-2">
               {goal.contributions.map((contribution, index) => (
-                <span key={index} className="badge badge-secondary">
+                <span key={index} className="badge bg-base-200">
                   ${contribution.amount.toLocaleString("es-AR")}
                 </span>
               ))}
             </div>
+
+            <p className="text-md mt-4">
+              Fecha límite:{" "}
+              <span
+                className={`badge ${
+                  isExpired ? "badge-error" : "badge-neutral"
+                }`}
+              >
+                {isExpired
+                  ? "Fecha expirada"
+                  : deadlineDate.toLocaleDateString("es-AR", {
+                      year: "numeric",
+                      month: "long",
+                      day: "numeric",
+                    })}
+              </span>
+            </p>
+
             {goal.contributions.length > 1 && (
               <p className="text-md mt-4">
                 Total de contribuciones:{" "}
@@ -122,44 +144,45 @@ export default function CreateContributionModal({ goal }) {
             )}
           </div>
 
-          <form onSubmit={handleSubmit(onSubmit)}>
-            {/* Monto */}
-            <div className="form-control">
-              <label htmlFor="amount" className="label">
-                <span className="label-text">Monto</span>
-              </label>
-              <input
-                id="amount"
-                type="text"
-                value={formattedAmount}
-                onChange={handleCurrencyInput}
-                placeholder="Monto"
-                className="input input-bordered w-full"
-              />
-              <p className="text-gray-500">Expresado en Pesos Argentinos</p>
-              {errors.amount && (
-                <p className="text-red-500 text-sm mt-2">
-                  {errors.amount.message}
-                </p>
-              )}
-            </div>
+          {!isExpired && (
+            <form onSubmit={handleSubmit(onSubmit)}>
+              <div className="form-control">
+                <label htmlFor="amount" className="label">
+                  <span className="label-text">Monto</span>
+                </label>
+                <input
+                  id="amount"
+                  type="text"
+                  value={formattedAmount}
+                  onChange={handleCurrencyInput}
+                  placeholder="Monto"
+                  className="input input-bordered w-full"
+                />
+                <p className="text-gray-500">Expresado en Pesos Argentinos</p>
+                {errors.amount && (
+                  <p className="text-red-500 text-sm mt-2">
+                    {errors.amount.message}
+                  </p>
+                )}
+              </div>
 
-            <div className="space-y-2 mt-4">
-              <button type="submit" className="btn btn-primary w-full">
-                Agregar contribución
-              </button>
-              <button
-                type="button"
-                className="btn btn-outline w-full"
-                onClick={() => setIsOpen(false)}
-              >
-                Cancelar
-              </button>
-            </div>
-          </form>
+              <div className="space-y-2 mt-4">
+                <button type="submit" className="btn btn-primary w-full">
+                  Agregar contribución
+                </button>
+                <button
+                  type="button"
+                  className="btn btn-outline w-full"
+                  onClick={() => setIsOpen(false)}
+                >
+                  Cancelar
+                </button>
+              </div>
+            </form>
+          )}
         </div>
       </dialog>
-    </div>
+    </>
   );
 }
 
