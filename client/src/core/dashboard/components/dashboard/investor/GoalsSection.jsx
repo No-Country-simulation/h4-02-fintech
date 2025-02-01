@@ -15,6 +15,7 @@ import {
   User,
   Folder,
   Flag,
+  Edit,
 } from "iconsax-react";
 import { getErrorMessage } from "../../../../validators/errorHandler";
 import CreateContributionModal from "./CreateContributionModal";
@@ -101,7 +102,7 @@ export const GoalsSection = () => {
         .map((goal, index) => (
           <div
             key={index}
-            className="space-y-3 sm:border-2 sm:p-2 sm:rounded-xl"
+            className="space-y-3 bg-base-100 shadow-md p-2 sm:border-2 sm:p-2 rounded-xl sm:bg-transparent sm:shadow-none"
           >
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-1">
@@ -109,6 +110,11 @@ export const GoalsSection = () => {
                 <h3 className="text-xl text-primary font-medium">
                   {goal.goalName}
                 </h3>
+              </div>
+              <div>
+                <button className="btn btn-ghost btn-square">
+                  <Edit size={24} className="text-primary" />
+                </button>
               </div>
             </div>
             <ul className="menu menu-horizontal bg-transparent rounded-box w-full">
