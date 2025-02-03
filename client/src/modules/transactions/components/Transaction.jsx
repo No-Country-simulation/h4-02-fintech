@@ -49,7 +49,7 @@ export const Transaction = () => {
 
           <div className="w-full relative">
             <progress
-              className="progress w-full h-8 bg-gray-300"
+              className="progress w-full h-8 bg-slate-400"
               value={hasLoaded ? financial.savings.percentage : 0}
               max="100"
             ></progress>
@@ -79,7 +79,7 @@ export const Transaction = () => {
             />
             <p className="text-sm opacity-70">
               {hasLoaded ? (
-                `El ${financial.savings.percentage}% de tus gastos se ve bien.`
+                `El ${financial.savings.percentage}% son gastos, se ve bien.`
               ) : (
                 <span className="loading loading-dots loading-md text-secondary"></span>
               )}

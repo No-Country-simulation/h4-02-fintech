@@ -17,3 +17,11 @@ export const createContribution = async (userId, goalId, contributionData) => {
   );
   return data;
 };
+
+export const updateGoal = async (userId, goalId, goalData) => {
+  const { data } = await iupiApi.put(
+    `/user/${userId}/goals/${goalId}`,
+    goalData
+  );
+  return data;
+};
