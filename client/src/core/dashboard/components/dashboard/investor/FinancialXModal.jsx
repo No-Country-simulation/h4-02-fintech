@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { PieChartWithPaddingAngle } from "../ui/PieChartWithPaddingAngle";
 import { Wallet } from "iconsax-react";
-
 import { formatCurrency } from "../../../../utils/formatCurrency";
 import { useFinancialStore } from "../../../store/useFinancialStore";
+import radiographyImage from "../../../../../assets/images/radiography.svg";
 
 export const FinancialXModal = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -32,7 +32,7 @@ export const FinancialXModal = () => {
   );
 
   return (
-    <div>
+    <>
       <button
         className="btn btn-primary w-full"
         onClick={() => setIsOpen(true)}
@@ -55,9 +55,26 @@ export const FinancialXModal = () => {
             ✕
           </button>
 
-          {hasData && (
+          {hasData ? (
             <div className="space-y-6 mb-6 mt-3">
               <PieChartWithPaddingAngle data={data} />
+            </div>
+          ) : (
+            <div className="flex flex-col items-center justify-center h-full">
+              <div className="flex justify-center py-6">
+                <img
+                  src={radiographyImage}
+                  alt="Radiography init"
+                  width="130"
+                  height="120"
+                  className="object-cover"
+                />
+              </div>
+              <p className="text-base text-center font-normal">
+                Aún no hay datos para mostrar.{" "}
+                <span className="font-semibold">Ingresa tu información</span>{" "}
+                para ver tu análisis financiero personalizado.
+              </p>
             </div>
           )}
 
@@ -90,6 +107,6 @@ export const FinancialXModal = () => {
           </ul>
         </div>
       </dialog>
-    </div>
+    </>
   );
 };
