@@ -8,6 +8,8 @@ import { useAuthStore } from "../../../../auth/store/useAuthStore";
 import { getErrorMessage } from "../../../../validators/errorHandler";
 import { contributionValidationSchema } from "../../../../validators/contribution";
 import PropTypes from "prop-types";
+import { Money, MoneyAdd } from "iconsax-react";
+import { formatCurrency } from "../../../../utils/formatCurrency";
 
 export default function CreateContributionModal({ goal }) {
   const { user } = useAuthStore();
@@ -66,7 +68,7 @@ export default function CreateContributionModal({ goal }) {
   const formattedAmount = watchAmount
     ? `$ ${watchAmount.replace(".", ",")}`
     : "";
-  const deadlineDate = new Date(goal.deadline);
+  const deadlineDate = new Date(`${goal.deadline}T23:59:59`);
   const today = new Date();
   const isExpired = deadlineDate < today;
 
@@ -94,54 +96,36 @@ export default function CreateContributionModal({ goal }) {
             ✕
           </button>
 
-          <div className="mb-4 mt-4">
-            <h2 className="text-xl font-semibold mb-2 text-black">
-              Agregar contribución para {`"${goal.goalName}"`}
+          <div className="mb-2 mt-2">
+            <h2 className="text-xl font-semibold mb-2 text-primary">
+              Agregar contribución para
             </h2>
-            <p className="text-md">
-              Monto deseado:{" "}
-              <span className="badge badge-primary">
-                ${goal.desiredAmount.toLocaleString("es-AR")}
-              </span>
-            </p>
 
-            <p className="text-md mt-2">Contribuciones actuales:</p>
-            <div className="flex flex-wrap gap-2 mt-2">
-              {goal.contributions.map((contribution, index) => (
-                <span key={index} className="badge bg-base-200">
-                  ${contribution.amount.toLocaleString("es-AR")}
-                </span>
-              ))}
+            <div className="flex justify-between">
+              <h3 className="text-xl font-semibold mb-2 text-primary">
+                {goal.goalName}
+              </h3>
+              <div className="flex flex-col flex-wrap justify-end items-end space-y-2">
+                <p className="text-sm text-gray-400 text-nowrap">
+                  <span
+                    className={`badge ${isExpired ? "badge-error" : "badge"}`}
+                  >
+                    {isExpired
+                      ? "Fecha expirada"
+                      : deadlineDate.toLocaleDateString("es-AR", {
+                          year: "numeric",
+                          month: "long",
+                          day: "numeric",
+                        })}
+                  </span>
+                </p>
+                <p className="flex space-x-2">
+                  <span className="badge badge-primary">
+                    {formatCurrency(goal.desiredAmount, "ARG", 2)}
+                  </span>
+                </p>
+              </div>
             </div>
-
-            <p className="text-md mt-4">
-              Fecha límite:{" "}
-              <span
-                className={`badge ${
-                  isExpired ? "badge-error" : "badge-neutral"
-                }`}
-              >
-                {isExpired
-                  ? "Fecha expirada"
-                  : deadlineDate.toLocaleDateString("es-AR", {
-                      year: "numeric",
-                      month: "long",
-                      day: "numeric",
-                    })}
-              </span>
-            </p>
-
-            {goal.contributions.length > 1 && (
-              <p className="text-md mt-4">
-                Total de contribuciones:{" "}
-                <span className="badge badge-accent">
-                  $
-                  {goal.contributions
-                    .reduce((sum, contribution) => sum + contribution.amount, 0)
-                    .toLocaleString("es-AR")}
-                </span>
-              </p>
-            )}
           </div>
 
           {!isExpired && (
@@ -158,13 +142,62 @@ export default function CreateContributionModal({ goal }) {
                   placeholder="Monto"
                   className="input input-bordered w-full"
                 />
-                <p className="text-gray-500">Expresado en Pesos Argentinos</p>
+                <p className="text-gray-500 text-sm ">
+                  Expresado en Pesos Argentinos
+                </p>
                 {errors.amount && (
                   <p className="text-red-500 text-sm mt-2">
                     {errors.amount.message}
                   </p>
                 )}
               </div>
+
+              <h3 className="text-md mt-2 text-primary font-semibold">
+                Últimas contribuciones
+              </h3>
+              <div className="sm:max-h-20 overflow-x-auto sm:overflow-y-auto flex sm:flex-col space-x-0 ">
+                {[...goal.contributions]
+                  .reverse()
+                  .map((contribution, index) => (
+                    <div key={index} className="flex flex-col mr-6 sm:mr-0">
+                      <div className="flex flex-col">
+                        <p className="text-sm text-gray-400 text-nowrap">
+                          {new Date(contribution.date).toLocaleDateString(
+                            "es-AR",
+                            {
+                              year: "numeric",
+                              month: "long",
+                              day: "numeric",
+                            }
+                          )}
+                        </p>
+                      </div>
+                      <div className="flex space-x-2">
+                        <MoneyAdd size="24" />
+                        <p>{formatCurrency(contribution.amount, "ARG", 2)}</p>
+                      </div>
+                    </div>
+                  ))}
+              </div>
+
+              <h3 className="text-md mt-2 text-primary font-semibold">
+                Total de contribuciones
+              </h3>
+              {goal.contributions.length > 1 && (
+                <p className="text-md mt-2 flex space-x-2">
+                  <Money size="24" />
+                  <span>
+                    {formatCurrency(
+                      goal.contributions.reduce(
+                        (sum, contribution) => sum + contribution.amount,
+                        0
+                      ),
+                      "ARG",
+                      2
+                    )}
+                  </span>
+                </p>
+              )}
 
               <div className="space-y-2 mt-4">
                 <button type="submit" className="btn btn-primary w-full">
