@@ -8,10 +8,12 @@ import com.fintech.h4_02.enums.QueriesState;
 import com.fintech.h4_02.exception.EntityNotFoundException;
 import com.fintech.h4_02.repository.QueryRepository;
 import com.fintech.h4_02.repository.UserRepository;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Service
 public class QueryService {
@@ -31,5 +33,12 @@ public class QueryService {
 
         query = queryRepository.save(query);
         return new QueryResponse(query);
+    }
+
+    public List<QueryResponse> getQueriesByuser(@NotNull(message = "el id no puede ser nulo") Long id) {
+        UserEntity user = userRepository.findById(id).orElseThrow( ()-> new EntityNotFoundException("user not found"));
+        List<QueryEntity> list = user.getQueries();
+        List<QueryResponse> listDto = list.stream().map(QueryResponse::new).toList();
+        return listDto;
     }
 }
