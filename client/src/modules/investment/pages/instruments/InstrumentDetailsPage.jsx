@@ -153,14 +153,26 @@ export const InstrumentDetailsPage = () => {
               },
             ],
           },
-          compareData: [
-            { instrument: "AE38 USD 2038", yield: "7,5 %", risk: "Moderado" },
-            { instrument: "GD30 USD 2030", yield: "8,1 %", risk: "Moderado" },
-            { instrument: "AL30 USD 2030", yield: "7,3 %", risk: "Arriesgado" },
+          PriceSummary: [
             {
-              instrument: "Fondo XYZ Global",
-              yield: "6,8 %",
-              risk: "Conservador",
+              label: "Precio de apertura",
+              value: `$${highPrice}`,
+              arsValue: `ARS ${await convertUsdToArs(highPrice)}`, // Agregar precio en ARS
+            },
+            {
+              label: "Precio de cierre",
+              value: `$${lowPrice}`,
+              arsValue: `ARS ${await convertUsdToArs(lowPrice)}`, // Agregar precio en ARS
+            },
+            {
+              label: "Precio más alto",
+              value: `$${graphHighPrice}`,
+              arsValue: `ARS ${await convertUsdToArs(graphHighPrice)}`, // Agregar precio en ARS
+            },
+            {
+              label: "Precio más bajo",
+              value: `$${graphLowPrice}`,
+              arsValue: `ARS ${await convertUsdToArs(graphLowPrice)}`, // Agregar precio en ARS
             },
           ],
         };
@@ -260,7 +272,7 @@ export const InstrumentDetailsPage = () => {
             {instrument.price || "Detalles Premium"}
           </div>
           <div className="text-secondary text-2xl font-bold mb-2">
-            {priceInArs ? `ARS ${priceInArs}` : "..."} {/* Muestra el precio en ARS */}
+            {priceInArs ? `ARS ${priceInArs}` : "..."}
           </div>
           <div className="flex items-center gap-2 mb-2">
             <span className="text-xl">{instrument.change || "N/A"}</span>
@@ -281,6 +293,29 @@ export const InstrumentDetailsPage = () => {
           <div className="w-full lg:w-1/2">
             <PerformanceChart performanceData={instrument.performance} />
           </div>
+
+          <div className="w-full lg:w-1/2">
+            <h2 className="font-semibold text-primary text-md">Caja de puntas</h2>
+            <table className="table w-full">
+              <thead className="bg-primary text-white">
+                <tr>
+                  <th>Descripción</th>
+                  <th>Valor (USD)</th>
+                  <th>Valor (ARS)</th>
+                </tr>
+              </thead>
+              <tbody>
+                {instrument.PriceSummary.map((item, index) => (
+                  <tr key={index}>
+                    <td>{item.label}</td>
+                    <td>{item.value}</td>
+                    <td>{item.arsValue}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
         </div>
 
         <CreateInvestmentModal instrument={{ ...instrument, price: priceInArs }} />

@@ -108,9 +108,9 @@ export const TransactionSection = () => {
                 </h2>
             }
 
-            <div className="my-4">
+            <div className="p-4 sm:p-6 my-4">
 
-                <ResponsiveContainer width="100%" height={300}>
+                <ResponsiveContainer width="100%" height={400}>
                     <AreaChart data={summary ? filterData(summary[selectedCategory], filter) : []}>
                         <XAxis dataKey="date" />
                         <YAxis
