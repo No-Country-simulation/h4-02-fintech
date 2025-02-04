@@ -3,6 +3,7 @@ package com.fintech.h4_02.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fintech.h4_02.dto.user.UpdateUserProfileDto;
 import com.fintech.h4_02.dto.user.UserFinancialRadiography;
+import com.fintech.h4_02.dto.user.UserFinancialSummaryDto;
 import com.fintech.h4_02.dto.user.UserResponseDto;
 import com.fintech.h4_02.entity.UserEntity;
 import com.fintech.h4_02.service.UserService;
@@ -126,22 +127,40 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(new UpdateUserProfileDto(userEntity));
     }
 
-    @Operation(summary = "radiography financial", description = "Get a radiography-financial by user by id")
+    @Operation(
+            summary = "Financial radiography",
+            description = "Get a financial radiography by user id."
+    )
     @ApiResponses({
             @ApiResponse(
                     responseCode = "200",
-                    description = "Get radiography-financial ",
                     content = @Content(
                             mediaType = MediaType.APPLICATION_JSON_VALUE,
                             schema = @Schema(implementation = UserFinancialRadiography.class)
-                    )
-            )
+                    ))
     })
     @GetMapping("/{userId}/financial-radiography")
     public ResponseEntity<UserFinancialRadiography> getUseFinancialXRay(
             @PathVariable Long userId
     ) throws JSONException, JsonProcessingException {
         return ResponseEntity.status(HttpStatus.OK).body(userService.calculateUserFinancialXRay(userId));
+    }
+
+    @Operation(
+            summary = "Financial summary",
+            description = "Get a financial summary (income, expenses and savings) grouped by date of a user."
+    )
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    content = @Content(
+                            mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = UserFinancialRadiography.class)
+                    ))
+    })
+    @GetMapping("/{userId}/financial-summary")
+    public ResponseEntity<UserFinancialSummaryDto> getUseFinancialSummary(@PathVariable Long userId) {
+        return ResponseEntity.status(HttpStatus.OK).body(userService.calculateUserFinancialSummary(userId));
     }
 
 }

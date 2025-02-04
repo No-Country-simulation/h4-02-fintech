@@ -5,9 +5,11 @@ import com.fintech.h4_02.dto.coin.CoinPrice;
 import com.fintech.h4_02.dto.exchange.ExchangeSimple;
 import com.fintech.h4_02.dto.user.UpdateUserProfileDto;
 import com.fintech.h4_02.dto.user.UserFinancialRadiography;
+import com.fintech.h4_02.dto.user.UserFinancialSummaryDto;
 import com.fintech.h4_02.entity.UserEntity;
 import com.fintech.h4_02.exception.EntityNotFoundException;
 import com.fintech.h4_02.repository.UserRepository;
+import com.fintech.h4_02.repository.WalletRepository;
 import com.fintech.h4_02.repository.goal.GoalContributionRepository;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -31,6 +33,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final GoalContributionRepository goalContributionRepository;
     private final ExchangeService exchangeService;
+    private final WalletRepository walletRepository;
 
     public UserEntity getUserByEmail(String email) {
         return userRepository
@@ -66,6 +69,13 @@ public class UserService {
         user.setMonthlyNotifications(dto.monthlyNotifications());
 
         return userRepository.save(user);
+    }
+
+    public UserFinancialSummaryDto calculateUserFinancialSummary(Long userId) {
+        var incomeGroupedByDate = walletRepository.calculateIncomeGroupedByDate(userId);
+        var expensesGroupedByDate = walletRepository.calculateExpensesGroupedByDate(userId);
+        var savingsGroupedByDate = goalContributionRepository.calculateSavingsGroupedByDate(userId);
+        return new UserFinancialSummaryDto(incomeGroupedByDate, expensesGroupedByDate, savingsGroupedByDate);
     }
 
     public UserFinancialRadiography calculateUserFinancialXRay(Long userId) throws JSONException, JsonProcessingException {
