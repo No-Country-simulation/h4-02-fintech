@@ -31,7 +31,7 @@ export const Drawer = ({ menu }) => {
           aria-label="close sidebar"
           className="drawer-overlay"
         ></label>
-        <ul className="menu bg-base-200 text-base-content min-h-full w-80 p-0">
+        <ul className="menu bg-base-100 text-base-content min-h-full w-80 p-0">
           <div className="flex justify-between items-center p-2">
             <Link
               className="btn btn-ghost flex items-center gap-2 px-2 w-fit"

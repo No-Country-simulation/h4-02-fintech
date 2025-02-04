@@ -5,7 +5,6 @@ import {
   Game,
   Health,
   Home2,
-  Money,
   Shop,
   Teacher,
 } from "iconsax-react";
@@ -95,13 +94,13 @@ export default function CreateTransactionModal() {
       {/* Categories Grid */}
       <div className="flex justify-center items-center gap-2 mb-4 mt-2">
         <button
-          className="btn btn-accent shadow-2xl rounded"
+          className="btn btn-primary btn-outline shadow-md rounded-2xl border-1 border-neutral"
           onClick={() => onClickCategory("IN")}
         >
           Agregar ingreso
         </button>
       </div>
-      <h2 className="text-start font-semibold mb-2">Agregar Gastos</h2>
+      <h2 className="text-start font-semibold mb-2 text-primary">Agregar Gastos</h2>
       <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-5 gap-4">
         {[
           {
@@ -137,11 +136,6 @@ export default function CreateTransactionModal() {
           {
             icon: <Teacher size={32} variant="Bold" className="text-white" />,
             label: "Escolaridad",
-            state: "OUT",
-          },
-          {
-            icon: <Money size={32} variant="Bold" className="text-white" />,
-            label: "Ahorro",
             state: "OUT",
           },
           {

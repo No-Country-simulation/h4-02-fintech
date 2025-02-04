@@ -6,3 +6,10 @@ export const getFinancial = async (userId) => {
   );
   return data;
 };
+
+export const getFinancialSummary = async(userId) => {
+  const { data } = await iupiApi.get(
+    `/user/${userId}/financial-summary`
+  );
+  return data;
+}

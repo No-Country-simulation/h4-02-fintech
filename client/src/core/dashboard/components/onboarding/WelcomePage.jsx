@@ -1,9 +1,10 @@
 import PropTypes from "prop-types";
-import onboardingImage from "../../../../assets/images/onboarding.svg";
 import { Link } from "react-router-dom";
 import { useEffect } from "react";
 import { useOnboardingStore } from "../../../auth/store/useOnboardingStore";
 import { validateComplete } from "../../../validators/complete";
+import iupiFooterImage from "../../../../assets/images/iupi-footer.svg";
+import sloganFooterImage from "../../../../assets/images/slogan-footer.svg";
 
 export const WelcomePage = ({ nextStep }) => {
   const { updateFormData, formData, setStep } = useOnboardingStore();
@@ -20,29 +21,38 @@ export const WelcomePage = ({ nextStep }) => {
   }, [formData, setStep]);
 
   return (
-    <div className="min-h-screen bg-gray-50 p-4 md:p-6 lg:p-8">
+    <div className="min-h-screen bg-gradient-to-b from-primary to-[#001E47] p-4 md:p-6 lg:p-8">
       <div className="mx-auto max-w-md w-full space-y-8">
         <div className="space-y-8 text-center">
-          <h1 className="text-2xl text-primary md:text-3xl font-semibold px-4">
+          <div className="flex justify-center items-center gap-4 flex-col">
+            <img
+              src={iupiFooterImage}
+              alt="iupi-desktop"
+              className="w-24 sm:w-32 md:w-40 lg:w-48 max-w-full"
+            />
+            <img
+              src={sloganFooterImage}
+              alt="slogan-desktop"
+              className="w-32 sm:w-40 md:w-48 lg:w-56 max-w-full"
+            />
+          </div>
+
+          <h1 className="text-2xl text-white md:text-3xl font-semibold px-4">
             Bienvenido a iUpi: tu aliado en el ahorro e inversión.
           </h1>
 
-          <div className="flex justify-center">
-            <img src={onboardingImage} alt="onboarding-image" />
-          </div>
-
-          <p className="text-lg text-secondary font-semibold px-4">
+          <p className="text-lg text-white font-semibold px-4">
             En unos simples pasos crearemos un perfil financiero adaptado a tus
             necesidades. ¡Comencemos!
           </p>
 
           <div className="space-y-4 pt-4">
-            <button className="w-full btn btn-primary" onClick={nextStep}>
+            <button className="w-full btn btn-outline btn-primary bg-white" onClick={nextStep}>
               Iniciar
             </button>
 
             <Link
-              className="w-full btn btn-outline"
+              className="w-full btn btn-primary"
               to="/dashboard"
               onClick={handleSaveAndContinueLater}
             >
