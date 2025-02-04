@@ -8,6 +8,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
 
+@Builder
 @Getter
 @Setter
 @NoArgsConstructor
@@ -34,3 +35,4 @@ public class CommentEntity {
     @JsonIgnore
     private UserEntity user;
 }
+

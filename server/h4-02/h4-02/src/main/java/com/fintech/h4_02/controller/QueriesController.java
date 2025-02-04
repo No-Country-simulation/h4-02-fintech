@@ -61,7 +61,7 @@ public class QueriesController {
                                     value = "[{\"id\": 1,\"user\": {\"id\": 1,\"name\": \"Lionel\"},\"date\": \"2025-02-04\",\"description\": \"consultas y mas consultas\",\"state\": \"QUERY\",\"comments\": []},{\"id\": 2,\"user\": {\"id\": 1,\"name\": \"Lionel\"},\"date\": \"2025-02-04\",\"description\": \"otra consulta 2\",\"state\": \"QUERY\",\"comments\": []}]")
                     ))
     })
-    @GetMapping("/user/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<List<QueryResponse>> getQueriesByuser(@PathVariable Long id){
         return ResponseEntity.status(HttpStatus.OK).body(queryService.getQueriesByuser(id));
     }

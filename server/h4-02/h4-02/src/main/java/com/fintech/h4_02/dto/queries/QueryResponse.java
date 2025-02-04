@@ -21,4 +21,5 @@ public record QueryResponse(
     public QueryResponse(QueryEntity query) {
         this(query.getId(), new UserResponseSimple(query.getUser()), query.getDate().toString(), query.getDescription(), query.getState(),query.getComments());
     }
+
 }
