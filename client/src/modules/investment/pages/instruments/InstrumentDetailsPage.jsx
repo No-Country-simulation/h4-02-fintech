@@ -4,6 +4,8 @@ import { PerformanceChart } from "../../../../core/dashboard/components/dashboar
 import { useEffect, useState } from "react";
 import { getPrice } from "../../services/instrument";
 import CreateInvestmentModal from "../../components/CreateInvestmentModal";
+import { convertUsdToArs } from "../../../../core/services/exchange";
+
 
 export const InstrumentDetailsPage = () => {
   const navigate = useNavigate();
@@ -11,6 +13,7 @@ export const InstrumentDetailsPage = () => {
 
   const [instrument, setInstrument] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [priceInArs, setPriceInArs] = useState(null); // Estado para el precio en ARS
 
   useEffect(() => {
     if (!type || !id) {
@@ -79,8 +82,8 @@ export const InstrumentDetailsPage = () => {
 
             const randomValue =
               Math.random() *
-                (Math.max(graphHighPrice, graphLowPrice) -
-                  Math.min(graphHighPrice, graphLowPrice)) +
+              (Math.max(graphHighPrice, graphLowPrice) -
+                Math.min(graphHighPrice, graphLowPrice)) +
               Math.min(graphHighPrice, graphLowPrice);
 
             return {
@@ -88,8 +91,8 @@ export const InstrumentDetailsPage = () => {
                 interval === "days"
                   ? dayOfWeek
                   : interval === "months"
-                  ? monthName
-                  : date.getFullYear(),
+                    ? monthName
+                    : date.getFullYear(),
               value: Math.max(0, randomValue).toFixed(2), // Garantiza que no sea negativo
             };
           }).reverse();
@@ -104,8 +107,8 @@ export const InstrumentDetailsPage = () => {
               day: date.toISOString().split("T")[0],
               value: (
                 Math.random() *
-                  (Math.max(graphHighPrice, graphLowPrice) -
-                    Math.min(graphHighPrice, graphLowPrice)) +
+                (Math.max(graphHighPrice, graphLowPrice) -
+                  Math.min(graphHighPrice, graphLowPrice)) +
                 Math.min(graphHighPrice, graphLowPrice)
               ).toFixed(2),
             });
@@ -163,6 +166,11 @@ export const InstrumentDetailsPage = () => {
         };
 
         setInstrument(transformedData);
+
+        // Convertir el precio a ARS
+        const arsPrice = await convertUsdToArs(lowPrice);
+        console.log(arsPrice);
+        setPriceInArs(arsPrice);
       }
     } catch (error) {
       console.error("Error fetching instrument data:", error);
@@ -252,17 +260,18 @@ export const InstrumentDetailsPage = () => {
           <div className="text-primary text-4xl font-bold mb-2">
             {instrument.price || "Detalles Premium"}
           </div>
+          <div className="text-secondary text-2xl font-bold mb-2">
+            {priceInArs ? `ARS ${priceInArs}` : "..."} {/* Muestra el precio en ARS */}
+          </div>
           <div className="flex items-center gap-2 mb-2">
             <span className="text-xl">{instrument.change || "N/A"}</span>
             <div
-              className={`flex items-center ${
-                instrument.isPositive ? "text-green-500" : "text-red-500"
-              }`}
+              className={`flex items-center ${instrument.isPositive ? "text-green-500" : "text-red-500"
+                }`}
             >
               <ArrowRight
-                className={`w-4 h-4 ${
-                  instrument.isPositive ? "" : "rotate-90"
-                }`}
+                className={`w-4 h-4 ${instrument.isPositive ? "" : "rotate-90"
+                  }`}
               />
               <span>{instrument.changePercent || "N/A"}</span>
             </div>
@@ -275,7 +284,7 @@ export const InstrumentDetailsPage = () => {
           </div>
         </div>
 
-        <CreateInvestmentModal instrument={instrument} />
+        <CreateInvestmentModal instrument={{...instrument, price: priceInArs} } />
       </div>
     </div>
   );

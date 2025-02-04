@@ -134,7 +134,7 @@ export default function CreateInvestmentModal({ instrument }) {
               {state === "BUY" ? "Comprar" : "Vender"} {instrument?.name || ""}
             </h3>
             <p className="text-gray-500 mt-2">
-              Precio Actual: {instrument?.price || ""}
+              Precio Actual: $ {instrument?.price || ""} ARS
             </p>
             {state === "SELL" && (
               <p className="text-gray-500 mt-2">
