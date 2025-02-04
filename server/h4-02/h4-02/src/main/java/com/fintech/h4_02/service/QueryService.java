@@ -41,4 +41,17 @@ public class QueryService {
         List<QueryResponse> listDto = list.stream().map(QueryResponse::new).toList();
         return listDto;
     }
+
+    public QueryResponse createQueryError(QueryRequest queryRequest) {
+        UserEntity user = userRepository.findById(queryRequest.userId()).orElseThrow( ()-> new EntityNotFoundException("user not found"));
+        QueryEntity query = QueryEntity.builder()
+                .user(user)
+                .description(queryRequest.comment())
+                .state(QueriesState.ERROR)
+                .date(LocalDate.now())
+                .build();
+
+        query = queryRepository.save(query);
+        return new QueryResponse(query);
+    }
 }

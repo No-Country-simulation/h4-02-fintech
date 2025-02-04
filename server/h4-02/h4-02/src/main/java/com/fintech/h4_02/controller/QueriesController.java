@@ -67,4 +67,22 @@ public class QueriesController {
     }
 
 
+    @Operation(summary = "create QueryEntity", description = "create new Query error")
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "201",
+                    description = "create a QueryEntity",
+                    content = @Content(
+                            mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = QueryResponse.class),
+                            examples = @ExampleObject(
+                                    name = "QueryResponse",
+                                    value = "{\"id\": 2,\"user\": {\"id\": 1,\"name\": \"Lionel\"},\"date\": \"2025-02-04\",\"description\": \"otra consulta 2\",\"state\": \"ERROR\",\"comments\": []}")
+                    ))
+    })
+    @PostMapping("/error")
+    public ResponseEntity<QueryResponse> createQueryError(@RequestBody @Valid QueryRequest queryRequest) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(queryService.createQueryError(queryRequest));
+    }
+
 }
