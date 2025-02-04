@@ -169,7 +169,6 @@ export const InstrumentDetailsPage = () => {
 
         // Convertir el precio a ARS
         const arsPrice = await convertUsdToArs(lowPrice);
-        console.log(arsPrice);
         setPriceInArs(arsPrice);
       }
     } catch (error) {
@@ -284,7 +283,7 @@ export const InstrumentDetailsPage = () => {
           </div>
         </div>
 
-        <CreateInvestmentModal instrument={{...instrument, price: priceInArs} } />
+        <CreateInvestmentModal instrument={{ ...instrument, price: priceInArs }} />
       </div>
     </div>
   );

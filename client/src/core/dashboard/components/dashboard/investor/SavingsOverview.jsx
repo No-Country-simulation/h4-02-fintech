@@ -50,7 +50,7 @@ export const SavingsOverview = () => {
 
   return (
     <Link
-      className="flex w-full items-center justify-center p-2 bg-base-200 border-1 rounded-xl shadow-md hover:shadow-lg"
+      className="flex w-full items-center justify-center p-2 bg-base-100 border-2 rounded-xl shadow-md hover:shadow-lg"
       to={"/dashboard/transactions"}
     >
       <div className="flex flex-col items-center gap-2 lg:w-auto p-2 ">
