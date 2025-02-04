@@ -109,7 +109,7 @@ export const Header = () => {
       </div>
 
       {financial && (
-        <div>
+        <div className="sm:hidden block">
           <p className="text-gray-400 text-sm">Balance</p>
           <div className="flex items-center justify-between">
             <div className="flex flex-col sm:flex-row items-start">
