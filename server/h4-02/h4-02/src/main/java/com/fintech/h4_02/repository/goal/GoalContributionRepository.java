@@ -1,5 +1,6 @@
 package com.fintech.h4_02.repository.goal;
 
+import com.fintech.h4_02.dto.wallet.ValueDatePairDto;
 import com.fintech.h4_02.entity.goal.GoalContribution;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -7,6 +8,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Repository
 public interface GoalContributionRepository extends JpaRepository<GoalContribution, Long> {
@@ -17,7 +19,9 @@ public interface GoalContributionRepository extends JpaRepository<GoalContributi
      * @param goalId The ID of the Goal.
      * @return The total sum as a BigDecimal.
      */
-    @Query("SELECT COALESCE(SUM(gc.amount), 0) FROM GoalContribution gc WHERE gc.goal.id = :goalId")
+    @Query("SELECT COALESCE(SUM(gc.amount), 0) " +
+            "FROM GoalContribution gc " +
+            "WHERE gc.goal.id = :goalId")
     BigDecimal findTotalAmountByGoalId(@Param("goalId") Long goalId);
 
     /**
@@ -28,6 +32,14 @@ public interface GoalContributionRepository extends JpaRepository<GoalContributi
      * @return The sum of all contributions (as {@link BigDecimal}) for the user's goals.
      * Returns {@link BigDecimal#ZERO} if no contributions exist.
      */
-    @Query("SELECT COALESCE(SUM(gc.amount), 0) FROM GoalContribution gc WHERE gc.goal.user.id = :userId")
+    @Query("SELECT COALESCE(SUM(gc.amount), 0) " +
+            "FROM GoalContribution gc " +
+            "WHERE gc.goal.user.id = :userId")
     BigDecimal sumTotalContributionsByUserId(@Param("userId") Long userId);
+
+    @Query("SELECT NEW com.fintech.h4_02.dto.wallet.ValueDatePairDto(COALESCE(SUM(gc.amount), 0) AS value, gc.date AS date) " +
+            "FROM GoalContribution gc " +
+            "WHERE gc.goal.user.id = :userId " +
+            "GROUP BY gc.date")
+    List<ValueDatePairDto> calculateSavingsGroupedByDate(@Param("userId") Long userId);
 }

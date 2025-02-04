@@ -10,11 +10,13 @@ import com.fintech.h4_02.dto.exchange.ExchangeResponse;
 import com.fintech.h4_02.dto.exchange.ExchangeRrequest;
 import com.fintech.h4_02.dto.exchange.ExchangeSimple;
 import com.fintech.h4_02.dto.exchange.GetCoinByDatesRequest;
+import com.fintech.h4_02.entity.ExchangeDescription;
 import com.fintech.h4_02.entity.ExchangeEntity;
 import com.fintech.h4_02.entity.UserEntity;
 import com.fintech.h4_02.enums.Coin;
 import com.fintech.h4_02.enums.State;
 import com.fintech.h4_02.exception.EntityNotFoundException;
+import com.fintech.h4_02.repository.ExchangeDescriptionRepository;
 import com.fintech.h4_02.repository.ExchangeRepository;
 import com.fintech.h4_02.repository.UserRepository;
 import jakarta.validation.constraints.NotBlank;
@@ -24,6 +26,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
@@ -38,11 +41,12 @@ import java.util.Optional;
 public class ExchangeService {
     private final ExchangeRepository exchangeRepository;
     private final UserRepository userRepository;
+    private final ExchangeDescriptionRepository exchangeDescriptionRepository;
     private final RestTemplate restTemplate;
     private final ObjectMapper mapper;
     private final String apikey = "2e2212a9163545fe83aee5773eb1639b";
 
-    public List<CoinDtoRequest> listCoinAllForex(Coin coin) throws JsonProcessingException, JSONException {
+    public List<CoinDtoRequest> listCoinAllForex(Coin coin) throws JsonProcessingException {
         String url = null;
         final String forex = "https://api.twelvedata.com/forex_pairs";
         final String commodities = "https://api.twelvedata.com/commodities?source=docs";
@@ -55,23 +59,12 @@ public class ExchangeService {
         } else if (coin.name().equalsIgnoreCase(Coin.BOND.toString())) {
             return listBond();
         }
-        return parcearDtoApi(url);
+        return parceDtoApi(url);
     }
 
     private List<CoinDtoRequest> listBond() {
         List<String> listString = List.of("AAPL", "GOOGL", "MSFT", "AMZN", "TSLA", "FB", "NFLX", "NVDA", "BABA", "V");
         return listString.stream().map(CoinDtoRequest::new).toList();
-    }
-
-    private List<CoinDtoRequest> parcearDtoApi(final String API_URL) throws JsonProcessingException {
-        // Obtener la respuesta como String
-        String jsonResponse = restTemplate.getForObject(API_URL, String.class);
-        // Parsear la respuesta y extraer el nodo "data"
-        JsonNode rootNode = mapper.readTree(jsonResponse);
-        JsonNode dataNode = rootNode.get("data");
-        // Deserializar el nodo "data" como una lista de CoinDto
-        return mapper.readValue(dataNode.toString(), new TypeReference<>() {
-        });
     }
 
     private List<CoinDtoRequest> listarEtfs() {
@@ -103,6 +96,17 @@ public class ExchangeService {
         return listCoin;
     }
 
+    private List<CoinDtoRequest> parceDtoApi(final String apiUrl) throws JsonProcessingException {
+        // Obtener la respuesta como String
+        String jsonResponse = restTemplate.getForObject(apiUrl, String.class);
+        // Parsear la respuesta y extraer el nodo "data"
+        JsonNode rootNode = mapper.readTree(jsonResponse);
+        JsonNode dataNode = rootNode.get("data");
+        // Deserializar el nodo "data" como una lista de CoinDto
+        return mapper.readValue(dataNode.toString(), new TypeReference<>() {
+        });
+    }
+
     public JsonNode connectionPrice(String coin) throws JsonProcessingException {
         final String url = "https://api.twelvedata.com/time_series?symbol="
                 .concat(coin)
@@ -111,12 +115,19 @@ public class ExchangeService {
         return connectionApi(url);
     }
 
+    @Transactional
     public JsonNode getCoinDescription(String coin) throws JsonProcessingException {
-        final String url = "https://api.twelvedata.com/profile?symbol="
-                .concat(coin)
-                .concat("&apikey=")
-                .concat(apikey);
-        return connectionApi(url);
+        // Check if description already cached
+        Optional<ExchangeDescription> existing = exchangeDescriptionRepository.findById(coin);
+        if (existing.isPresent()) {
+            return mapper.valueToTree(existing.get());
+        }
+        String url = "https://api.twelvedata.com/profile?symbol=" + coin + "&apikey=" + apikey;
+        // Fetch and cache coin description
+        JsonNode apiResponse = connectionApi(url);
+        ExchangeDescription newEntity = mapper.treeToValue(apiResponse, ExchangeDescription.class);
+        exchangeDescriptionRepository.save(newEntity);
+        return apiResponse;
     }
 
     public JsonNode getCoinByDates(GetCoinByDatesRequest getCoinByDatesRequest) throws JsonProcessingException {

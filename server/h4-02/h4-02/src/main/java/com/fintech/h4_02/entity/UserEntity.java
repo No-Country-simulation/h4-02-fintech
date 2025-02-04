@@ -137,6 +137,29 @@ public class UserEntity {
     @JsonIgnore
     private List<ExchangeEntity> exchangeList;
 
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
+    private List<QueryEntity> queries;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     public UserEntity(CreateUserRequestDto user) {
         this.email = user.email();
         this.name = user.name();

@@ -62,6 +62,7 @@ public class GoalService {
         goal.setDeadline(dto.deadline());
         goal.setCategory(dto.category());
         goal.setDesiredAmount(dto.desiredAmount());
+        goal.setProgress(dto.desiredAmount());
 
         return goalRepository.save(goal);
     }
