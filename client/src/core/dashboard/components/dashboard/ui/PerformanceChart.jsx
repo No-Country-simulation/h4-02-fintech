@@ -34,7 +34,10 @@ export const PerformanceChart = ({ performanceData }) => {
             className={`flex-1 py-2 px-4 rounded-full text-center 
               ${selectedPeriod === period ? "bg-white shadow-sm" : ""}`}
           >
-            {period}
+            {period == "1W" && "1S"}
+            {period == "1M" && "1M"}
+            {period == "1Y" && "1A"}
+            {period == "3Y" && "3A"}
           </button>
         ))}
       </div>
