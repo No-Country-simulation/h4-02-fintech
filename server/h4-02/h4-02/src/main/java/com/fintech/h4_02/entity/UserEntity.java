@@ -160,7 +160,6 @@ public class UserEntity {
 
 
 
-
     public UserEntity(CreateUserRequestDto user) {
         this.email = user.email();
         this.name = user.name();

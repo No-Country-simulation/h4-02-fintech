@@ -32,12 +32,12 @@ public class QueryEntity {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     @Column(name = "date")
     private LocalDate date = LocalDate.now();
-    @Column(name = "description",columnDefinition = "TEXT")
+    @Column(name = "description", columnDefinition = "TEXT")
     private String description;
     @Enumerated(EnumType.STRING)
     private QueriesState state;
-    /* @Builder.Default
-    @OneToMany(mappedBy = "query",fetch = FetchType.LAZY,cascade = CascadeType.ALL,orphanRemoval = true)
+    @Builder.Default
+    @OneToMany(mappedBy = "query", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
-    private List<CommentEntity> comments = new ArrayList<>();*/
+    private List<CommentEntity> comments = new ArrayList<>();
 }
