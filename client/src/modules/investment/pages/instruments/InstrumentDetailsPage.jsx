@@ -4,8 +4,7 @@ import { PerformanceChart } from "../../../../core/dashboard/components/dashboar
 import { useEffect, useState } from "react";
 import { getPrice } from "../../services/instrument";
 import CreateInvestmentModal from "../../components/CreateInvestmentModal";
-import { convertUsdToArs } from "../../../../core/services/exchange";
-
+import { convertUsdToArsOne } from "../../../../core/services/exchange";
 
 export const InstrumentDetailsPage = () => {
   const navigate = useNavigate();
@@ -26,9 +25,7 @@ export const InstrumentDetailsPage = () => {
 
   const onHandleInstrumentDetails = async () => {
     try {
-      const priceData = await getPrice(
-        id.replace(/-/g, "/")
-      );
+      const priceData = await getPrice(id.replace(/-/g, "/"));
 
       if (priceData?.message?.includes("plan")) {
         setInstrument({ error: "Detalles Premium" });
@@ -82,8 +79,8 @@ export const InstrumentDetailsPage = () => {
 
             const randomValue =
               Math.random() *
-              (Math.max(graphHighPrice, graphLowPrice) -
-                Math.min(graphHighPrice, graphLowPrice)) +
+                (Math.max(graphHighPrice, graphLowPrice) -
+                  Math.min(graphHighPrice, graphLowPrice)) +
               Math.min(graphHighPrice, graphLowPrice);
 
             return {
@@ -91,8 +88,8 @@ export const InstrumentDetailsPage = () => {
                 interval === "days"
                   ? dayOfWeek
                   : interval === "months"
-                    ? monthName
-                    : date.getFullYear(),
+                  ? monthName
+                  : date.getFullYear(),
               value: Math.max(0, randomValue).toFixed(2), // Garantiza que no sea negativo
             };
           }).reverse();
@@ -107,8 +104,8 @@ export const InstrumentDetailsPage = () => {
               day: date.toISOString().split("T")[0],
               value: (
                 Math.random() *
-                (Math.max(graphHighPrice, graphLowPrice) -
-                  Math.min(graphHighPrice, graphLowPrice)) +
+                  (Math.max(graphHighPrice, graphLowPrice) -
+                    Math.min(graphHighPrice, graphLowPrice)) +
                 Math.min(graphHighPrice, graphLowPrice)
               ).toFixed(2),
             });
@@ -155,24 +152,46 @@ export const InstrumentDetailsPage = () => {
           },
           PriceSummary: [
             {
-              label: "Precio de apertura",
-              value: `$${highPrice}`,
-              arsValue: `ARS ${await convertUsdToArs(highPrice)}`, // Agregar precio en ARS
+              label: "Cantidad",
+              value: `${priceData.values[0].volume}`, // Volumen
             },
             {
-              label: "Precio de cierre",
-              value: `$${lowPrice}`,
-              arsValue: `ARS ${await convertUsdToArs(lowPrice)}`, // Agregar precio en ARS
+              label: "Precio más alto (USD)",
+              value: `$${priceData.values[0].high}`, // Precio más alto en USD
             },
             {
-              label: "Precio más alto",
-              value: `$${graphHighPrice}`,
-              arsValue: `ARS ${await convertUsdToArs(graphHighPrice)}`, // Agregar precio en ARS
+              label: "Precio más alto (ARS)",
+              value: `ARS ${await convertUsdToArsOne(
+                priceData.values[0].high
+              )}`, // Precio más alto en ARS
             },
             {
-              label: "Precio más bajo",
-              value: `$${graphLowPrice}`,
-              arsValue: `ARS ${await convertUsdToArs(graphLowPrice)}`, // Agregar precio en ARS
+              label: "Precio más bajo (USD)",
+              value: `$${priceData.values[0].low}`, // Precio más bajo en USD
+            },
+            {
+              label: "Precio más bajo (ARS)",
+              value: `ARS ${await convertUsdToArsOne(priceData.values[0].low)}`, // Precio más bajo en ARS
+            },
+            {
+              label: "Precio de apertura (USD)",
+              value: `$${priceData.values[0].open}`, // Precio de apertura en USD
+            },
+            {
+              label: "Precio de apertura (ARS)",
+              value: `ARS ${await convertUsdToArsOne(
+                priceData.values[0].open
+              )}`, // Precio de apertura en ARS
+            },
+            {
+              label: "Precio de cierre (USD)",
+              value: `$${priceData.values[0].close}`, // Precio de cierre en USD
+            },
+            {
+              label: "Precio de cierre (ARS)",
+              value: `ARS ${await convertUsdToArsOne(
+                priceData.values[0].close
+              )}`, // Precio de cierre en ARS
             },
           ],
         };
@@ -180,7 +199,7 @@ export const InstrumentDetailsPage = () => {
         setInstrument(transformedData);
 
         // Convertir el precio a ARS
-        const arsPrice = await convertUsdToArs(lowPrice);
+        const arsPrice = await convertUsdToArsOne(lowPrice);
         setPriceInArs(arsPrice);
       }
     } catch (error) {
@@ -277,12 +296,14 @@ export const InstrumentDetailsPage = () => {
           <div className="flex items-center gap-2 mb-2">
             <span className="text-xl">{instrument.change || "N/A"}</span>
             <div
-              className={`flex items-center ${instrument.isPositive ? "text-green-500" : "text-red-500"
-                }`}
+              className={`flex items-center ${
+                instrument.isPositive ? "text-green-500" : "text-red-500"
+              }`}
             >
               <ArrowRight
-                className={`w-4 h-4 ${instrument.isPositive ? "" : "rotate-90"
-                  }`}
+                className={`w-4 h-4 ${
+                  instrument.isPositive ? "" : "rotate-90"
+                }`}
               />
               <span>{instrument.changePercent || "N/A"}</span>
             </div>
@@ -295,27 +316,62 @@ export const InstrumentDetailsPage = () => {
           </div>
 
           <div className="w-full lg:w-1/2">
-            <h2 className="font-semibold text-primary text-md">Caja de puntas</h2>
-            <table className="table w-full">
+            {/* Primera tabla: Cantidad, Precio más alto y Precio más bajo */}
+            <h2 className="font-semibold text-primary text-md">
+              Caja de puntas
+            </h2>
+            <table className="table w-full mb-8">
               <thead className="bg-primary text-white">
                 <tr>
-                  <th>Descripción</th>
-                  <th>Valor (USD)</th>
-                  <th>Valor (ARS)</th>
+                  <th>Cantidad</th>
+                  <th>Precio más alto</th>
+                  <th>Precio más bajo</th>
                 </tr>
               </thead>
               <tbody>
-                {instrument.PriceSummary.map((item, index) => (
-                  <tr key={index}>
-                    <td>{item.label}</td>
-                    <td>{item.value}</td>
-                    <td>{item.arsValue}</td>
-                  </tr>
-                ))}
+                <tr>
+                  <td rowSpan="2">{instrument.PriceSummary[0].value}</td>{" "}
+                  {/* Cantidad */}
+                  <td>{instrument.PriceSummary[1].value}</td>{" "}
+                  {/* Precio más alto (USD) */}
+                  <td>{instrument.PriceSummary[3].value}</td>{" "}
+                  {/* Precio más bajo (USD) */}
+                </tr>
+                <tr>
+                  <td>{instrument.PriceSummary[2].value}</td>{" "}
+                  {/* Precio más alto (ARS) */}
+                  <td>{instrument.PriceSummary[4].value}</td>{" "}
+                  {/* Precio más bajo (ARS) */}
+                </tr>
+              </tbody>
+            </table>
+
+            {/* Segunda tabla: Precio de apertura y Precio de cierre */}
+            <table className="table w-full">
+              <thead className="bg-primary text-white">
+                <tr>
+                  <th>Cantidad</th>
+                  <th>Precio de apertura</th>
+                  <th>Precio de cierre</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td rowSpan="2">{instrument.PriceSummary[0].value}</td>{" "}
+                  <td>{instrument.PriceSummary[5].value}</td>{" "}
+                  {/* Precio de apertura (USD) */}
+                  <td>{instrument.PriceSummary[7].value}</td>{" "}
+                  {/* Precio de cierre (USD) */}
+                </tr>
+                <tr>
+                  <td>{instrument.PriceSummary[6].value}</td>{" "}
+                  {/* Precio de apertura (ARS) */}
+                  <td>{instrument.PriceSummary[8].value}</td>{" "}
+                  {/* Precio de cierre (ARS) */}
+                </tr>
               </tbody>
             </table>
           </div>
-
         </div>
 
         <CreateInvestmentModal instrument={instrument} />
