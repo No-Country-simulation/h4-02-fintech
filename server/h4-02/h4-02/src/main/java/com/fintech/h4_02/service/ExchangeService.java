@@ -34,6 +34,7 @@ import org.springframework.web.client.RestTemplate;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -256,7 +257,7 @@ public class ExchangeService {
             CoinResponseMoreBuy coin = new CoinResponseMoreBuy((String) o[0], String.valueOf(o[1]));
             listDto.add(coin);
         }
-        return listDto;
+        return CoinResponseMoreBuy.sortListDto(listDto);
     }
 
 }
