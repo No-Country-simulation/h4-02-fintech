@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fintech.h4_02.dto.coin.CoinDtoRequest;
 import com.fintech.h4_02.dto.coin.CoinPrice;
+import com.fintech.h4_02.dto.coin.CoinResponseMoreBuy;
 import com.fintech.h4_02.dto.exchange.ExchangeResponse;
 import com.fintech.h4_02.dto.exchange.ExchangeRrequest;
 import com.fintech.h4_02.dto.exchange.ExchangeSimple;
@@ -33,6 +34,7 @@ import org.springframework.web.client.RestTemplate;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -238,6 +240,24 @@ public class ExchangeService {
     private JsonNode connectionApi(String url) throws JsonProcessingException {
         String jsonResponse = restTemplate.getForObject(url, String.class);
         return mapper.readTree(jsonResponse);
+    }
+
+    public List<CoinResponseMoreBuy> getCoinMoreBuyToday() {
+        LocalDate date = LocalDate.now();
+        List<Object[]> list = exchangeRepository.findByCoinsMoreBuy(date);
+        List<CoinResponseMoreBuy> listDto = convertToCoinDtoList(list);
+        return listDto;
+    }
+
+    private List<CoinResponseMoreBuy> convertToCoinDtoList(List<Object[]> list) {
+        List<CoinResponseMoreBuy> listDto = new ArrayList<>();
+
+
+        for(Object [] o : list){
+            CoinResponseMoreBuy coin = new CoinResponseMoreBuy((String) o[0], String.valueOf(o[1]));
+            listDto.add(coin);
+        }
+        return CoinResponseMoreBuy.sortListDto(listDto);
     }
 
 }
