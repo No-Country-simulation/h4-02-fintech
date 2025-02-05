@@ -37,7 +37,7 @@ export const FinancialXModal = () => {
         className="btn btn-primary w-full"
         onClick={() => setIsOpen(true)}
       >
-        Mi radiografía
+        Ver mi radiografía
       </button>
 
       <dialog

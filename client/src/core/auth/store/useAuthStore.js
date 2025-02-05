@@ -6,6 +6,7 @@ import { useGoalStore } from "../../dashboard/store/useGoalStore";
 import { useNotificationStore } from "../../notifications/store/useNotificatiosStore";
 import useOperationsStore from "../../../modules/investment/store/useOperation";
 import { useFinancialStore } from "../../dashboard/store/useFinancialStore";
+import { useRadiographyStore } from "../../../modules/radiography/store/radiograpy";
 
 export const useAuthStore = create(
   persist(
@@ -29,6 +30,7 @@ export const useAuthStore = create(
         useNotificationStore.getState().reset();
         useOperationsStore.getState().reset();
         useFinancialStore.getState().reset();
+        useRadiographyStore.getState().reset();
         set({ status: "not-authenticated", user: null });
       },
     }),
