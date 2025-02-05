@@ -1,25 +1,47 @@
 package com.fintech.h4_02.dto.queries;
 
-import com.fintech.h4_02.dto.user.UserResponseDto;
 import com.fintech.h4_02.dto.user.UserResponseSimple;
-import com.fintech.h4_02.entity.CommentEntity;
 import com.fintech.h4_02.entity.QueryEntity;
-import com.fintech.h4_02.entity.UserEntity;
 import com.fintech.h4_02.enums.QueriesState;
 
-import java.util.List;
+import java.time.LocalDateTime;
+import java.util.Set;
 
 public record QueryResponse(
-        long id,
+        Long id,
+
+        LocalDateTime date,
+
         UserResponseSimple user,
-        String date,
+
+        String affectedArea,
+
         String description,
-        QueriesState state,
-        List<CommentEntity> comments
+
+        String lastUpdate,
+
+        Set<String> takenActions,
+
+        String assignedTo,
+
+        String estimated,
+
+        QueriesState state
 ) {
 
     public QueryResponse(QueryEntity query) {
-        this(query.getId(), new UserResponseSimple(query.getUser()), query.getDate().toString(), query.getDescription(), query.getState(),query.getComments());
+        this(
+                query.getId(),
+                query.getDate(),
+                new UserResponseSimple(query.getUser()),
+                query.getAffectedArea(),
+                query.getDescription(),
+                query.getLastUpdate(),
+                query.getTakenActions(),
+                query.getAssignedTo(),
+                query.getEstimated(),
+                query.getState()
+        );
     }
 
 }

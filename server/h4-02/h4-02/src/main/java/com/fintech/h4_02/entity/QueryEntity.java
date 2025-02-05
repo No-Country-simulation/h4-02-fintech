@@ -5,11 +5,11 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fintech.h4_02.enums.QueriesState;
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.format.annotation.DateTimeFormat;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Builder
 @Getter
@@ -22,20 +22,38 @@ import java.util.List;
 public class QueryEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    private long id;
+    private Long id;
+
+    @Column(name = "date")
+    private LocalDateTime date = LocalDateTime.now();
 
     @ManyToOne
     @JoinColumn(name = "user_entity_id", referencedColumnName = "id")
-    @JsonIgnore
     private UserEntity user;
 
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    @Column(name = "date")
-    private LocalDate date = LocalDate.now();
+    @Column(name = "affected_area")
+    private String affectedArea;
+
     @Column(name = "description", columnDefinition = "TEXT")
     private String description;
+
+    @Column(name = "last_update")
+    private String lastUpdate;
+
+    @ElementCollection
+    @CollectionTable(name = "queries_taken_actions", joinColumns = @JoinColumn(name = "query_id"))
+    @Column(name = "action_taken")
+    private Set<String> takenActions;
+
+    @Column(name = "assigned_to")
+    private String assignedTo;
+
+    @Column(name = "estimated")
+    private String estimated;
+
     @Enumerated(EnumType.STRING)
     private QueriesState state;
+
     @Builder.Default
     @OneToMany(mappedBy = "query", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
