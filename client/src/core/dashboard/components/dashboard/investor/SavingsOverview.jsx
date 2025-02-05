@@ -11,7 +11,7 @@ import { toast } from "sonner";
 export const SavingsOverview = () => {
   const [progressValue, setProgressValue] = useState(0);
   const { user } = useAuthStore();
-  const { financial, hasLoaded, updateFinancialData, currencyType } =
+  const { financial, hasLoaded, updateFinancialData, currencyType, show } =
     useFinancialStore();
 
   const onHandleFinances = useCallback(async () => {
@@ -50,7 +50,7 @@ export const SavingsOverview = () => {
 
   return (
     <Link
-      className="flex w-full items-center justify-center p-2 bg-base-100 border-2 rounded-xl shadow-md hover:shadow-lg"
+      className="flex w-full items-center justify-center p-2 bg-base-200 border-1 rounded-xl shadow-md hover:shadow-lg"
       to={"/dashboard/transactions"}
     >
       <div className="flex flex-col items-center gap-2 lg:w-auto p-2 ">
@@ -90,13 +90,10 @@ export const SavingsOverview = () => {
               <span className="text-base font-semibold">Ingresos</span>
               {hasLoaded ? (
                 <span className="font-bold text-sm text-primary">
-                  {financial.income.values[currencyType] == 0
-                    ? "0,00"
-                    : formatCurrency(
-                        financial.income.values[currencyType],
-                        currencyType,
-                        2
-                      )}
+                  {show
+                    ? (financial.income.values[currencyType] === 0 ? "0,00" : formatCurrency(financial.income.values[currencyType], currencyType, 2))
+                    : (financial.income.values[currencyType] === 0 ? "0,00" : formatCurrency(financial.income.values[currencyType], currencyType, 2).replace(/\d/g, "x"))
+                  }
                 </span>
               ) : (
                 <span className="loading loading-dots loading-md text-secondary"></span>
@@ -115,13 +112,10 @@ export const SavingsOverview = () => {
               {hasLoaded ? (
                 <span className="font-bold text-sm text-primary">
                   -
-                  {financial.fixedExpenses.values[currencyType] == 0
-                    ? "0,00"
-                    : formatCurrency(
-                        financial.fixedExpenses.values[currencyType],
-                        currencyType,
-                        2
-                      )}
+                  {show
+                    ? (financial.fixedExpenses.values[currencyType] === 0 ? "0,00" : formatCurrency(financial.fixedExpenses.values[currencyType], currencyType, 2))
+                    : (financial.fixedExpenses.values[currencyType] === 0 ? "0,00" : formatCurrency(financial.fixedExpenses.values[currencyType], currencyType, 2).replace(/\d/g, "x"))
+                  }
                 </span>
               ) : (
                 <span className="loading loading-dots loading-md text-primary"></span>
