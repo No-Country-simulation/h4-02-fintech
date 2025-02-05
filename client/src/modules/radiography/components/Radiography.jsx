@@ -21,8 +21,9 @@ export const Radiography = () => {
       const newRadiography = await getRadiography(user.id);
       await setRadiographyData(newRadiography);
     } catch (error) {
+      await setRadiographyData(null);
       const errorMessage = getErrorMessage(error);
-      console.log(error);
+      
       if (!error.response.data.message.includes("Financial profile for")) {
         toast.error("Problemas al cargar la radiografía financiera", {
           description: errorMessage,
@@ -30,7 +31,6 @@ export const Radiography = () => {
       }
 
       console.error("Error al cargar la radiografía financiera", error);
-      await setRadiographyData(null);
     }
   }, [user.id, hasLoaded, setRadiographyData]);
 
