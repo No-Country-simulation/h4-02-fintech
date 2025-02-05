@@ -318,7 +318,7 @@ export const InstrumentDetailsPage = () => {
 
         </div>
 
-        <CreateInvestmentModal instrument={{ ...instrument, price: priceInArs }} />
+        <CreateInvestmentModal instrument={instrument} />
       </div>
     </div>
   );

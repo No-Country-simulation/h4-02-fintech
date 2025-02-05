@@ -1,19 +1,5 @@
 import axios from "axios";
 
-export const convertUsdToArs = async (usdAmount) => {
-  try {
-    const response = await axios.get(
-      "https://api.exchangerate-api.com/v4/latest/USD"
-    );
-
-    const exchangeRate = response.data.rates.ARS;
-    return (usdAmount * exchangeRate).toFixed(2);
-  } catch (error) {
-    console.error("Error fetching exchange rate:", error);
-    return "Error";
-  }
-};
-
 export const convertArsToUsd = async (arsAmounts) => {
   try {
     const response = await axios.get(
@@ -28,6 +14,26 @@ export const convertArsToUsd = async (arsAmounts) => {
     });
 
     return usdValues;
+  } catch (error) {
+    console.error("Error fetching exchange rate:", error);
+    return {};
+  }
+};
+
+export const convertUsdToArs = async (usdAmounts) => {
+  try {
+    const response = await axios.get(
+      "https://api.exchangerate-api.com/v4/latest/USD"
+    );
+
+    const exchangeRate = response.data.rates.ARS;
+
+    const arsValues = {};
+    usdAmounts.forEach((amount, index) => {
+      arsValues[index] = (amount * exchangeRate).toFixed(2);
+    });
+
+    return arsValues;
   } catch (error) {
     console.error("Error fetching exchange rate:", error);
     return {};

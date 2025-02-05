@@ -5,7 +5,7 @@ import { useAuthStore } from "../../../core/auth/store/useAuthStore";
 import { toast } from "sonner";
 import { getOperations, getOperationsTotal } from "../services/instrument";
 import useOperationsStore from "../store/useOperation";
-import { convertArsToUsd } from "../../../core/services/exchange";
+import { convertUsdToArs } from "../../../core/services/exchange";
 
 export const OperationsSection = () => {
   const { user } = useAuthStore();
@@ -21,10 +21,10 @@ export const OperationsSection = () => {
       setOperations(dataOperations.reverse());
 
       // Obtener todos los totales en ARS
-      const arsAmounts = dataOperations.map(operation => operation.total);
+      const arsAmounts = dataOperations.map((operation) => operation.total);
 
       // Convertir todos los valores a USD en una sola llamada
-      const usdValues = await convertArsToUsd(arsAmounts);
+      const usdValues = await convertUsdToArs(arsAmounts);
 
       // Crear un objeto con los valores convertidos usando el ID de la operación como clave
       const usdValuesMap = {};
@@ -119,11 +119,11 @@ export const OperationsSection = () => {
                   <thead>
                     <tr>
                       <th className="p-3 text-left">Moneda</th>
-                      <th className="p-3 text-left">Valor (ARS)</th>
                       <th className="p-3 text-left">Valor (USD)</th>
+                      <th className="p-3 text-left">Valor (ARS)</th>
                       <th className="p-3 text-left">Cantidad</th>
-                      <th className="p-3 text-left">Total (ARS)</th>
                       <th className="p-3 text-left">Total (USD)</th>
+                      <th className="p-3 text-left">Total (ARS)</th>
                       <th className="p-3 text-left">Fecha</th>
                       <th className="p-3 text-left">Estado</th>
                     </tr>
@@ -133,10 +133,14 @@ export const OperationsSection = () => {
                       <tr key={operation.id}>
                         <td className="p-3">{operation.coin}</td>
                         <td className="p-3">{operation.value}</td>
-                        <td className="p-3">{usdValues[operation.id] || "Calculando..."}</td>
+                        <td className="p-3">
+                          {usdValues[operation.id] || "Calculando..."}
+                        </td>
                         <td className="p-3">{operation.quantity}</td>
                         <td className="p-3">{operation.total}</td>
-                        <td className="p-3">{usdValues[operation.id] || "Calculando..."}</td>
+                        <td className="p-3">
+                          {usdValues[operation.id] || "Calculando..."}
+                        </td>
                         <td className="p-3">{operation.date}</td>
                         <td className="p-3">
                           {operation.state === "BY" ? "Comprado" : "Vendido"}
