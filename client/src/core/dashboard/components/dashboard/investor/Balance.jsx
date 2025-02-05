@@ -1,20 +1,24 @@
-import { useState } from "react";
 import { useFinancialStore } from "../../../store/useFinancialStore";
 import { formatCurrency } from "../../../../utils/formatCurrency";
 import { Eye, EyeSlash } from "iconsax-react";
 
 export const Balance = () => {
-    const { financial, toggleCurrencyType, currencyType } = useFinancialStore();
-
-    const [showBalance, setShowBalance] = useState(false);
+    const { financial, toggleCurrencyType, currencyType, show, toggleShow } = useFinancialStore();
 
     const toggleBalanceVisibility = () => {
-        setShowBalance(!showBalance);
+        toggleShow();
     };
 
     const handleCurrencyChange = () => {
         toggleCurrencyType();
     };
+
+    const formattedBalance = formatCurrency(
+        financial.balance.values[currencyType],
+        currencyType,
+        2
+    );
+
     return (
         financial && (
             <div className="sm:block hidden bg-base-100 p-4 border-2 rounded-xl shadow-md hover:shadow-lg">
@@ -22,17 +26,7 @@ export const Balance = () => {
                 <div className="flex items-center justify-between">
                     <div className="flex flex-col items-start">
                         <h1 className="text-2xl text-primary font-bold">
-                            {showBalance
-                                ? formatCurrency(
-                                    financial.balance.values[currencyType],
-                                    currencyType,
-                                    2
-                                )
-                                : formatCurrency(
-                                    financial.balance.values[currencyType],
-                                    currencyType,
-                                    2
-                                ).replace(/\d/g, "x") || "0,00"}
+                            {show ? formattedBalance : formattedBalance.replace(/\d/g, "x") || "0,00"}
                         </h1>
                         <select
                             className="select select-sm bg-transparent border-0 mx-2 my-2"
@@ -52,7 +46,7 @@ export const Balance = () => {
                         className="btn btn-ghost btn-circle mt-4 md:mt-0"
                         onClick={toggleBalanceVisibility}
                     >
-                        {showBalance ? (
+                        {show ? (
                             <Eye size="24" className="text-primary" />
                         ) : (
                             <EyeSlash size="24" className="text-primary" />
