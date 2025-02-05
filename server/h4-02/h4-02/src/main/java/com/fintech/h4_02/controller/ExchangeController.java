@@ -3,6 +3,7 @@ package com.fintech.h4_02.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fintech.h4_02.dto.coin.CoinDtoRequest;
+import com.fintech.h4_02.dto.coin.CoinResponseMoreBuy;
 import com.fintech.h4_02.dto.exchange.ExchangeResponse;
 import com.fintech.h4_02.dto.exchange.ExchangeRrequest;
 import com.fintech.h4_02.dto.exchange.ExchangeSimple;
@@ -31,7 +32,7 @@ import java.util.List;
 @Controller
 @RequestMapping("api/v1/exchange")
 @RequiredArgsConstructor
-@Tag(name = "Exchange Entity")
+@Tag(name = "ExchangeEntity")
 public class ExchangeController {
     private final ExchangeService exchangeService;
 
@@ -164,6 +165,26 @@ public class ExchangeController {
     @GetMapping("/history-by-dates")
     public ResponseEntity<JsonNode> getCoinByDates(@RequestBody @Valid GetCoinByDatesRequest getCoinByDatesRequest) throws JsonProcessingException {
         return ResponseEntity.status(HttpStatus.OK).body(exchangeService.getCoinByDates(getCoinByDatesRequest));
+    }
+
+
+    @Operation(
+            summary = "Get list of coins more buy by today",
+            description = "Get coin more buy by today"
+    )
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Get list of coins more buy by today",
+                    content = @Content(
+                            mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = List.class),
+                            examples = @ExampleObject(
+                                    name = "List<CoinResponseMoreBuy>",
+                                    value = "")
+                    ))
+    })
+    @GetMapping("/more-buy")
+    public ResponseEntity<List<CoinResponseMoreBuy>> getCoinByDates() throws JsonProcessingException {
+        return ResponseEntity.status(HttpStatus.OK).body(exchangeService.getCoinMoreBuyToday());
     }
 
 }
