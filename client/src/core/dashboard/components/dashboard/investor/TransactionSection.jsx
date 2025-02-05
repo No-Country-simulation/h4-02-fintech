@@ -55,7 +55,7 @@ export const TransactionSection = () => {
                 filteredData.push({ date: daysOfWeek[day.getDay()], value: currencyType === "USD" ? value * exchangeRate : value, realDate: day.toLocaleDateString() });
             }
         } else if (filter === "month") {
-            const months = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
+            const months = ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"];
             for (let i = 6; i >= 0; i--) {
                 const month = new Date(now);
                 month.setMonth(now.getMonth() - i);
@@ -121,9 +121,9 @@ export const TransactionSection = () => {
                 </h2>
             }
 
-            <div className="p-4 sm:p-6 my-4">
-                <ResponsiveContainer width="100%" height={400}>
-                    <AreaChart data={summary ? filterData(summary[selectedCategory], filter) : []}>
+            <div className="my-4 flex justify-center w-full">
+                <ResponsiveContainer  height={260}>
+                    <AreaChart data={summary ? filterData(summary[selectedCategory], filter) : []} className="p-4 sm:p-6" >
                         <XAxis dataKey="date" />
                         <YAxis tickFormatter={(value) => `$${value}`} />
                         <Tooltip

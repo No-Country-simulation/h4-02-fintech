@@ -50,7 +50,7 @@ export const SavingsOverview = () => {
 
   return (
     <Link
-      className="flex w-full items-center justify-center p-2 bg-base-200 border-1 rounded-xl shadow-md hover:shadow-lg"
+      className="flex w-full items-center justify-center p-2 bg-base-100 border-2 rounded-xl shadow-md hover:shadow-lg"
       to={"/dashboard/transactions"}
     >
       <div className="flex flex-col items-center gap-2 lg:w-auto p-2 ">
@@ -82,7 +82,7 @@ export const SavingsOverview = () => {
 
       <div className="divider divider-horizontal divider-primary"></div>
 
-      <div className="flex-1 w-full lg:w-auto">
+      <div className="flex-1 w-full lg:w-auto justify-center">
         <div className="flex items-center gap-2">
           <DollarCircle size="36" className="text-primary" />
           <div className="flex-1">
@@ -96,7 +96,7 @@ export const SavingsOverview = () => {
                   }
                 </span>
               ) : (
-                <span className="loading loading-dots loading-md text-secondary"></span>
+                <span className="loading loading-dots loading-md text-primary"></span>
               )}
             </div>
           </div>

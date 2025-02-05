@@ -16,6 +16,7 @@ import { CommoditiesPage } from "../../modules/investment/pages/investment/Commo
 import { ForexPage } from "../../modules/investment/pages/investment/ForexPage";
 import { InstrumentDetailsPage } from "../../modules/investment/pages/instruments/InstrumentDetailsPage";
 import { FiltersPage } from "../../modules/investment/pages/investment/FiltersPage";
+import { RadiographyPage } from "../../modules/radiography/pages/radiographyPage";
 
 export const DashboardRouter = () => {
   const { user } = useAuthStore();
@@ -50,6 +51,7 @@ export const DashboardRouter = () => {
           <Route path="/onboarding" element={<OnboardingPage />} />
           <Route path="/profile" element={<ProfileInvestorPage />} />
           <Route path="/transactions" element={<TransactionsPage />} />
+          <Route path="/radiography" element={<RadiographyPage />} />
 
           {/* Rutas de inversión con layout */}
           <Route path="/investment" element={<InvestmentLayout />}>

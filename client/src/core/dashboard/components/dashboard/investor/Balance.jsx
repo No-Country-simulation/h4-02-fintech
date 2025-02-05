@@ -21,7 +21,7 @@ export const Balance = () => {
 
     return (
         financial && (
-            <div className="sm:block hidden bg-base-100 p-4 border-2 rounded-xl shadow-md hover:shadow-lg">
+            <div className="sm:block hidden bg-base-100 p-4 border-2 rounded-xl shadow-md">
                 <p className="text-primary/75 text-sm">Balance</p>
                 <div className="flex items-center justify-between">
                     <div className="flex flex-col items-start">
