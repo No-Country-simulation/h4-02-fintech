@@ -16,7 +16,14 @@ public interface GoalProgressionNotificationRepository extends JpaRepository<Goa
     @Query("SELECT g FROM GoalProgressionNotification g WHERE g.goal.user.id = :userId")
     List<GoalProgressionNotification> findAllByUserId(@Param("userId") Long userId, Pageable pageable);
 
-    boolean existsByLowerBoundPercentage(Integer lowerBoundPercentage);
+    @Query("SELECT CASE WHEN COUNT(e) > 0 THEN true ELSE false END " +
+            "FROM GoalProgressionNotification e " +
+            "WHERE e.lowerBoundPercentage = :lowerBoundPercentage " +
+            "AND e.goal.id = :goalId")
+    boolean existsByLowerBoundPercentageAndGoalId(
+            @Param("lowerBoundPercentage") Integer lowerBoundPercentage,
+            @Param("goalId") Long goalId
+    );
 
     @Modifying
     @Query("UPDATE GoalProgressionNotification g SET g.isRead = true WHERE g.id IN :ids")

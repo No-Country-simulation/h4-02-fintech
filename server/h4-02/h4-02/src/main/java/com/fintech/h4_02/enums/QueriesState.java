@@ -9,4 +9,5 @@ public enum QueriesState {
     QueriesState(String value) {
         this.value = value;
     }
+    
 }

@@ -32,7 +32,7 @@ public class NotificationService {
             return;
         }
         // This is to prevent duplicate notifications
-        if (notificationRepository.existsByLowerBoundPercentage(lowerBoundPercentage)) {
+        if (notificationRepository.existsByLowerBoundPercentageAndGoalId(lowerBoundPercentage, goalId)) {
             return;
         }
 

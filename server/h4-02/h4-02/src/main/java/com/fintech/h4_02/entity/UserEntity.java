@@ -108,6 +108,10 @@ public class UserEntity {
     @JsonManagedReference
     private OnboardingEntity onboarding;
 
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "financial_profile_id", referencedColumnName = "id")
+    private FinancialProfile financialProfile;
+
     @OneToMany(
             mappedBy = "user",
             fetch = FetchType.LAZY,
@@ -140,25 +144,6 @@ public class UserEntity {
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
     private List<QueryEntity> queries;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     public UserEntity(CreateUserRequestDto user) {
         this.email = user.email();

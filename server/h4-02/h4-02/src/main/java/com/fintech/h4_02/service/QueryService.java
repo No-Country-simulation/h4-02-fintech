@@ -8,50 +8,63 @@ import com.fintech.h4_02.enums.QueriesState;
 import com.fintech.h4_02.exception.EntityNotFoundException;
 import com.fintech.h4_02.repository.QueryRepository;
 import com.fintech.h4_02.repository.UserRepository;
-import jakarta.validation.constraints.NotNull;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class QueryService {
+    private final QueryRepository queryRepository;
+    private final UserRepository userRepository;
 
-    @Autowired
-    private QueryRepository queryRepository;
-    @Autowired
-    private UserRepository userRepository;
-    public QueryResponse createQuery(QueryRequest queryRequest) {
-        UserEntity user = userRepository.findById(queryRequest.userId()).orElseThrow( ()-> new EntityNotFoundException("user not found"));
+    public List<QueryResponse> getAllErrorQueries() {
+        List<QueryEntity> list = queryRepository.findAllByState(QueriesState.ERROR);
+        return list.stream().map(QueryResponse::new).toList();
+    }
+
+    public Long getErrorQueriesCount() {
+        return queryRepository.count();
+    }
+
+    public QueryResponse createQuery(QueryRequest request) {
+        UserEntity user = userRepository.findById(request.userId())
+                .orElseThrow(() -> new EntityNotFoundException("user not found"));
+
         QueryEntity query = QueryEntity.builder()
+                .date(LocalDateTime.now())
                 .user(user)
-                .description(queryRequest.comment())
+                .affectedArea(request.affectedArea())
+                .description(request.description())
+                .lastUpdate(request.lastUpdate())
+                .takenActions(request.takenActions())
+                .assignedTo(request.assignedTo())
+                .estimated(request.estimated())
                 .state(QueriesState.QUERY)
-                .date(LocalDate.now())
                 .build();
-
         query = queryRepository.save(query);
         return new QueryResponse(query);
     }
 
-    public List<QueryResponse> getQueriesByuser(@NotNull(message = "el id no puede ser nulo") Long id) {
-        UserEntity user = userRepository.findById(id).orElseThrow( ()-> new EntityNotFoundException("user not found"));
-        List<QueryEntity> list = user.getQueries();
-        List<QueryResponse> listDto = list.stream().map(QueryResponse::new).toList();
-        return listDto;
-    }
+    public QueryResponse createErrorQuery(QueryRequest request) {
+        UserEntity user = userRepository.findById(request.userId())
+                .orElseThrow(() -> new EntityNotFoundException("user not found"));
 
-    public QueryResponse createQueryError(QueryRequest queryRequest) {
-        UserEntity user = userRepository.findById(queryRequest.userId()).orElseThrow( ()-> new EntityNotFoundException("user not found"));
         QueryEntity query = QueryEntity.builder()
+                .date(LocalDateTime.now())
                 .user(user)
-                .description(queryRequest.comment())
+                .affectedArea(request.affectedArea())
+                .description(request.description())
+                .lastUpdate(request.lastUpdate())
+                .takenActions(request.takenActions())
+                .assignedTo(request.assignedTo())
+                .estimated(request.estimated())
                 .state(QueriesState.ERROR)
-                .date(LocalDate.now())
                 .build();
-
         query = queryRepository.save(query);
         return new QueryResponse(query);
     }
+
 }

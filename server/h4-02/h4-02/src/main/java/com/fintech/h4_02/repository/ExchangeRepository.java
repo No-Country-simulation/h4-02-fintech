@@ -1,7 +1,6 @@
 package com.fintech.h4_02.repository;
 
 import com.fintech.h4_02.dto.coin.CoinPrice;
-import com.fintech.h4_02.dto.coin.CoinResponseMoreBuy;
 import com.fintech.h4_02.entity.ExchangeEntity;
 import com.fintech.h4_02.entity.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -13,11 +12,10 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Repository
-public interface ExchangeRepository extends JpaRepository<ExchangeEntity,Long> {
+public interface ExchangeRepository extends JpaRepository<ExchangeEntity, Long> {
 
     @Query("SELECT e FROM ExchangeEntity e WHERE e.user =:user")
     List<ExchangeEntity> findAllByUserId(@Param("user") UserEntity user);
-
 
     @Query("SELECT e.coin, " +
             "SUM(CASE WHEN e.state = 'BY' THEN e.quantity ELSE -e.quantity END) " +
@@ -26,11 +24,12 @@ public interface ExchangeRepository extends JpaRepository<ExchangeEntity,Long> {
             "GROUP BY e.coin")
     List<Object> getTotalCoinByUser(@Param("user") UserEntity user);
 
-
-
     @Query("SELECT NEW com.fintech.h4_02.dto.coin.CoinPrice( e.coin, AVG(e.value) ) FROM ExchangeEntity e WHERE e.user =:user GROUP BY e.coin ORDER BY e.coin")
     List<CoinPrice> findPriceCoins(@Param("user") UserEntity user);
 
     @Query("SELECT  e.coin, COUNT(e.coin)  FROM ExchangeEntity e WHERE e.date =:date GROUP BY e.coin ")
     List<Object[]> findByCoinsMoreBuy(@Param("date") LocalDate date);
+
+    @Query("SELECT COUNT(DISTINCT e.coin) FROM ExchangeEntity e WHERE e.user.id = :userId")
+    Long getTotalInvestmentsForUser(@Param("userId") Long userId);
 }
