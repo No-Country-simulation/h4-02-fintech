@@ -1,4 +1,4 @@
-import { Navbar } from "../../../core/dashboard/components/dashboard/ui/Navbar";
+import { Navbar } from "../../../core/dashboard/components/dashboard/investor/Navbar";
 import { ProfileInvestor } from "../components/ProfileInvestor";
 
 export const ProfileInvestorPage = () => {

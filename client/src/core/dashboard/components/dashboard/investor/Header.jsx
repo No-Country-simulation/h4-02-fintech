@@ -9,7 +9,6 @@ import {
   Profile,
   Profile2User,
 } from "iconsax-react";
-import { useState } from "react";
 import { useAuthStore } from "../../../../auth/store/useAuthStore";
 import { useOnboardingStore } from "../../../../auth/store/useOnboardingStore";
 import NotificationsModal from "../../../../notifications/components/NotificationsModal";
@@ -24,17 +23,22 @@ export const Header = () => {
   const { formData } = useOnboardingStore();
   const formDataComplete = validateComplete(formData);
 
-  const { financial, toggleCurrencyType, currencyType } = useFinancialStore();
-
-  const [showBalance, setShowBalance] = useState(false);
+  const { financial, toggleCurrencyType, currencyType, show, toggleShow } =
+    useFinancialStore();
 
   const toggleBalanceVisibility = () => {
-    setShowBalance(!showBalance);
+    toggleShow();
   };
 
   const handleCurrencyChange = () => {
     toggleCurrencyType();
   };
+
+  const formattedBalance = formatCurrency(
+    financial.balance.values[currencyType],
+    currencyType,
+    2
+  );
 
   const drawerItems = [
     {
@@ -67,7 +71,7 @@ export const Header = () => {
     {
       icon: <MessageQuestion size="24" />,
       text: "Ayuda y soporte técnico",
-      link: "/",
+      link: "/report-incidence",
     },
   ];
 
@@ -109,22 +113,14 @@ export const Header = () => {
       </div>
 
       {financial && (
-        <div>
+        <div className="sm:hidden block">
           <p className="text-gray-400 text-sm">Balance</p>
           <div className="flex items-center justify-between">
             <div className="flex flex-col sm:flex-row items-start">
-              <h1 className="text-3xl font-bold">
-                {showBalance
-                  ? formatCurrency(
-                      financial.balance.values[currencyType],
-                      currencyType,
-                      2
-                    )
-                  : formatCurrency(
-                      financial.balance.values[currencyType],
-                      currencyType,
-                      2
-                    ).replace(/\d/g, "x") || "0,00"}
+              <h1 className="text-2xl font-bold">
+                {show
+                  ? formattedBalance
+                  : formattedBalance.replace(/\d/g, "x") || "0,00"}
               </h1>
               <select
                 className="select select-sm bg-transparent border-0 mx-2 my-2"
@@ -144,7 +140,7 @@ export const Header = () => {
               className="btn btn-ghost btn-circle mt-4 md:mt-0"
               onClick={toggleBalanceVisibility}
             >
-              {showBalance ? (
+              {show ? (
                 <Eye size="24" className="text-white" />
               ) : (
                 <EyeSlash size="24" className="text-white" />

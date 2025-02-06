@@ -26,7 +26,7 @@ export const PerformanceChart = ({ performanceData }) => {
   return (
     <div className="shadow-md rounded-2xl p-4 bg-white mb-4">
       {/* Selector de Período */}
-      <div className="flex gap-2 mb-6 bg-cyan-50 p-2 rounded-full">
+      <div className="flex gap-2 mb-6 bg-[#C6E1DC] p-2 rounded-full">
         {timeButtons.map((period) => (
           <button
             key={period}
@@ -34,7 +34,10 @@ export const PerformanceChart = ({ performanceData }) => {
             className={`flex-1 py-2 px-4 rounded-full text-center 
               ${selectedPeriod === period ? "bg-white shadow-sm" : ""}`}
           >
-            {period}
+            {period == "1W" && "1S"}
+            {period == "1M" && "1M"}
+            {period == "1Y" && "1A"}
+            {period == "3Y" && "3A"}
           </button>
         ))}
       </div>

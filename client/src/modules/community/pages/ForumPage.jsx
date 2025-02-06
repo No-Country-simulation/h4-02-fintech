@@ -1,8 +1,9 @@
 import "@mdxeditor/editor/style.css";
-import { Navbar } from "../../../core/dashboard/components/dashboard/ui/Navbar";
+
 import { Post } from "../components/Post";
 import { PostEditor } from "../components/PostEditor";
 import { usePosts } from "../hooks/usePosts";
+import { Navbar } from "../../../core/dashboard/components/dashboard/investor/Navbar";
 
 export const ForumPage = () => {
   const {

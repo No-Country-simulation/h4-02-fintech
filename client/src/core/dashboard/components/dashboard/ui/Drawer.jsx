@@ -1,12 +1,13 @@
 import { PropTypes } from "prop-types";
 import { ArrowRight2, Home, Logout } from "iconsax-react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { useAuthStore } from "../../../../auth/store/useAuthStore";
 import { useAuth0 } from "@auth0/auth0-react";
 
 export const Drawer = ({ menu }) => {
   const { logout: logoutStore } = useAuthStore();
   const { logout, user } = useAuth0();
+  const location = useLocation();
 
   const onLogout = async () => {
     try {
@@ -21,6 +22,11 @@ export const Drawer = ({ menu }) => {
     }
   };
 
+  // Determina la ruta de inicio basada en la ruta actual
+  const homeLink = location.pathname.includes("dashboard/admin")
+    ? "/dashboard/admin"
+    : "/";
+
   return (
     <div className="drawer z-10">
       <input id="my-drawer" type="checkbox" className="drawer-toggle" />
@@ -31,11 +37,11 @@ export const Drawer = ({ menu }) => {
           aria-label="close sidebar"
           className="drawer-overlay"
         ></label>
-        <ul className="menu bg-base-200 text-base-content min-h-full w-80 p-0">
+        <ul className="menu bg-base-100 text-base-content min-h-full w-80 p-0">
           <div className="flex justify-between items-center p-2">
             <Link
               className="btn btn-ghost flex items-center gap-2 px-2 w-fit"
-              to={"/"}
+              to={homeLink}
             >
               <Home size="24" />
               <span className="text-xl font-semibold text-navy-900">

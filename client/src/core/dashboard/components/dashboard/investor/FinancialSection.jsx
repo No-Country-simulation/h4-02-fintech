@@ -1,10 +1,11 @@
 import { Graph } from "iconsax-react";
-import { FinancialXModal } from "./FinancialXModal";
+import { Link } from "react-router-dom";
+/* import { FinancialXModal } from "./FinancialXModal"; */
 
 export const FinancialSection = () => {
   return (
-    <div className="p-4 space-y-8 sm:border-2 sm:p-2 sm:rounded-xl sm:flex sm:justify-center sm:items-center">
-      <div className="space-y-2 p-2">
+    <div className="flex p-4 space-y-8 sm:border-2 sm:p-2 sm:rounded-xl sm:items-center">
+      <div className="flex flex-col space-y-2 p-2 w-full">
         <div className="flex items-center gap-2">
           <Graph size="24" className="text-primary" />
           <h3 className="text-xl font-medium text-primary">
@@ -16,7 +17,10 @@ export const FinancialSection = () => {
           Actualiza tus datos para obtener recomendaciones más personalizadas.
         </p>
 
-        <FinancialXModal />
+        {/* <FinancialXModal /> */}
+        <Link className="btn btn-primary w-full" to={"/dashboard/radiography"}>
+          Ver mi radiografía
+        </Link>
       </div>
     </div>
   );

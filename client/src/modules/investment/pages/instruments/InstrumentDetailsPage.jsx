@@ -4,6 +4,7 @@ import { PerformanceChart } from "../../../../core/dashboard/components/dashboar
 import { useEffect, useState } from "react";
 import { getPrice } from "../../services/instrument";
 import CreateInvestmentModal from "../../components/CreateInvestmentModal";
+import { convertUsdToArsOne } from "../../../../core/services/exchange";
 
 export const InstrumentDetailsPage = () => {
   const navigate = useNavigate();
@@ -11,6 +12,7 @@ export const InstrumentDetailsPage = () => {
 
   const [instrument, setInstrument] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [priceInArs, setPriceInArs] = useState(null); // Estado para el precio en ARS
 
   useEffect(() => {
     if (!type || !id) {
@@ -23,9 +25,7 @@ export const InstrumentDetailsPage = () => {
 
   const onHandleInstrumentDetails = async () => {
     try {
-      const priceData = await getPrice(
-        id.replace(/-/g, "/")
-      );
+      const priceData = await getPrice(id.replace(/-/g, "/"));
 
       if (priceData?.message?.includes("plan")) {
         setInstrument({ error: "Detalles Premium" });
@@ -150,19 +150,57 @@ export const InstrumentDetailsPage = () => {
               },
             ],
           },
-          compareData: [
-            { instrument: "AE38 USD 2038", yield: "7,5 %", risk: "Moderado" },
-            { instrument: "GD30 USD 2030", yield: "8,1 %", risk: "Moderado" },
-            { instrument: "AL30 USD 2030", yield: "7,3 %", risk: "Arriesgado" },
+          PriceSummary: [
             {
-              instrument: "Fondo XYZ Global",
-              yield: "6,8 %",
-              risk: "Conservador",
+              label: "Cantidad",
+              value: `${priceData.values[0].volume}`, // Volumen
+            },
+            {
+              label: "Precio más alto (USD)",
+              value: `$${priceData.values[0].high}`, // Precio más alto en USD
+            },
+            {
+              label: "Precio más alto (ARS)",
+              value: `ARS ${await convertUsdToArsOne(
+                priceData.values[0].high
+              )}`, // Precio más alto en ARS
+            },
+            {
+              label: "Precio más bajo (USD)",
+              value: `$${priceData.values[0].low}`, // Precio más bajo en USD
+            },
+            {
+              label: "Precio más bajo (ARS)",
+              value: `ARS ${await convertUsdToArsOne(priceData.values[0].low)}`, // Precio más bajo en ARS
+            },
+            {
+              label: "Precio de apertura (USD)",
+              value: `$${priceData.values[0].open}`, // Precio de apertura en USD
+            },
+            {
+              label: "Precio de apertura (ARS)",
+              value: `ARS ${await convertUsdToArsOne(
+                priceData.values[0].open
+              )}`, // Precio de apertura en ARS
+            },
+            {
+              label: "Precio de cierre (USD)",
+              value: `$${priceData.values[0].close}`, // Precio de cierre en USD
+            },
+            {
+              label: "Precio de cierre (ARS)",
+              value: `ARS ${await convertUsdToArsOne(
+                priceData.values[0].close
+              )}`, // Precio de cierre en ARS
             },
           ],
         };
 
         setInstrument(transformedData);
+
+        // Convertir el precio a ARS
+        const arsPrice = await convertUsdToArsOne(lowPrice);
+        setPriceInArs(arsPrice);
       }
     } catch (error) {
       console.error("Error fetching instrument data:", error);
@@ -252,6 +290,9 @@ export const InstrumentDetailsPage = () => {
           <div className="text-primary text-4xl font-bold mb-2">
             {instrument.price || "Detalles Premium"}
           </div>
+          <div className="text-secondary text-2xl font-bold mb-2">
+            {priceInArs ? `ARS ${priceInArs}` : "..."}
+          </div>
           <div className="flex items-center gap-2 mb-2">
             <span className="text-xl">{instrument.change || "N/A"}</span>
             <div
@@ -272,6 +313,59 @@ export const InstrumentDetailsPage = () => {
         <div className="lg:flex w-full lg:space-x-4">
           <div className="w-full lg:w-1/2">
             <PerformanceChart performanceData={instrument.performance} />
+          </div>
+
+          <div className="w-full lg:w-1/2">
+            {/* Primera tabla: Cantidad, Precio más alto y Precio más bajo */}
+            <h2 className="font-semibold text-primary text-md">
+              Caja de puntas
+            </h2>
+            <table className="table w-full mb-8">
+              <thead className="bg-primary text-white">
+                <tr>
+                  <th>Cantidad</th>
+                  <th>Precio más alto</th>
+                  <th>Precio más bajo</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td rowSpan="2">
+                    {instrument?.PriceSummary?.[0]?.value ?? "-"}
+                  </td>
+                  <td>{instrument?.PriceSummary?.[1]?.value ?? "-"}</td>
+                  <td>{instrument?.PriceSummary?.[3]?.value ?? "-"}</td>
+                </tr>
+                <tr>
+                  <td>{instrument?.PriceSummary?.[2]?.value ?? "-"}</td>
+                  <td>{instrument?.PriceSummary?.[4]?.value ?? "-"}</td>
+                </tr>
+              </tbody>
+            </table>
+
+            {/* Segunda tabla: Precio de apertura y Precio de cierre */}
+            <table className="table w-full">
+              <thead className="bg-primary text-white">
+                <tr>
+                  <th>Cantidad</th>
+                  <th>Precio de apertura</th>
+                  <th>Precio de cierre</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td rowSpan="2">
+                    {instrument?.PriceSummary?.[0]?.value ?? "-"}
+                  </td>
+                  <td>{instrument?.PriceSummary?.[5]?.value ?? "-"}</td>
+                  <td>{instrument?.PriceSummary?.[7]?.value ?? "-"}</td>
+                </tr>
+                <tr>
+                  <td>{instrument?.PriceSummary?.[6]?.value ?? "-"}</td>
+                  <td>{instrument?.PriceSummary?.[8]?.value ?? "-"}</td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </div>
 

@@ -1,21 +1,24 @@
+import { useAuth0 } from "@auth0/auth0-react";
 import { useEffect, useMemo } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
-import { OnboardingPage } from "../dashboard/pages/OnboardingPage";
-import { InvestorDashboardPage } from "../dashboard/pages/InvestorDashboardPage";
-import { AdminDashboardPage } from "../dashboard/pages/AdminDashboardPage";
-import { useAuthStore } from "../auth/store/useAuthStore";
 import { ProfileInvestorPage } from "../../modules/account/pages/ProfileInvestorPage";
-import { useAuth0 } from "@auth0/auth0-react";
-import { TransactionsPage } from "../../modules/transactions/pages/TransactionsPage";
+import { IncidencesPage } from "../../modules/community/pages/IncidencesPage";
 import { InvestmentLayout } from "../../modules/investment/pages/InvestmentLayout";
 import { InvestmentPage } from "../../modules/investment/pages/InvestmentPage";
 import { RecommendationPage } from "../../modules/investment/pages/RecommendationPage";
-import { BondsPage } from "../../modules/investment/pages/investment/BondsPage";
-import { EtfsPage } from "../../modules/investment/pages/investment/EtfsPage";
-import { CommoditiesPage } from "../../modules/investment/pages/investment/CommoditiesPage";
-import { ForexPage } from "../../modules/investment/pages/investment/ForexPage";
 import { InstrumentDetailsPage } from "../../modules/investment/pages/instruments/InstrumentDetailsPage";
+import { BondsPage } from "../../modules/investment/pages/investment/BondsPage";
+import { CommoditiesPage } from "../../modules/investment/pages/investment/CommoditiesPage";
+import { EtfsPage } from "../../modules/investment/pages/investment/EtfsPage";
 import { FiltersPage } from "../../modules/investment/pages/investment/FiltersPage";
+import { ForexPage } from "../../modules/investment/pages/investment/ForexPage";
+import { RadiographyFinancialPage } from "../../modules/radiography/pages/RadiographyFinancialPage";
+import { TransactionsPage } from "../../modules/transactions/pages/TransactionsPage";
+import { useAuthStore } from "../auth/store/useAuthStore";
+import { AdminDashboardPage } from "../dashboard/pages/AdminDashboardPage";
+import { InvestorDashboardPage } from "../dashboard/pages/InvestorDashboardPage";
+import { OnboardingPage } from "../dashboard/pages/OnboardingPage";
+import { UsersPage } from "../../modules/admin/pages/UsersPage";
 
 export const DashboardRouter = () => {
   const { user } = useAuthStore();
@@ -50,6 +53,7 @@ export const DashboardRouter = () => {
           <Route path="/onboarding" element={<OnboardingPage />} />
           <Route path="/profile" element={<ProfileInvestorPage />} />
           <Route path="/transactions" element={<TransactionsPage />} />
+          <Route path="/radiography" element={<RadiographyFinancialPage />} />
 
           {/* Rutas de inversión con layout */}
           <Route path="/investment" element={<InvestmentLayout />}>
@@ -72,13 +76,17 @@ export const DashboardRouter = () => {
       {(roles.includes("ADMIN") ||
         roles.includes("ADMINISTRADOR") ||
         roles.includes("ADMINISTRATOR")) && (
-        <Route path="/admin" element={<AdminDashboardPage />} />
+        <>
+          <Route path="/admin" element={<AdminDashboardPage />} />
+          <Route path="/admin/incidences" element={<IncidencesPage />} />
+          <Route path="/admin/users" element={<UsersPage/>}/>
+        </>
       )}
 
       {/* Redirección por defecto */}
       <Route
         path="/*"
-        element={<Navigate to={roles.includes("ADMIN") ? "/admin" : "/"} />}
+        element={<Navigate to={roles.includes("ADMIN") ? "/dashboard/admin" : "/"} />}
       />
     </Routes>
   );
