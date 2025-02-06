@@ -330,18 +330,15 @@ export const InstrumentDetailsPage = () => {
               </thead>
               <tbody>
                 <tr>
-                  <td rowSpan="2">{instrument.PriceSummary[0].value}</td>{" "}
-                  {/* Cantidad */}
-                  <td>{instrument.PriceSummary[1].value}</td>{" "}
-                  {/* Precio más alto (USD) */}
-                  <td>{instrument.PriceSummary[3].value}</td>{" "}
-                  {/* Precio más bajo (USD) */}
+                  <td rowSpan="2">
+                    {instrument?.PriceSummary?.[0]?.value ?? "-"}
+                  </td>
+                  <td>{instrument?.PriceSummary?.[1]?.value ?? "-"}</td>
+                  <td>{instrument?.PriceSummary?.[3]?.value ?? "-"}</td>
                 </tr>
                 <tr>
-                  <td>{instrument.PriceSummary[2].value}</td>{" "}
-                  {/* Precio más alto (ARS) */}
-                  <td>{instrument.PriceSummary[4].value}</td>{" "}
-                  {/* Precio más bajo (ARS) */}
+                  <td>{instrument?.PriceSummary?.[2]?.value ?? "-"}</td>
+                  <td>{instrument?.PriceSummary?.[4]?.value ?? "-"}</td>
                 </tr>
               </tbody>
             </table>
@@ -357,17 +354,15 @@ export const InstrumentDetailsPage = () => {
               </thead>
               <tbody>
                 <tr>
-                  <td rowSpan="2">{instrument.PriceSummary[0].value}</td>{" "}
-                  <td>{instrument.PriceSummary[5].value}</td>{" "}
-                  {/* Precio de apertura (USD) */}
-                  <td>{instrument.PriceSummary[7].value}</td>{" "}
-                  {/* Precio de cierre (USD) */}
+                  <td rowSpan="2">
+                    {instrument?.PriceSummary?.[0]?.value ?? "-"}
+                  </td>
+                  <td>{instrument?.PriceSummary?.[5]?.value ?? "-"}</td>
+                  <td>{instrument?.PriceSummary?.[7]?.value ?? "-"}</td>
                 </tr>
                 <tr>
-                  <td>{instrument.PriceSummary[6].value}</td>{" "}
-                  {/* Precio de apertura (ARS) */}
-                  <td>{instrument.PriceSummary[8].value}</td>{" "}
-                  {/* Precio de cierre (ARS) */}
+                  <td>{instrument?.PriceSummary?.[6]?.value ?? "-"}</td>
+                  <td>{instrument?.PriceSummary?.[8]?.value ?? "-"}</td>
                 </tr>
               </tbody>
             </table>

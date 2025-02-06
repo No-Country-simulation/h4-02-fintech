@@ -48,7 +48,7 @@ export const CardsRecommendation = () => {
   }, []);
 
   return (
-    <div className="carousel w-full space-y-6 sm:grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div className="carousel w-full sm:grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       {isLoading
         ? // Skeleton loader
           Array.from({ length: 2 }).map((_, index) => (

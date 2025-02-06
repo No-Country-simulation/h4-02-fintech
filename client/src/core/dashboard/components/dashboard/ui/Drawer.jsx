@@ -1,12 +1,13 @@
 import { PropTypes } from "prop-types";
 import { ArrowRight2, Home, Logout } from "iconsax-react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { useAuthStore } from "../../../../auth/store/useAuthStore";
 import { useAuth0 } from "@auth0/auth0-react";
 
 export const Drawer = ({ menu }) => {
   const { logout: logoutStore } = useAuthStore();
   const { logout, user } = useAuth0();
+  const location = useLocation();
 
   const onLogout = async () => {
     try {
@@ -20,6 +21,11 @@ export const Drawer = ({ menu }) => {
       console.error("Error al cerrar sesión:", error);
     }
   };
+
+  // Determina la ruta de inicio basada en la ruta actual
+  const homeLink = location.pathname.includes("dashboard/admin")
+    ? "/dashboard/admin"
+    : "/";
 
   return (
     <div className="drawer z-10">
@@ -35,7 +41,7 @@ export const Drawer = ({ menu }) => {
           <div className="flex justify-between items-center p-2">
             <Link
               className="btn btn-ghost flex items-center gap-2 px-2 w-fit"
-              to={"/"}
+              to={homeLink}
             >
               <Home size="24" />
               <span className="text-xl font-semibold text-navy-900">

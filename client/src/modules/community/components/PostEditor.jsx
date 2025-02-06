@@ -26,7 +26,12 @@ function decodeHtmlEntities(input) {
   return tempElement.textContent || tempElement.innerText || "";
 }
 
-export const PostEditor = ({ onPublishPost, isPublishing = false }) => {
+export const PostEditor = ({
+  onPublishPost,
+  isPublishing = false,
+  placeholder = "¿En qué estáis pensando?",
+  buttonLabel = "Publicar post",
+}) => {
   const ref = useRef(null);
   const [postContentLength, setPostContentLength] = useState(0);
 
@@ -55,7 +60,7 @@ export const PostEditor = ({ onPublishPost, isPublishing = false }) => {
             const decodedString = decodeHtmlEntities(value);
             setPostContentLength(decodedString.length);
           }}
-          placeholder="¿En qué estáis pensando...?"
+          placeholder={placeholder}
           plugins={[
             headingsPlugin(),
             listsPlugin(),
@@ -93,7 +98,7 @@ export const PostEditor = ({ onPublishPost, isPublishing = false }) => {
             disabled={isPublishing || !isPostContentLengthValid()}
             className="btn btn-primary disabled:opacity-50"
           >
-            {isPublishing ? "Publicando..." : "Publicar post"}
+            {isPublishing ? "Publicando..." : buttonLabel}
           </button>
         </div>
       </div>
@@ -104,4 +109,6 @@ export const PostEditor = ({ onPublishPost, isPublishing = false }) => {
 PostEditor.propTypes = {
   onPublishPost: PropTypes.func.isRequired,
   isPublishing: PropTypes.bool.isRequired,
+  placeholder: PropTypes.string,
+  buttonLabel: PropTypes.string,
 };

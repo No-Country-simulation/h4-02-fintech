@@ -12,7 +12,7 @@ import { PropTypes } from "prop-types";
 import { Link } from "react-router-dom";
 import { useOnboardingStore } from "../../../../auth/store/useOnboardingStore";
 import { validateComplete } from "../../../../validators/complete";
-import { Drawer } from "./Drawer";
+import { Drawer } from "../ui/Drawer";
 
 export const Navbar = ({ title }) => {
   const { formData } = useOnboardingStore();
@@ -49,7 +49,7 @@ export const Navbar = ({ title }) => {
     {
       icon: <MessageQuestion size="24" />,
       text: "Ayuda y soporte técnico",
-      link: "/",
+      link: "/report-incidence",
     },
   ];
 

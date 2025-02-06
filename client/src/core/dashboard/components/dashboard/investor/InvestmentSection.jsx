@@ -17,17 +17,15 @@ export const InvestmentSection = () => {
         </div>
 
         <div className="flex flex-col bg-base-100 border-2 rounded-xl p-6 shadow-sm space-y-4 w-full">
-          <h4 className="text-lg font-semibold text-secondary">
-            Plazo Fijo en Dólares
-          </h4>
-
           <div className="space-y-4">
             <div>
               <div className="flex items-center gap-2">
                 <div className="w-2 h-2 rounded-full bg-blue-500"></div>
                 <p className="text-sm text-gray-600">Nivel de riesgo</p>
               </div>
-              <p className="text-sm text-gray-400 ml-4 capitalize">{formData.riskPreference}</p>
+              <p className="text-sm text-gray-400 ml-4 capitalize">
+                {formData.riskPreference}
+              </p>
             </div>
 
             <div>
@@ -35,7 +33,9 @@ export const InvestmentSection = () => {
                 <div className="w-2 h-2 rounded-full bg-blue-500"></div>
                 <p className="text-sm text-gray-600">Nivel de conocimiento</p>
               </div>
-              <p className="text-sm text-gray-400 ml-4 capitalize">{formData.knowledgeLevel}</p>
+              <p className="text-sm text-gray-400 ml-4 capitalize">
+                {formData.knowledgeLevel}
+              </p>
             </div>
 
             <Link
