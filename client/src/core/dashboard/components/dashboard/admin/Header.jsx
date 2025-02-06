@@ -1,16 +1,10 @@
 import { HambergerMenu, User, Warning2 } from "iconsax-react";
 import { useAuthStore } from "../../../../auth/store/useAuthStore";
-import { useOnboardingStore } from "../../../../auth/store/useOnboardingStore";
 
-import { validateComplete } from "../../../../validators/complete";
-
-import OnboardingModal from "../../onboarding/OnboardingModal";
 import { Drawer } from "../ui/Drawer";
 
 export const Header = () => {
   const { user } = useAuthStore();
-  const { formData } = useOnboardingStore();
-  const formDataComplete = validateComplete(formData);
 
   const drawerItems = [
     {
@@ -62,7 +56,6 @@ export const Header = () => {
       </div>
 
       <Drawer menu={drawerItems} />
-      {!formDataComplete && <OnboardingModal />}
     </div>
   );
 };
