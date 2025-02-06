@@ -48,14 +48,12 @@ export default function IncidentAccordion({ incident }) {
 
             <div className="flex items-start gap-2">
               <User className="w-4 h-4 mt-1 text-gray-500" />
-              <p className="text-sm">
-                Usuario afectado: {incident.userAffected}
-              </p>
+              <p className="text-sm">Usuario afectado: {incident.user.name}</p>
             </div>
 
             <div className="flex items-start gap-2">
               <Target className="w-4 h-4 mt-1 text-gray-500" />
-              <p className="text-sm">Área afectada: {incident.areaAffected}</p>
+              <p className="text-sm">Área afectada: {incident.affectedArea}</p>
             </div>
 
             <div className="flex items-start gap-2">
