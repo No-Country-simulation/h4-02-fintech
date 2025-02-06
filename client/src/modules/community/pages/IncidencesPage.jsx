@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import { Navbar } from "../../../core/dashboard/components/dashboard/ui/Navbar";
 import IncidentAccordion from "../components/IncidentAccordion";
 import { fetchIncidents } from "../services/incidents";
+import { Navbar } from "../../../core/dashboard/components/dashboard/admin/Navbar";
 
 export const IncidencesPage = () => {
   const [incidents, setIncidents] = useState([]);

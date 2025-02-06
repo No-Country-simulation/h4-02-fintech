@@ -16,7 +16,12 @@ export const CompletePage = () => {
       <div className="mx-auto max-w-md w-full space-y-8">
         <div className="space-y-8">
           <h1 className="text-2xl text-primary md:text-3xl font-semibold text-center">
-            ¡Tu Perfil está listo!
+            {riskPreference === "bajo" &&
+              "¡Tu Perfil está listo, inversionista prudente!"}
+            {riskPreference === "moderado" &&
+              "¡Tu Perfil está listo, estratega financiero!"}
+            {riskPreference === "alto" &&
+              "¡Tu Perfil está listo, visionario arriesgado!"}
           </h1>
 
           <div className="flex justify-center py-6">
@@ -70,6 +75,49 @@ export const CompletePage = () => {
                   {savingsPercentage}% del ingreso mensual
                 </p>
               </div>
+            </div>
+          </div>
+
+          <div className="flex items-center space-x-4 p-4 bg-white rounded border">
+            <div>
+              <h2 className="font-semibold text-lg">Perfil del inversor</h2>
+              <p className="text-gray-500 capitalize">
+                {riskPreference === "bajo" && (
+                  <>
+                    <span className="font-semibold">Conservador</span>
+                    <br />
+                    🔹 Priorizas la seguridad sobre la rentabilidad, optando por
+                    inversiones estables y de bajo riesgo.
+                    <br />
+                    🔹 Prefieres preservar tu capital y minimizar la volatilidad
+                    en tus inversiones.
+                  </>
+                )}
+                {riskPreference === "moderado" && (
+                  <>
+                    <span className="font-semibold">Moderado</span>
+                    <br />
+                    🔹 Buscas un equilibrio entre rentabilidad y seguridad,
+                    combinando inversiones de bajo y mediano riesgo.
+                    <br />
+                    🔹 Prefieres diversificar tus activos para optimizar el
+                    crecimiento sin exponerte demasiado a la volatilidad del
+                    mercado.
+                  </>
+                )}
+                {riskPreference === "alto" && (
+                  <>
+                    <span className="font-semibold">Arriesgado</span>
+                    <br />
+                    🔹 Estás dispuesto a asumir un mayor riesgo con el objetivo
+                    de obtener mayores rendimientos en el largo plazo.
+                    <br />
+                    🔹 Aceptas la volatilidad del mercado y aprovechas
+                    oportunidades de inversión con alto potencial de
+                    crecimiento.
+                  </>
+                )}
+              </p>
             </div>
           </div>
 

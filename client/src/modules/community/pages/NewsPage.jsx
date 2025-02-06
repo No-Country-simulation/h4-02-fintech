@@ -1,4 +1,5 @@
-import { Navbar } from "../../../core/dashboard/components/dashboard/ui/Navbar";
+
+import { Navbar } from "../../../core/dashboard/components/dashboard/investor/Navbar";
 import { DailyTip } from "../components/DailyTip";
 import { NewsItem } from "../components/NewsItem";
 import { useNews } from "../hooks/useNews";

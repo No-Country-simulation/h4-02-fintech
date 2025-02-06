@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, NavLink, Outlet } from "react-router-dom";
-import { Navbar } from "../../../core/dashboard/components/dashboard/ui/Navbar";
+import { Navbar } from "../../../core/dashboard/components/dashboard/investor/Navbar";
 import { useOnboardingStore } from "../../../core/auth/store/useOnboardingStore";
 import { validateComplete } from "../../../core/validators/complete";
 import recommendationModalImage from "../../../assets/images/recommendation-modal.svg";

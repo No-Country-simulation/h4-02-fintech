@@ -59,7 +59,7 @@ export const Transaction = () => {
                   <span>{financial.savings.percentage}%</span>
                   <span className="break-all text-gray-800">
                     {formatCurrency(
-                      financial.income.values[currencyType],
+                      financial.savings.values[currencyType],
                       currencyType,
                       2
                     )}

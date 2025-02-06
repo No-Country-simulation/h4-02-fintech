@@ -18,6 +18,7 @@ import { useAuthStore } from "../auth/store/useAuthStore";
 import { AdminDashboardPage } from "../dashboard/pages/AdminDashboardPage";
 import { InvestorDashboardPage } from "../dashboard/pages/InvestorDashboardPage";
 import { OnboardingPage } from "../dashboard/pages/OnboardingPage";
+import { UsersPage } from "../../modules/admin/pages/UsersPage";
 
 export const DashboardRouter = () => {
   const { user } = useAuthStore();
@@ -78,6 +79,7 @@ export const DashboardRouter = () => {
         <>
           <Route path="/admin" element={<AdminDashboardPage />} />
           <Route path="/admin/incidences" element={<IncidencesPage />} />
+          <Route path="/admin/users" element={<UsersPage/>}/>
         </>
       )}
 

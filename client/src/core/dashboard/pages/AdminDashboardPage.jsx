@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { fetchIncidentCount } from "../../../modules/community/services/incidents";
-import { Header } from "../components/dashboard/investor/Header";
+import { Header } from "../components/dashboard/admin/Header";
 
 export const AdminDashboardPage = () => {
   const [incidentCount, setIncidentCount] = useState(0);

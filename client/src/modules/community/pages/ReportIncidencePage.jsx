@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { toast } from "sonner";
 import { useAuthStore } from "../../../core/auth/store/useAuthStore";
-import { Navbar } from "../../../core/dashboard/components/dashboard/ui/Navbar";
+
 import { PostEditor } from "../components/PostEditor";
 import { createIncidence } from "../services/incidents";
+import { Navbar } from "../../../core/dashboard/components/dashboard/investor/Navbar";
 
 const affectedAreas = {
   auth: "Inicio de sesión",
