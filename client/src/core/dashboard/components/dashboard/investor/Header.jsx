@@ -23,7 +23,8 @@ export const Header = () => {
   const { formData } = useOnboardingStore();
   const formDataComplete = validateComplete(formData);
 
-  const { financial, toggleCurrencyType, currencyType, show, toggleShow } = useFinancialStore();
+  const { financial, toggleCurrencyType, currencyType, show, toggleShow } =
+    useFinancialStore();
 
   const toggleBalanceVisibility = () => {
     toggleShow();
@@ -70,7 +71,7 @@ export const Header = () => {
     {
       icon: <MessageQuestion size="24" />,
       text: "Ayuda y soporte técnico",
-      link: "/",
+      link: "/report-incidence",
     },
   ];
 
@@ -117,7 +118,9 @@ export const Header = () => {
           <div className="flex items-center justify-between">
             <div className="flex flex-col sm:flex-row items-start">
               <h1 className="text-2xl font-bold">
-                {show ? formattedBalance : formattedBalance.replace(/\d/g, "x") || "0,00"}
+                {show
+                  ? formattedBalance
+                  : formattedBalance.replace(/\d/g, "x") || "0,00"}
               </h1>
               <select
                 className="select select-sm bg-transparent border-0 mx-2 my-2"

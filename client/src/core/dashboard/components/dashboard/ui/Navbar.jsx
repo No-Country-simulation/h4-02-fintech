@@ -49,7 +49,7 @@ export const Navbar = ({ title }) => {
     {
       icon: <MessageQuestion size="24" />,
       text: "Ayuda y soporte técnico",
-      link: "/",
+      link: "/report-incidence",
     },
   ];
 
