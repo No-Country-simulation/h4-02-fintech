@@ -86,7 +86,7 @@ export const DashboardRouter = () => {
       {/* Redirección por defecto */}
       <Route
         path="/*"
-        element={<Navigate to={roles.includes("ADMIN") ? "/admin" : "/"} />}
+        element={<Navigate to={roles.includes("ADMIN") ? "/dashboard/admin" : "/"} />}
       />
     </Routes>
   );
